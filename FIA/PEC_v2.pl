@@ -1,0 +1,69 @@
+% Constantes y Hechos
+constante(control_social).
+constante(vigilancia).
+constante(obedecer).
+
+
+
+ciudadano(ciudadano_1).
+ciudadano(ciudadano_2).
+ciudadano(ciudadano_3).
+ciudadano(ciudadano_4).
+ciudadano(ciudadano_5).
+
+:- dynamic situacion/2.
+
+situacion(ciudadano_1, vigilado).
+situacion(ciudadano_1, rebelde).
+situacion(ciudadano_2, not_vigilado).
+situacion(ciudadano_2, obediente).
+situacion(ciudadano_3, vigilado).
+situacion(ciudadano_3, rebelde).
+situacion(ciudadano_4, vigilado).
+situacion(ciudadano_4, infiltrado).
+situacion(ciudadano_5, vigilado).
+situacion(ciudadano_5, escondido).
+
+ubicacion_camara(sala_1).
+
+% Predicados
+
+son_ciudadanos(Ciudadanos) :- findall(C,ciudadano(C),Ciudadanos).
+situaciones(Ciudadano,Lista):-findall(S, situacion(Ciudadano,S),Lista).
+es_ciudadano(C):- ciudadano(C).
+
+vigilancia(X) :- situacion(X, vigilado).
+rebelde(X) :- situacion(X, rebelde).
+infiltrado(X) :- situacion(X,infiltrado).
+fugitivo(X):- situacion(X,escondido).
+
+conectados(ciudadano_1,X) :- member(X, [ciudadano_3, ciudadano_4,ciudadano_5]).
+conectados(ciudadano_3,X) :- member(X, [ciudadano_1,ciudadano_2]).
+conectados(ciudadano_5,X) :- member(X, [ciudadano_2,ciudadano_3,ciudadano_4]).
+
+% Reglas adicionales
+detectar_rebeldes_infiltrados(Ciudadano) :- vigilancia(Ciudadano), rebelde(Ciudadano), infiltrado(Ciudadano), aplicar_castigo(Ciudadano).
+detectar_rebeldes_infiltrados(Ciudadano) :- vigilancia(Ciudadano), rebelde(Ciudadano), aplicar_castigo(Ciudadano).
+
+aplicar_castigo(Ciudadano) :- write('El ciudadano '), write(Ciudadano), write(' ha sido castigado por su conducta rebelde.'), nl. % Definimos cómo se aplica el castigo, en este caso, simplpemente mostramos un mensaje en la consola.
+
+% Ejemplo de uso de operadores relacionales
+eficacia_vigilancia(Eficacia) :- findall(Ciudadano, (vigilancia(Ciudadano), infiltrado(Ciudadano)), Infiltrados), findall(Ciudadano, vigilancia(Ciudadano), Vigilados), length(Vigilados, NumVigilados), ( NumVigilados = 0 -> Eficacia = 100, length(Infiltrados, NumInfiltrados), Eficacia is (NumInfiltrados / NumVigilados) * 100 ).
+
+% Ejemplo de recursividad
+% /*
+% propagacion_control(Ciudadano) :- vigilancia(Ciudadano),
+% propagacion_control_aux(Ciudadano, [Ciudadano]).
+% propagacion_control_aux(_, []).
+%  propagacion_control_aux(Ciudadano, [Visitado|Resto]) :-
+%  conectados(Visitado, Otro), \+ member(Otro, Resto), vigilancia(Otro),
+% propagacion_control_aux(Ciudadano, [Otro|Resto]).
+% */
+
+% Ejemplo de inserción y borrado de hechos
+agregar_situacion_nueva(Sujeto, Situacion) :- assertz(situacion(Sujeto, Situacion)).
+borrar_situacion(Ciudadano,Situacion) :- retract(situacion(Ciudadano,Situacion)).
+
+% Predicados adicionales
+verificar_camara(X) :- ubicacion_camara(X).
+

@@ -1,0 +1,25 @@
+#BlueJ class context
+comment0.target=Peque\u00F1os_Prod
+comment0.text=\r\n\ La\ clase\ Peque\u00F1os\ Productores\ es\ una\ clase\ hija\ de\ Productores\ y\ aqui\ se\ comprueba\ si\ se\ puede\ a\u00F1adir\ un\ producto\ al\ peque\u00F1o\ productor\ sin\ pasarse\ de\ las\ hectareas\r\n\ \r\n\ @author\ Jorge\ \r\n\ @version\ *17Mayo*\r\n
+comment1.params=nombre
+comment1.target=Peque\u00F1os_Prod(java.lang.String)
+comment1.text=\r\n\ Constructor\ para\ Peque\u00F1os\ Productores,\ se\ piden\ las\ caracter\u00EDsticas\ que\ incorporar\u00E1\ a\ futuro\ el\ productor\ y\ a\ mayores\ se\ establece\ el\ maximo\ de\ hectareas\r\n
+comment2.params=
+comment2.target=double\ getHectareasMax()
+comment2.text=\r\n\ Un\ getter\ para\ obtener\ las\ hectareas\ del\ productor\r\n\r\n\ @return\ hectareasmax\ Al\ ser\ un\ getter\ te\ devuelve\ el\ valor\ de\ la\ funcion\ \r\n\ \r\n
+comment3.params=hectareas
+comment3.target=void\ setHectareasMax(double)
+comment3.text=\r\n\ Un\ setter\ para\ darle\ un\ nuevo\ valor\ a\ las\ hectareas\ maximas\r\n\r\n\ @param\ hectareas\ Para\ cambiarle\ las\ hectareas\ maximas\ al\ productor\ \r\n\ \r\n
+comment4.params=hectareas
+comment4.target=boolean\ isComprobar(java.lang.Double)
+comment4.text=\r\n\ Funcion\ booleana\ para\ saber\ si\ el\ productor\ puede\ agregar\ el\ producto\ a\ su\ lista\ sin\ pasarse\ de\ las\ hectareas\ o\ cantidad\ de\ productos\r\n\r\n\ @param\ \ hectareas\ \ Las\ hectareas\ que\ se\ tendr\u00E1n\ en\ cuenta\ al\ comprobar\ el\ maximo\r\n\ @return\ boolean\ Para\ saber\ el\ resultado\ de\ la\ funcion,\ si\ puede\ o\ no\ a\u00F1adirse\ el\ producto\r\n
+comment5.params=cantidad_productos
+comment5.target=void\ setCantidadProductosMax(int)
+comment5.text=\r\n\ Un\ setter\ para\ darle\ un\ nuevo\ valor\ a\ la\ cantidad\ maxima\ de\ productos\r\n\r\n\ @param\ cantidad_productos\ Para\ cambiarle\ la\ cantidad\ maxima\ de\ productos\ al\ productor\ \r\n\ \r\n
+comment6.params=
+comment6.target=int\ getCantidadProductosMax()
+comment6.text=\r\n\ Un\ getter\ para\ obtener\ la\ cantidad\ maxima\ de\ productos\ del\ productor\r\n\r\n\ @return\ cant_max\ Al\ ser\ un\ getter\ te\ devuelve\ el\ valor\ de\ la\ funcion\ \r\n\ \r\n
+comment7.params=
+comment7.target=java.lang.String\ toString()
+comment7.text=\r\n\ En\ la\ funci\u00F3n\ toString\ se\ crea\ una\ muestra\ de\ lo\ que\ aparecer\u00E1\ al\ pedir\ el\ productor\ peque\u00F1o,\ en\ este\ caso,\ los\ datos\ del\ productor\ m\u00E1s\ el\ tipo\ al\ que\ pertenece\r\n\r\n\ @return\ \ \ \ \ Una\ oraci\u00F3n\ donde\ se\ juntan\ todos\ los\ datos\ disponibles\ del\ productor\r\n
+numComments=8

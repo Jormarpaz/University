@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=Grandes_Prod
+comment0.text=\r\n\ La\ clase\ Grandes\ Productores\ es\ una\ clase\ hija\ de\ Productores\ y\ aqui\ no\ hay\ limite\ de\ productos\ o\ hectareas\r\n\ \r\n\ @author\ Jorge\ \r\n\ @version\ *17Mayo*\r\n
+comment1.params=nombre
+comment1.target=Grandes_Prod(java.lang.String)
+comment1.text=\r\n\ Constructor\ para\ Grandes\ Productores,\ se\ piden\ las\ caracter\u00EDsticas\ que\ incorporar\u00E1\ a\ futuro\ el\ productor\r\n
+comment2.params=
+comment2.target=int\ getCantidadProductosMax()
+comment2.text=\r\n\ Un\ getter\ para\ obtener\ la\ cantidad\ maxima\ de\ productos\ del\ productor\r\n\r\n\ @return\ cant_max\ Al\ ser\ un\ getter\ te\ devuelve\ el\ valor\ de\ la\ funcion\ \r\n\ \r\n
+comment3.params=cantidad_productos
+comment3.target=void\ setCantidadProductosMax(int)
+comment3.text=\r\n\ Un\ setter\ para\ darle\ un\ nuevo\ valor\ a\ la\ cantidad\ maxima\ de\ productos\r\n\r\n\ @param\ hectareas\ Para\ cambiarle\ la\ cantidad\ maxima\ de\ productos\ al\ productor\ \r\n\ \r\n
+comment4.params=
+comment4.target=java.lang.String\ toString()
+comment4.text=\r\n\ En\ la\ funci\u00F3n\ toString\ se\ crea\ una\ muestra\ de\ lo\ que\ aparecer\u00E1\ al\ pedir\ el\ productor\ peque\u00F1o,\ en\ este\ caso,\ los\ datos\ del\ productor\ m\u00E1s\ el\ tipo\ al\ que\ pertenece\r\n\r\n\ @return\ \ \ \ \ Una\ oraci\u00F3n\ donde\ se\ juntan\ todos\ los\ datos\ disponibles\ del\ productor\r\n
+numComments=5

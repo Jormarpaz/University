@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=Cooperativa
+comment0.text=\r\n\ Clase\ Cooperativa,\ desde\ aqui\ se\ cargan\ todas\ las\ funciones\ para\ que\ funcione\ el\ programa\ y\ se\ llevan\ a\ cabo\ las\ pruebas\r\n\ \r\n\ @author\ Jorge\ \r\n\ @version\ *17Mayo*\r\n
+comment1.params=args
+comment1.target=void\ main(java.lang.String[])
+numComments=2

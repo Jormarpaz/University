@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=Consumidor
+comment0.text=\r\n\ Clase\ hija\ de\ Cliente,\ principalmente\ calcula\ el\ precio\ total\ de\ los\ consumidores\r\n\ \r\n\ @author\ Jorge\ \r\n\ @version\ *17Mayo*\r\n
+comment1.params=nombre\ distancia
+comment1.target=Consumidor(java.lang.String,\ double)
+comment1.text=\r\n\ Constructor\ para\ el\ Consumidor,\ donde\ obtiene\ las\ propiedades\ del\ constructor\ padre\r\n
+comment2.params=
+comment2.target=void\ calcularPrecioTotal()
+comment2.text=\r\n\ Funcion\ para\ calcular\ el\ precio\ total\ a\ pagar\ por\ el\ consumidor\r\n\r\n\ @return\ \ Preciototal\ \ \ El\ resultado\ de\ la\ f\u00F3rmula\r\n
+comment3.params=
+comment3.target=java.lang.String\ toString()
+comment3.text=\r\n\ En\ la\ funci\u00F3n\ toString\ se\ crea\ una\ muestra\ de\ lo\ que\ aparecer\u00E1\ al\ pedir\ el\ cliente,\ en\ este\ caso,\ los\ datos\ del\ consumidor\r\n\r\n\ @return\ \ \ \ \ Una\ oraci\u00F3n\ donde\ se\ juntan\ todos\ los\ datos\ disponibles\ del\ cliente\r\n
+numComments=4

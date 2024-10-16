@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=Pedido
+comment0.text=\r\n\ Clase\ Pedido,\ donde\ se\ muestra\ principalmente\ el\ resumen\ de\ pedidos\r\n\ \r\n\ @author\ Jorge\ \r\n\ @version\ *17Mayo*\r\n
+comment1.params=producto\ productor\ cliente\ logistica
+comment1.target=Pedido(Producto,\ Productores,\ Cliente,\ Logistica)
+comment1.text=\r\n\ Constructor\ de\ Pedido,\ donde\ adquiere\ sus\ propiedades\r\n
+comment2.params=
+comment2.target=java.lang.String\ toString()
+comment2.text=\r\n\ En\ la\ funci\u00F3n\ toString\ se\ crea\ una\ muestra\ de\ lo\ que\ aparecer\u00E1\ al\ pedir\ el\ pedido,\ en\ este\ caso,\ los\ datos\ de\ toda\ la\ compra\r\n\r\n\ @return\ \ \ \ \ Una\ oraci\u00F3n\ donde\ se\ juntan\ todos\ los\ datos\ disponibles\ de\ la\ compra\r\n
+numComments=3

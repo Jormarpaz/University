@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=Transporte
+comment0.text=\r\n\ Clase\ Transporte,\ se\ crean\ los\ diversos\ transportes\ bien\ de\ peque\u00F1a\ o\ gran\ logistica\ que\ se\ asignaran\ a\ las\ empresas\r\n\ \r\n\ @author\ Jorge\ \r\n\ @version\ *17Mayo*\r\n
+comment1.params=nombre\ precio\ tipo
+comment1.target=Transporte(java.lang.String,\ java.lang.Double,\ java.lang.Boolean)
+comment1.text=\r\n\ Constructor\ para\ Transporte,\ se\ piden\ las\ caracter\u00EDsticas\ que\ incorporar\u00E1\ a\ futuro\ el\ transporte\ logistico\r\n
+comment2.params=
+comment2.target=double\ getPrecio()
+comment2.text=\r\n\ Funcion\ getter\ para\ obtener\ el\ precio\ del\ transporte\r\n\ @return\ precio\ Se\ devuelve\ el\ precio\r\n
+comment3.params=
+comment3.target=boolean\ getTipo()
+comment3.text=\r\n\ Funcion\ getter\ para\ obtener\ el\ tipo\ de\ transporte\ logistico\r\n\ @return\ GranLog\ Se\ devuelve\ saber\ el\ tipo\r\n
+comment4.params=
+comment4.target=java.lang.String\ getNombre()
+comment4.text=\r\n\ Un\ getter\ para\ obtener\ el\ nombre\ del\ transporte\r\n\r\n\ @return\ nombre\ Al\ ser\ un\ getter\ te\ devuelve\ el\ valor\ de\ la\ funcion\ \r\n\ \r\n
+comment5.params=nombre
+comment5.target=void\ SetNombre(java.lang.String)
+comment5.text=\r\n\ Un\ setter\ para\ darle\ un\ nuevo\ nombre\ al\ transporte\r\n\r\n\ @param\ Nombre\ Para\ saber\ el\ nombre\ que\ se\ le\ quiere\ dar\ al\ transporte\r\n\ \r\n
+comment6.params=
+comment6.target=java.lang.String\ toString()
+comment6.text=\r\n\ En\ la\ funci\u00F3n\ toString\ se\ crea\ una\ muestra\ de\ lo\ que\ aparecer\u00E1\ al\ pedir\ el\ transporte,\ en\ este\ caso,\ los\ datos\ del\ mismo\r\n\r\n\ @return\ \ \ \ \ Una\ oraci\u00F3n\ donde\ se\ juntan\ todos\ los\ datos\ disponibles\ del\ transporte\r\n
+numComments=7

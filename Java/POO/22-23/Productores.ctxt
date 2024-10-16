@@ -1,0 +1,25 @@
+#BlueJ class context
+comment0.target=Productores
+comment0.text=\r\n\ Clase\ padre\ de\ los\ productores,\ alberga\ algunas\ funciones\ importantes\ como\ la\ de\ asignarle\ un\ producto\ al\ productor\ o\ comprobar\ si\ existe\ el\ producto\ en\ el\ productor\r\n\ \r\n\ @author\ Jorge\ \r\n\ @version\ *17Mayo*\r\n
+comment1.params=nombre
+comment1.target=Productores(java.lang.String)
+comment1.text=\r\n\ Constructor\ de\ la\ clase\ Productores,\ se\ piden\ las\ caracter\u00EDsticas\ que\ incorporar\u00E1\ a\ futuro\ el\ productor\r\n
+comment2.params=producto\ hectareas
+comment2.target=void\ A\u00F1adirProducto(Producto,\ java.lang.Double)
+comment2.text=\r\n\ Funcion\ void\ para\ asignarle\ un\ producto\ al\ productor\ junto\ a\ la\ cantidad\ de\ hectareas\ que\ ocupa\r\n\r\n\ @param\ \ producto\ \ El\ producto\ que\ introducimos\ en\ el\ mapa\r\n\ @param\ \ hectareas\ Para\ saber\ las\ hectareas\ que\ ocupar\u00E1\ el\ producto\r\n\ \r\n
+comment3.params=producto
+comment3.target=void\ getHectareas(Producto)
+comment3.text=\r\n\ Funcion\ void\ para\ la\ cantidad\ de\ hectareas\ que\ ocupa\ el\ producto\r\n
+comment4.params=producto
+comment4.target=boolean\ isProducto(Producto)
+comment4.text=\r\n\ Funcion\ booleana\ para\ saber\ si\ el\ productor\ cuenta\ con\ el\ producto\ que\ se\ le\ pide\r\n\r\n\ @param\ \ producto\ \ El\ producto\ que\ introducimos\ en\ el\ mapa\r\n\ @return\ boolean\ Para\ saber\ el\ resultado\ de\ la\ funcion,\ si\ hay\ o\ no\ ese\ producto\r\n
+comment5.params=
+comment5.target=java.lang.String\ getNombre()
+comment5.text=\r\n\ Un\ getter\ para\ obtener\ el\ nombre\ del\ productor\r\n\r\n\ @return\ nombre\ Al\ ser\ un\ getter\ te\ devuelve\ el\ valor\ de\ la\ funcion\ \r\n\ \r\n
+comment6.params=Nombre
+comment6.target=void\ setNombre(java.lang.String)
+comment6.text=\r\n\ Un\ setter\ para\ darle\ un\ nuevo\ nombre\ al\ productor\r\n\r\n\ @param\ Nombre\ Para\ saber\ el\ nombre\ que\ se\ le\ quiere\ dar\ al\ productor\ \r\n\ \r\n
+comment7.params=
+comment7.target=java.lang.String\ toString()
+comment7.text=\r\n\ En\ la\ funci\u00F3n\ toString\ se\ crea\ una\ muestra\ de\ lo\ que\ aparecer\u00E1\ al\ pedir\ el\ productor,\ en\ este\ caso,\ los\ datos\ del\ productor\r\n\r\n\ @return\ \ \ \ \ Una\ oraci\u00F3n\ donde\ se\ juntan\ todos\ los\ datos\ disponibles\ del\ productor\r\n
+numComments=8
