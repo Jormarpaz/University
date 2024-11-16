@@ -1,0 +1,9 @@
+18:30:04: El proceso 1931 ejecutando 'sleep 10; echo hola >> test1.txt' ha nacido.
+18:30:04: El proceso 1941 ejecutando 'yes > /dev/null' ha nacido.
+18:30:04: El proceso 1946 ejecutando '5' ha nacido.
+18:30:04: El proceso 1950 ejecutando '5' ha nacido.
+18:30:09: El proceso 1941 ha sido detenido y no será reiniciado.
+18:30:16: El Apocalipsis ha sido iniciado.
+18:30:17: Comprobando procesos vivos tras el Apocalipsis...
+18:30:17: Verificación completa.
+18:30:17: Todos los residuos han sido eliminados. El sistema está limpio.
