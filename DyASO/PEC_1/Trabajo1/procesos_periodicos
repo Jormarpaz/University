@@ -1,2 +1,0 @@
-0 5 2457 'echo hola_periodico >> test2.txt'
-0 5 2472 'echo hola_periodico_lento >> test3.txt; sleep 20'
