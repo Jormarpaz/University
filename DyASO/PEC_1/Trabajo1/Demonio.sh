@@ -23,39 +23,43 @@ handle_signal() {
 handle_lists() {
     if ! flock -w 5 SanPedro -c "
         # Procesar lista de procesos normales
-        while read pid cmd; do
-            if [ -f \"./Infierno/\$pid\" ]; then
-                kill \$pid 2>/dev/null
-                log_to_bible "El proceso $pid '$cmd' ha terminado."
-                sed -i \"/^$pid /d\" procesos
-            fi
-        done < procesos
+        if [ -f procesos ]; then
+            while read pid comando; do
+                if ! ps -p \"$pid\" >/dev/null 2>&1; then
+                    log_to_bible \"El proceso $pid '$comando' ha terminado.\"
+                    sed -i \"/^$pid /d\" procesos
+                fi
+            done < procesos
+        fi
 
         # Procesar lista de procesos de servicio
-        while read pid cmd; do
-            if ! ps -p \$pid >/dev/null; then
-                log_to_bible "El proceso $pid ha terminado."
-                nohup bash -c \"\$cmd\" >/dev/null 2>&1 &
-                new_pid=\$!
-                sed -i \"s/^\$pid /\$new_pid /\" procesos_servicio
-                log_to_bible "El proceso $pid resucita con pid $new_pid."
-            fi
-        done < procesos_servicio
+        if [ -f procesos_servicio ]; then
+            while read pid comando; do
+                if ! ps -p \"$pid\" >/dev/null 2>&1; then
+                    log_to_bible \"El proceso $pid ha terminado.\"
+                    nohup bash -c \"$comando\" >/dev/null 2>&1 &
+                    new_pid=\$!
+                    sed -i \"s/^$pid /$new_pid /\" procesos_servicio
+                    log_to_bible \"El proceso $pid resucita con pid $new_pid.\"
+                fi
+            done < procesos_servicio
+        fi
 
         # Procesar lista de procesos periódicos
-        while read time period pid cmd; do
-            if (( time >= period )); then
-                kill \$pid 2>/dev/null
-                log_to_bible "El proceso $pid '$comando' ha terminado."
-                nohup bash -c \"\$comando\" >/dev/null 2>&1 &
-                new_pid=\$!
-                sed -i \"s/^\$time \$period \$pid /0 $period \$new_pid /\" procesos_periodicos
-                log_to_bible "El proceso $pid se reencarna con pid $new_pid."
-            else
-                # Incrementar el tiempo de ejecución
-                sed -i "s/^$time $period $pid /$((time + 1)) $period $pid /" procesos_periodicos
-            fi
-        done < procesos_periodicos
+        if [ -f procesos_periodicos ]; then
+            while read time period pid comando; do
+                if (( time >= period )); then
+                    kill \"$pid\" 2>/dev/null
+                    log_to_bible "El proceso $pid '$comando' ha terminado."
+                    nohup bash -c \"$comando\" >/dev/null 2>&1 &
+                    new_pid=\$!
+                    sed -i \"s/^$time $period $pid /0 $period $new_pid /\" procesos_periodicos
+                    log_to_bible "El proceso $pid se reencarna con pid $new_pid."
+                else
+                    sed -i \"s/^$time $period $pid /$((time + 1)) $period $pid /\" procesos_periodicos
+                fi
+            done < procesos_periodicos
+        fi
     "; then
         log_to_bible "Error: No se pudo manejar las listas debido a un fallo en flock."
         return 1

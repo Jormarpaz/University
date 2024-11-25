@@ -11,18 +11,6 @@ log_event() {
     echo "$(date +'%H:%M:%S') [Fausto] $1" >>$BIBLIA
 }
 
-
-
-# --- Función para iniciar el demonio ---
-start_demonio() {
-    if ! pgrep -f "$DEMONIO" >/dev/null; then
-        log_event "---------------Génesis---------------"
-        log_event "El demonio ha sido creado"
-        nohup bash -c "$DEMONIO" >/dev/null 2>&1 &
-        demonio_pid=$!
-    fi
-}
-
 check_demonio() {
     if pgrep -f "./Demonio.sh" >/dev/null; then
         return 0
@@ -41,13 +29,15 @@ check_demonio() {
     fi
 
     # Iniciar el demonio
-    start_demonio
+    log_event "---------------Génesis---------------"
+    log_event "El demonio ha sido creado"
+    nohup bash -c "$DEMONIO" >/dev/null 2>&1 &
+    demonio_pid=$!
 }
 
 # --- Ejecutar un comando normal ---
 run_command() {
     local cmd="$1" # El comando a ejecutar
-    local log_time=$(date +'%H:%M:%S')
 
     # Lanzar el comando en segundo plano usando bash
     nohup bash -c "$cmd" >/dev/null 2>&1 &
@@ -63,7 +53,7 @@ run_command() {
     } 200<>procesos
 
     # Registrar el evento en la Biblia
-    log_event "$log_time: El proceso $pid '$cmd' ha nacido."
+    log_event " El proceso $pid '$cmd' ha nacido."
 
     # Retornar inmediatamente
     return 0
@@ -73,7 +63,6 @@ run_command() {
 # --- Ejecutar un comando como servicio ---
 run_service() {
     local cmd="$1" # El comando a ejecutar como servicio
-    local log_time=$(date +'%H:%M:%S')
 
     # Lanzar el comando como servicio usando nohup para que se ejecute independientemente del terminal
     nohup bash -c "$cmd" >/dev/null 2>&1 &
@@ -90,7 +79,7 @@ run_service() {
     } 200<>procesos_servicio
 
     # Registrar el evento en la Biblia
-    log_event "$log_time: El proceso $pid '$cmd' ha nacido."
+    log_event " El proceso $pid '$cmd' ha nacido."
 
     # Retornar inmediatamente
     return 0
@@ -100,7 +89,6 @@ run_service() {
 run_periodic() {
     local period=$1 # El periodo en segundos
     local cmd="$2"  # El comando a ejecutar
-    local log_time=$(date +'%H:%M:%S')
 
    # Ejecutar el comando en segundo plano
     nohup bash -c "$cmd" >/dev/null 2>&1 &
@@ -118,7 +106,7 @@ run_periodic() {
     } 200<>procesos_periodicos
 
     # Registrar el evento en la Biblia
-    log_event "$log_time: El proceso '$cmd' ha nacido para ejecutarse periódicamente cada $period segundos."
+    log_event " El proceso '$cmd' ha nacido para ejecutarse periódicamente cada $period segundos."
 }
 
 # --- Función para manejar el comando 'list' ---
@@ -174,7 +162,6 @@ end_system() {
 
 # --- Mostrar ayuda ---
 show_help() {
-    log_event "Mostrando ayuda."
     echo "  Uso: ./Fausto.sh [comando]"
     echo ""
     echo "  ***** Comandos disponibles *****"
@@ -197,21 +184,21 @@ check_demonio
 
 case $COMMAND in
 run)
-    if [ -z "$@" ]; then
-        echo "Error: Debes proporcionar un comando para ejecutar."
+    if [ "$#" -eq 0 ]; then
+        echo "Error: No se pasaron argumentos."
         exit 1
     fi
     run_command "$@"
     ;;
 run-service)
-    if [ -z "$@" ]; then
+    if [ "$#" -eq 0 ]; then
         echo "Error: Debes proporcionar un comando para ejecutar como servicio."
         exit 1
     fi
     run_service "$@"
     ;;
 run-periodic)
-    if [ -z "$2" ] || [ -z "$3" ]; then
+    if [ -z "$2" ] || [ -z "$3" ] || [ "$#" -eq 0 ]; then
         echo "Error: Debes proporcionar un período y un comando."
         exit 1
     fi
@@ -221,7 +208,7 @@ list)
     list_processes
     ;;
 stop)
-    if [ -z "$@" ]; then
+    if [ "$#" -eq 0 ]; then
         echo "Error: Debes especificar un PID."
     else
         stop_process $@
