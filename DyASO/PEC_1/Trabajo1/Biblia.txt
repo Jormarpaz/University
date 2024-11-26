@@ -356,3 +356,13 @@
 21:45:43 Error: No se pudo manejar las listas.
 21:45:45 Error: No se pudo manejar las listas debido a un fallo en flock.
 21:45:45 Error: No se pudo manejar las listas.
+21:45:47 Error: No se pudo manejar las listas debido a un fallo en flock.
+21:45:47 Error: No se pudo manejar las listas.
+21:45:49 Error: No se pudo manejar las listas debido a un fallo en flock.
+21:45:49 Error: No se pudo manejar las listas.
+21:45:50 Error: No se pudo manejar las listas debido a un fallo en flock.
+21:45:50 Error: No se pudo manejar las listas.
+21:45:52 Error: No se pudo manejar las listas debido a un fallo en flock.
+21:45:52 Error: No se pudo manejar las listas.
+21:45:54 Error: No se pudo manejar las listas debido a un fallo en flock.
+21:45:54 Error: No se pudo manejar las listas.
