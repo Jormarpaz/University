@@ -43,14 +43,12 @@ run_command() {
     nohup bash -c "$cmd" >/dev/null 2>&1 &
     local pid=$! # Capturar el PID del proceso bash lanzado
 
-    # Añadir el PID y el comando al archivo procesos (sin condiciones de carrera)
-    #flock SanPedro -c "
-    #    echo \"$pid '$cmd'\" >> procesos
-    #"
-    {
-        flock -x 200
-        echo "$pid '$cmd'" >> procesos
-    } 200<>procesos
+    exec 200>SanPedro.lock
+    flock -x 200
+
+    echo "$pid '$cmd'" >> procesos
+
+    flock -u 200
 
     # Registrar el evento en la Biblia
     log_event " El proceso $pid '$cmd' ha nacido."
@@ -68,15 +66,12 @@ run_service() {
     nohup bash -c "$cmd" >/dev/null 2>&1 &
     local pid=$! # Capturar el PID del proceso bash lanzado
 
-    # Añadir el PID y el comando al archivo procesos_servicio (sin condiciones de carrera)
-    #flock SanPedro -c "
-    #    echo \"$pid '$cmd'\" >> procesos_servicio
-    #"
+    exec 200>SanPedro.lock
+    flock -x 200
 
-    {
-        flock -x 200
-        echo "$pid '$cmd'" >> procesos_servicio
-    } 200<>procesos_servicio
+    echo "$pid '$cmd'" >> procesos_servicio
+
+    flock -u 200
 
     # Registrar el evento en la Biblia
     log_event " El proceso $pid '$cmd' ha nacido."
@@ -96,14 +91,12 @@ run_periodic() {
 
     sleep 1
 
-    # Añadir el contador, periodo, PID y el comando al archivo procesos_periodicos (sin condiciones de carrera)
-    #flock SanPedro -c "
-    #    echo \"0 $period $pid '$cmd'\" >> procesos_periodicos
-    #"
-    {
-        flock -x 200
-        echo "0 $period $pid '$cmd'" >> procesos_periodicos
-    } 200<>procesos_periodicos
+    exec 200>SanPedro.lock
+    flock -x 200
+
+    echo "0 $period $pid '$cmd'" >> procesos_periodicos
+
+    flock -u 200
 
     # Registrar el evento en la Biblia
     log_event " El proceso '$cmd' ha nacido para ejecutarse periódicamente cada $period segundos."
@@ -111,7 +104,10 @@ run_periodic() {
 
 # --- Función para manejar el comando 'list' ---
 list_processes() {
-    flock SanPedro -c "
+
+    exec 200>SanPedro.lock
+    flock -x 200
+
         echo \"***** Procesos *****\"
         cat procesos
 
@@ -120,7 +116,8 @@ list_processes() {
 
         echo \"***** Procesos_Periodicos *****\"
         cat procesos_periodicos
-    "
+    
+    flock -u 200
 }
 
 # --- Función para detener un proceso ---
@@ -128,7 +125,10 @@ stop_process() {
     PID=$1
     process_found=0
 
-    flock SanPedro -c "
+    exec 200>SanPedro.lock
+
+    flock -x 200
+    
         # Comprobar si el PID está en la lista de procesos
         if grep -q \"^$PID\" procesos; then
             process_found=1
@@ -144,14 +144,15 @@ stop_process() {
             process_found=1
         fi
 
-        if [ \$process_found -eq 1 ]; then
+        if [ "$process_found" -eq 1 ]; then
             mkdir -p ./Infierno
             touch ./Infierno/$PID
             echo \"$PID marcado para eliminación\" >&2
         else
             echo \"Error: Proceso $PID no encontrado en ninguna lista\" >&2
         fi
-    "
+    
+    flock -u 200
 }
 
 # --- Función para terminar todos los procesos y activar el Apocalipsis ---
@@ -198,7 +199,7 @@ run-service)
     run_service "$@"
     ;;
 run-periodic)
-    if [ -z "$2" ] || [ -z "$3" ] || [ "$#" -eq 0 ]; then
+    if [ "$#" -lt 2 ]; then
         echo "Error: Debes proporcionar un período y un comando."
         exit 1
     fi
@@ -221,6 +222,6 @@ help)
     show_help
     ;;
 *)
-    echo "Comando '$@' no reconocido. Usa 'help' para más información."
+    echo "Comando '$COMMAND' no reconocido. Usa 'help' para más información."
     ;;
 esac

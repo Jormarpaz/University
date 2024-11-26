@@ -5,85 +5,133 @@ trap 'log_to_bible "Error detectado en Demonio.sh en línea $LINENO"; exit 1' ER
 
 # --- Función para registrar eventos en Biblia.txt ---
 log_to_bible() {
-    echo "$(date '+%H:%M:%S') $1" >>Biblia.txt
-    echo "Registrado en Biblia: $1" # Mensaje de depuración
+    local message="$1"
+    if [ -n "$message" ]; then
+        echo "$(date '+%H:%M:%S') $message" >>Biblia.txt
+        echo "Registrado en Biblia: $message" # Mensaje de depuración
+    fi
 }
 
 # Exportar la función para que esté disponible en subprocesos
 export -f log_to_bible
 
-# --- Manejador de señales ---
-handle_signal() {
-    log_to_bible "Señal recibida: $1. Terminando el demonio."
-    log_to_bible "El demonio ha terminado correctamente tras recibir $1."
-    exit 0
-}
-
 # Definir la función
 handle_lists() {
-    if ! flock -w 5 SanPedro -c "
+
+    exec 200>SanPedro.lock
+    if flock -w 5 200; then
         # Procesar lista de procesos normales
         if [ -f procesos ]; then
-            while read pid comando; do
-                if ! ps -p \"$pid\" >/dev/null 2>&1; then
+            while read -r pid comando; do
+                if ! ps -p "$pid" >/dev/null 2>&1; then
                     log_to_bible \"El proceso $pid '$comando' ha terminado.\"
-                    sed -i \"/^$pid /d\" procesos
+                    sed -i "/^$(echo "$pid" | sed 's/[][\.*^$/]/\\&/g') /d" procesos
                 fi
-            done < procesos
+            done <procesos
         fi
 
         # Procesar lista de procesos de servicio
         if [ -f procesos_servicio ]; then
-            while read pid comando; do
-                if ! ps -p \"$pid\" >/dev/null 2>&1; then
-                    log_to_bible \"El proceso $pid ha terminado.\"
-                    nohup bash -c \"$comando\" >/dev/null 2>&1 &
-                    new_pid=\$!
-                    sed -i \"s/^$pid /$new_pid /\" procesos_servicio
-                    log_to_bible \"El proceso $pid resucita con pid $new_pid.\"
+            while read -r pid comando; do
+                if ! ps -p "$pid" >/dev/null 2>&1; then
+                    if [ -f "./Infierno/$pid" ]; then
+                        log_to_bible "El proceso $pid ha sido eliminado manualmente."
+                        rm -f "./Infierno/$pid"
+                        sed -i "/^$(echo "$pid" | sed 's/[][\.*^$/]/\\&/g') /d" procesos_servicio
+                    else
+                        log_to_bible "El proceso $pid ha terminado."
+                        nohup bash -c "$comando" >/dev/null 2>&1 &
+                        new_pid=$!
+                        escaped_pid=$(printf '%s\n' "$pid" | sed 's/[][\.*^$/]/\\&/g')
+                        sed -i "s/^$escaped_pid /$new_pid /" procesos_servicio
+                        log_to_bible "El proceso $pid resucita con pid $new_pid."
+                    fi
                 fi
-            done < procesos_servicio
+            done <procesos_servicio
         fi
 
         # Procesar lista de procesos periódicos
         if [ -f procesos_periodicos ]; then
-            while read time period pid comando; do
-                if (( time >= period )); then
+            while read -r time period pid comando; do
+                if ! ps -p "$pid" >/dev/null 2>&1; then
+                    log_to_bible "El proceso $pid '$comando' ha terminado."
+                    sed -i "/^$time $period $(echo "$pid" | sed 's/[][\.*^$/]/\\&/g') /d" procesos_periodicos
+                elif ((time >= period)); then
                     kill \"$pid\" 2>/dev/null
                     log_to_bible "El proceso $pid '$comando' ha terminado."
                     nohup bash -c \"$comando\" >/dev/null 2>&1 &
                     new_pid=\$!
-                    sed -i \"s/^$time $period $pid /0 $period $new_pid /\" procesos_periodicos
+                    sed -i "s/^$time $period $pid /0 $period $new_pid /" procesos_periodicos
                     log_to_bible "El proceso $pid se reencarna con pid $new_pid."
                 else
                     sed -i \"s/^$time $period $pid /$((time + 1)) $period $pid /\" procesos_periodicos
                 fi
-            done < procesos_periodicos
+            done <procesos_periodicos
         fi
-    "; then
-        log_to_bible "Error: No se pudo manejar las listas debido a un fallo en flock."
-        return 1
     fi
+    flock -u 200
+
+}
+
+kill_process_tree() {
+    local pid=$1
+    # Matar todos los procesos en el árbol de procesos
+    pkill -TERM -P "$pid" 2>/dev/null
+    kill "$pid" 2>/dev/null
 }
 
 # --- Función para manejar el Apocalipsis ---
 Apocalipsis() {
-    log_to_bible "$(date +'%H:%M:%S') ---------------Apocalipsis---------------"
-    log_to_bible "$(date +'%H:%M:%S') Iniciando la eliminación de procesos y listas."
+
+    log_to_bible "---------------Apocalipsis---------------"
+    log_to_bible "Iniciando la eliminación de procesos y listas."
+
+    exec 200>SanPedro.lock
+    flock -x 200
+
+    while read -r pid _; do
+        kill_process_tree "$pid"
+        log_to_bible "El proceso $pid ha terminado."
+    done < procesos
+
+    # Eliminar los procesos de servicio
+    while read -r pid _; do
+        kill_process_tree "$pid"
+        log_to_bible "El proceso de servicio $pid ha terminado."
+    done < procesos_servicio
+
+    # Eliminar los procesos periódicos
+    while read -r time period pid _; do
+        kill_process_tree "$pid"
+        log_to_bible "El proceso periódico $pid ha terminado."
+    done < procesos_periodicos
 
     # Eliminar todos los procesos en las listas
-    for file in procesos procesos_servicio procesos_periodicos; do
-        if [ -f "$file" ]; then
-            while read pid; do
-                if kill -0 $pid 2>/dev/null; then
-                    kill $pid
-                    log_to_bible "$(date +'%H:%M:%S') El proceso $pid ha sido terminado."
-                fi
-            done < <(awk '{print $1}' "$file")
-            rm -f "$file"
-            log_to_bible "$(date +'%H:%M:%S') Lista $file eliminada."
+    # for file in procesos procesos_servicio procesos_periodicos; do
+    #     if [ -f "$file" ]; then
+    #         while read pid; do
+    #             if kill -0 $pid 2>/dev/null; then
+    #                 kill $pid
+    #                 log_to_bible "$(date +'%H:%M:%S') El proceso $pid ha sido terminado."
+    #             fi
+    #         done < <(awk '{print $1}' "$file")
+    #         rm -f "$file"
+    #     else
+    #         echo "No se encontró el archivo $file"
+    #     fi
+    # done
+
+    flock -u 200
+
+    rm -f procesos procesos_servicio procesos_periodicos
+    # Eliminar cualquier archivo con terminación .lock
+    for lock_file in *.lock; do
+        if [ -f "$lock_file" ]; then
+            rm -f "$lock_file"
         fi
     done
+    rm -rf Infierno
+    rm -f SanPedro Apocalipsis
 
     # Limpiar el directorio Infierno
     if [ -d "./Infierno" ]; then
@@ -95,28 +143,12 @@ Apocalipsis() {
 
     # Eliminar el archivo Apocalipsis
     rm -f "./Apocalipsis"
-    log_to_bible "$(date +'%H:%M:%S') Se acabó el mundo."
+    log_to_bible "Se acabó el mundo."
     exit 0
 }
 
 # Exportar la función Apocalipsis
 export -f Apocalipsis
-
-cleanup_and_exit() {
-    log_to_bible "Señal recibida: SIGTERM. Terminando el demonio."
-    rm -f SanPedro
-    log_to_bible "El archivo SanPedro ha sido eliminado."
-
-    > Biblia.txt
-    log_to_bible "El demonio ha terminado correctamente tras recibir SIGTERM."
-    exit 0
-}
-
-# Registrar manejadores de señales
-trap 'handle_signal SIGHUP' SIGHUP
-trap 'handle_signal SIGINT' SIGINT
-trap 'handle_signal SIGTERM' SIGTERM
-trap 'cleanup_and_exit' SIGTERM
 
 # --- Bucle principal del demonio ---
 while true; do
@@ -126,7 +158,7 @@ while true; do
     # Comprobar si ha llegado el Apocalipsis
     if [ -f "./Apocalipsis" ]; then
         Apocalipsis
-        exit 0  # Finalizar el bucle después del Apocalipsis
+        exit 0 # Finalizar el bucle después del Apocalipsis
     fi
 
     # Manejar listas
