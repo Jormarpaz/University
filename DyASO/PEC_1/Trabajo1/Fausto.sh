@@ -39,6 +39,10 @@ check_demonio() {
 run_command() {
     local cmd="$1" # El comando a ejecutar
 
+    if [ ! -f "SanPedro.lock" ]; then
+        touch SanPedro.lock
+    fi
+
     # Lanzar el comando en segundo plano usando bash
     nohup bash -c "$cmd" >/dev/null 2>&1 &
     local pid=$! # Capturar el PID del proceso bash lanzado
@@ -61,6 +65,10 @@ run_command() {
 # --- Ejecutar un comando como servicio ---
 run_service() {
     local cmd="$1" # El comando a ejecutar como servicio
+
+    if [ ! -f "SanPedro.lock" ]; then
+        touch SanPedro.lock
+    fi
 
     # Lanzar el comando como servicio usando nohup para que se ejecute independientemente del terminal
     nohup bash -c "$cmd" >/dev/null 2>&1 &
@@ -91,12 +99,7 @@ run_periodic() {
 
     sleep 1
 
-    exec 200>SanPedro.lock
-    flock -x 200
-
-    echo "0 $period $pid '$cmd'" >> procesos_periodicos
-
-    flock -u 200
+    flock SanPedro echo "0 $period $pid '$cmd'" >> procesos_periodicos
 
     # Registrar el evento en la Biblia
     log_event " El proceso '$cmd' ha nacido para ejecutarse periódicamente cada $period segundos."
@@ -104,9 +107,6 @@ run_periodic() {
 
 # --- Función para manejar el comando 'list' ---
 list_processes() {
-
-    exec 200>SanPedro.lock
-    flock -x 200
 
         echo \"***** Procesos *****\"
         cat procesos
@@ -117,7 +117,6 @@ list_processes() {
         echo \"***** Procesos_Periodicos *****\"
         cat procesos_periodicos
     
-    flock -u 200
 }
 
 # --- Función para detener un proceso ---
@@ -130,26 +129,26 @@ stop_process() {
     flock -x 200
     
         # Comprobar si el PID está en la lista de procesos
-        if grep -q \"^$PID\" procesos; then
+        if grep -q "^$PID" procesos; then
             process_found=1
         fi
 
         # Comprobar si el PID está en la lista de procesos_servicio
-        if grep -q \"^$PID\" procesos_servicio; then
+        if grep -q "^$PID" procesos_servicio; then
             process_found=1
         fi
 
         # Comprobar si el PID está en la lista de procesos_periodicos
-        if grep -q \"^$PID\" procesos_periodicos; then
+        if grep -q "^$PID" procesos_periodicos; then
             process_found=1
         fi
 
         if [ "$process_found" -eq 1 ]; then
             mkdir -p ./Infierno
             touch ./Infierno/$PID
-            echo \"$PID marcado para eliminación\" >&2
+            echo "$PID marcado para eliminación" >&2
         else
-            echo \"Error: Proceso $PID no encontrado en ninguna lista\" >&2
+            echo "Error: Proceso $PID no encontrado en ninguna lista" >&2
         fi
     
     flock -u 200
