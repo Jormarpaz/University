@@ -1,0 +1,16 @@
+19:49:46 [Fausto] ---------------Génesis---------------
+19:49:46 [Fausto] El demonio ha sido creado
+19:49:46 [Fausto]  El proceso 11131 'sleep 10; echo hola >> test1.txt' ha nacido.
+19:49:46 [Fausto]  El proceso 11144 'yes > /dev/null' ha nacido.
+19:49:47 [Fausto]  El proceso 'echo hola_periodico >> test2.txt' ha nacido para ejecutarse periódicamente cada 5 segundos.
+19:49:48 [Fausto]  El proceso 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido para ejecutarse periódicamente cada 5 segundos.
+19:49:51 [Demonio] El proceso 11144 ha terminado.
+19:49:51 [Demonio] El proceso 11144 resucita con pid 11223.
+19:49:54 [Demonio] El proceso 11223 ha sido eliminado manualmente.
+19:49:54 [Demonio] El proceso periódico 11151 se reencarna con pid 11310.
+19:49:57 [Demonio] El proceso 11131 ha terminado.
+19:50:00 [Demonio] ---------------Apocalipsis---------------
+19:50:00 [Demonio] Iniciando la eliminación de procesos y listas.
+19:50:00 [Demonio] El proceso 11310 ha terminado.
+19:50:00 [Demonio] El proceso 11166 ha terminado.
+19:50:00 [Demonio] Se acabó el mundo.

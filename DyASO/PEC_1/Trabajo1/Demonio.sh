@@ -23,7 +23,7 @@ handle_lists() {
         if [ -f procesos ]; then
             while read -r pid comando; do
                 if ! ps -p "$pid" >/dev/null 2>&1; then
-                    log_to_bible \"El proceso $pid '$comando' ha terminado.\"
+                    log_to_bible "El proceso $pid ha terminado."
                     sed -i "/^$(echo "$pid" | sed 's/[][\.*^$/]/\\&/g') /d" procesos
                 fi
             done <procesos
@@ -49,74 +49,47 @@ handle_lists() {
             done <procesos_servicio
         fi
 
-        # Procesar lista de procesos periódicos
-        #if [ -f procesos_periodicos ]; then
-        #    while read -r time period pid comando; do
-        #        if ! ps -p "$pid" >/dev/null 2>&1; then
-        #            log_to_bible "El proceso $pid '$comando' ha terminado."
-        #            sed -i "/^$time $period $(echo "$pid" | sed 's/[][\.*^$/]/\\&/g') /d" procesos_periodicos
-        #        elif ((time >= period)); then
-        #            kill \"$pid\" 2>/dev/null
-        #            log_to_bible "El proceso $pid '$comando' ha terminado."
-        #            nohup bash -c "$comando" >/dev/null 2>&1 &
-        #            new_pid=\$!
-        #            sed -i "s/^$time $period $pid /0 $period $new_pid /" procesos_periodicos
-        #            log_to_bible "El proceso $pid se reencarna con pid $new_pid."
-        #        else
-        #            sed -i \"s/^$time $period $pid /$((time + 1)) $period $pid /\" procesos_periodicos
-        #        fi
-        #    done <procesos_periodicos
-        #fi
         if [ -f procesos_periodicos ]; then
-            
+
+            # Obtener el timestamp actual
+            current_time=$(date +%s)
+            elapsed=$((current_time - last_update)) # Calcular tiempo transcurrido
+            last_update=$current_time               # Actualizar la última iteración
+
+            # Crear un archivo temporal para procesar las líneas actualizadas
+            temp_file=$(mktemp)
 
             while IFS= read -r line; do
-                
 
-                # Extraer campos: tiempo, período, PID, y comando
+                # Extraer campos: tiempo, período, PID y comando
                 time=$(echo "$line" | awk '{print $1}')
                 period=$(echo "$line" | awk '{print $2}')
                 pid=$(echo "$line" | awk '{print $3}')
-                comando=$(echo "$line" | cut -d' ' -f4- | sed "s/^'//;s/'$//") # Elimina comillas externas
+                comando=$(echo "$line" | cut -d' ' -f4- | sed "s/^'//;s/'$//")
 
-                # Incrementar tiempo de ejecución
-                ((time++))
+                # Incrementar el tiempo acumulado
+                time=$((time + elapsed))
 
-                if ((time >= period)); then
-                    log_to_bible "Tiempo $time ha alcanzado el período $period. Reencarnando proceso $pid."
-                    # Matar el proceso actual
-                    if ps -p "$pid" >/dev/null 2>&1; then
-                        kill "$pid" 2>/dev/null
-                    fi
-
-                    # Lanzar un nuevo proceso
-                    nohup bash -c "$comando" >/dev/null 2>&1 &
-                    new_pid=$!
-                    
-
-                    
-                    sed -i "/^$pid /d" procesos_periodicos
-                    if [ $? -eq 0 ]; then
-                        log_to_bible "Líneas antiguas con PID $pid eliminadas."
-                    else
-                        log_to_bible "Error al eliminar las líneas antiguas con PID $pid."
-                    fi                     
-                    echo "0 $period $new_pid '$comando'" >>procesos_periodicos 
-
-                    log_to_bible "El proceso periódico $pid se reencarna con pid $new_pid."
+                if ps -p "$pid" >/dev/null 2>&1; then
+                    :
                 else
-                    log_to_bible "Actualizando tiempo del proceso $pid a $time."
-                    sed -i "/^$pid /d" procesos_periodicos
-                    if [ $? -eq 0 ]; then
-                        log_to_bible "Líneas antiguas con PID $pid eliminadas."
-                    else
-                        log_to_bible "Error al eliminar las líneas antiguas con PID $pid."
-                    fi                     
-                    echo "$time $period $pid '$comando'" >> procesos_periodicos 
-
-                    
+                    if ((time >= period)); then
+                        # Reencarnar el proceso si ha alcanzado el período
+                        nohup bash -c "$comando" >/dev/null 2>&1 &
+                        new_pid=$!
+                        log_to_bible "El proceso periódico $pid se reencarna con pid $new_pid."
+                        time=0 # Reiniciar el tiempo tras reencarnar
+                        pid=$new_pid
+                    fi
                 fi
+
+                # Guardar la línea actualizada en el archivo temporal
+                echo "$time $period $pid '$comando'" >>"$temp_file"
+                sleep 1
             done <procesos_periodicos
+
+            # Reemplazar el archivo original con el archivo temporal
+            mv "$temp_file" procesos_periodicos
         fi
     fi
     flock -u 200
@@ -135,13 +108,13 @@ Apocalipsis() {
         # Procesar y eliminar lista de procesos normales
         if [ -f procesos ]; then
             while IFS= read -r line; do
-            pid=$(echo "$line" | awk '{print $1}')
-            log_to_bible "El proceso $pid ha terminado."
-            if ps -p "$pid" >/dev/null 2>&1; then
-                kill "$pid" 2>/dev/null
-            fi
-            pattern=$(echo "$pid" | sed 's/[][\.*^$\/]/\\&/g')
-            sed -i "/^$pattern /d" procesos
+                pid=$(echo "$line" | awk '{print $1}')
+                log_to_bible "El proceso $pid ha terminado."
+                if ps -p "$pid" >/dev/null 2>&1; then
+                    kill "$pid" 2>/dev/null
+                fi
+                pattern=$(echo "$pid" | sed 's/[][\.*^$\/]/\\&/g')
+                sed -i "/^$pattern /d" procesos
             done <procesos
             rm -f procesos
         fi
@@ -149,13 +122,13 @@ Apocalipsis() {
         # Procesar y eliminar lista de procesos de servicio
         if [ -f procesos_servicio ]; then
             while IFS= read -r line; do
-            pid=$(echo "$line" | awk '{print $1}')
-            log_to_bible "El proceso $pid ha terminado."
-            if ps -p "$pid" >/dev/null 2>&1; then
-                kill "$pid" 2>/dev/null
-            fi
-            pattern=$(echo "$pid" | sed 's/[][\.*^$\/]/\\&/g')
-            sed -i "/^$pattern /d" procesos_servicio
+                pid=$(echo "$line" | awk '{print $1}')
+                log_to_bible "El proceso $pid ha terminado."
+                if ps -p "$pid" >/dev/null 2>&1; then
+                    kill "$pid" 2>/dev/null
+                fi
+                pattern=$(echo "$pid" | sed 's/[][\.*^$\/]/\\&/g')
+                sed -i "/^$pattern /d" procesos_servicio
             done <procesos_servicio
             rm -f procesos_servicio
         fi
@@ -163,13 +136,13 @@ Apocalipsis() {
         # Procesar y eliminar lista de procesos periódicos
         if [ -f procesos_periodicos ]; then
             while IFS= read -r line; do
-            pid=$(echo "$line" | awk '{print $3}')
-            log_to_bible "El proceso $pid ha terminado."
-            if ps -p "$pid" >/dev/null 2>&1; then
-                kill "$pid" 2>/dev/null
-            fi
-            pattern=$(echo "$pid" | sed 's/[][\.*^$\/]/\\&/g')
-            sed -i "/^.* .* $pattern /d" procesos_periodicos
+                pid=$(echo "$line" | awk '{print $3}')
+                log_to_bible "El proceso $pid ha terminado."
+                if ps -p "$pid" >/dev/null 2>&1; then
+                    kill "$pid" 2>/dev/null
+                fi
+                pattern=$(echo "$pid" | sed 's/[][\.*^$\/]/\\&/g')
+                sed -i "/^.* .* $pattern /d" procesos_periodicos
             done <procesos_periodicos
             rm -f procesos_periodicos
         fi
@@ -198,7 +171,5 @@ while true; do
     # Manejar listas
     if ! handle_lists; then
         log_to_bible "Error: No se pudo manejar las listas."
-        # Opcionalmente, podrías realizar una pausa para evitar reinicios rápidos
-        sleep 1
     fi
 done
