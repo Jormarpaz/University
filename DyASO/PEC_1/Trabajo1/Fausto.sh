@@ -11,7 +11,9 @@ log_event() {
     echo "$(date +'%H:%M:%S') [Fausto] $1" >>$BIBLIA
 }
 
+# --- Verificar si el demonio está en ejecución ---
 check_demonio() {
+    # Comprobar si el demonio está en ejecución
     if pgrep -f "./Demonio.sh" >/dev/null; then
         return 0
     fi
@@ -25,7 +27,7 @@ check_demonio() {
 
     # Vaciar Biblia.txt si ya existe al iniciar Fausto
     if [ -f Biblia.txt ]; then
-        > Biblia.txt
+        >Biblia.txt
     fi
 
     # Iniciar el demonio
@@ -39,19 +41,24 @@ check_demonio() {
 run_command() {
     local cmd="$1" # El comando a ejecutar
 
+    # Crear el archivo SanPedro.lock si no existe
     if [ ! -f "SanPedro.lock" ]; then
         touch SanPedro.lock
     fi
 
     # Lanzar el comando en segundo plano usando bash
     nohup bash -c "$cmd" >/dev/null 2>&1 &
-    local pid=$! # Capturar el PID del proceso bash lanzado
+    # Capturar el PID del proceso bash lanzado
+    local pid=$!
 
+    # Bloquear el archivo SanPedro.lock
     exec 200>SanPedro.lock
     flock -x 200
 
-    echo "$pid '$cmd'" >> procesos
+    # Registrar el PID y el comando en el archivo procesos
+    echo "$pid '$cmd'" >>procesos
 
+    # Liberar el archivo SanPedro.lock
     flock -u 200
 
     # Registrar el evento en la Biblia
@@ -66,19 +73,24 @@ run_command() {
 run_service() {
     local cmd="$1" # El comando a ejecutar como servicio
 
+    # Crear el archivo SanPedro.lock si no existe
     if [ ! -f "SanPedro.lock" ]; then
         touch SanPedro.lock
     fi
 
     # Lanzar el comando como servicio usando nohup para que se ejecute independientemente del terminal
     nohup bash -c "$cmd" >/dev/null 2>&1 &
-    local pid=$! # Capturar el PID del proceso bash lanzado
+    # Capturar el PID del proceso bash lanzado
+    local pid=$!
 
+    # Bloquear el archivo SanPedro.lock
     exec 200>SanPedro.lock
     flock -x 200
 
-    echo "$pid '$cmd'" >> procesos_servicio
+    # Registrar el PID y el comando en el archivo procesos_servicio
+    echo "$pid '$cmd'" >>procesos_servicio
 
+    # Liberar el archivo SanPedro.lock
     flock -u 200
 
     # Registrar el evento en la Biblia
@@ -93,30 +105,31 @@ run_periodic() {
     local period=$1 # El periodo en segundos
     local cmd="$2"  # El comando a ejecutar
 
-   # Ejecutar el comando en segundo plano
+    # Ejecutar el comando en segundo plano
     nohup bash -c "$cmd" >/dev/null 2>&1 &
-    local pid=$! # Capturar el PID del proceso bash lanzado
+    # Capturar el PID del proceso bash lanzado
+    local pid=$!
 
     sleep 1
 
-    flock SanPedro echo "0 $period $pid '$cmd'" >> procesos_periodicos
+    flock SanPedro echo "0 $period $pid '$cmd'" >>procesos_periodicos
 
     # Registrar el evento en la Biblia
-    log_event " El proceso '$cmd' ha nacido para ejecutarse periódicamente cada $period segundos."
+    log_event " El proceso '$pid' '$cmd' ha nacido para ejecutarse periódicamente cada $period segundos."
 }
 
 # --- Función para manejar el comando 'list' ---
 list_processes() {
 
-        echo \"***** Procesos *****\"
-        cat procesos
+    # Mostrar los procesos en cada lista
+    echo \"***** Procesos *****\"
+    cat procesos
 
-        echo \"***** Procesos_Servicio *****\"
-        cat procesos_servicio
+    echo \"***** Procesos_Servicio *****\"
+    cat procesos_servicio
 
-        echo \"***** Procesos_Periodicos *****\"
-        cat procesos_periodicos
-    
+    echo \"***** Procesos_Periodicos *****\"
+    cat procesos_periodicos
 }
 
 # --- Función para detener un proceso ---
@@ -124,33 +137,36 @@ stop_process() {
     PID=$1
     process_found=0
 
+    # Bloquear el archivo SanPedro.lock
     exec 200>SanPedro.lock
 
     flock -x 200
-    
-        # Comprobar si el PID está en la lista de procesos
-        if grep -q "^$PID" procesos; then
-            process_found=1
-        fi
 
-        # Comprobar si el PID está en la lista de procesos_servicio
-        if grep -q "^$PID" procesos_servicio; then
-            process_found=1
-        fi
+    # Comprobar si el PID está en la lista de procesos
+    if grep -q "^$PID" procesos; then
+        process_found=1
+    fi
 
-        # Comprobar si el PID está en la lista de procesos_periodicos
-        if grep -q "^$PID" procesos_periodicos; then
-            process_found=1
-        fi
+    # Comprobar si el PID está en la lista de procesos_servicio
+    if grep -q "^$PID" procesos_servicio; then
+        process_found=1
+    fi
 
-        if [ "$process_found" -eq 1 ]; then
-            mkdir -p ./Infierno
-            touch ./Infierno/$PID
-            echo "$PID marcado para eliminación" >&2
-        else
-            echo "Error: Proceso $PID no encontrado en ninguna lista" >&2
-        fi
-    
+    # Comprobar si el PID está en la lista de procesos_periodicos
+    if grep -q "^$PID" procesos_periodicos; then
+        process_found=1
+    fi
+
+    # Marcar el PID para eliminación si se encontró en alguna lista
+    if [ "$process_found" -eq 1 ]; then
+        mkdir -p ./Infierno
+        touch ./Infierno/$PID
+        echo "$PID marcado para eliminación" >&2
+    else
+        echo "Error: Proceso $PID no encontrado en ninguna lista" >&2
+    fi
+
+    # Liberar el archivo SanPedro.lock
     flock -u 200
 }
 
@@ -182,6 +198,7 @@ shift
 # Verificar el demonio antes de procesar cualquier comando
 check_demonio
 
+# Procesar el comando
 case $COMMAND in
 run)
     if [ "$#" -eq 0 ]; then
