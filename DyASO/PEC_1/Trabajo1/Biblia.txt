@@ -1,16 +1,16 @@
-18:53:47 [Fausto] ---------------Génesis---------------
-18:53:47 [Fausto] El demonio ha sido creado
-18:53:47 [Fausto]  El proceso 1402 'sleep 10; echo hola >> test1.txt' ha nacido.
-18:53:47 [Fausto]  El proceso 1415 'yes > /dev/null' ha nacido.
-18:53:48 [Fausto]  El proceso '1422' 'echo hola_periodico >> test2.txt' ha nacido para ejecutarse periódicamente cada 5 segundos.
-18:53:49 [Fausto]  El proceso '1437' 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido para ejecutarse periódicamente cada 5 segundos.
-18:53:52 [Demonio] El proceso 1415 ha terminado.
-18:53:52 [Demonio] El proceso 1415 resucita con pid 1492.
-18:53:55 [Demonio] El proceso 1492 ha sido eliminado manualmente.
-18:53:55 [Demonio] El proceso periódico 1422 se reencarna con pid 1585.
-18:53:58 [Demonio] El proceso 1402 ha terminado.
-18:54:01 [Demonio] ---------------Apocalipsis---------------
-18:54:01 [Demonio] Iniciando la eliminación de procesos y listas.
-18:54:01 [Demonio] El proceso 1585 ha terminado.
-18:54:01 [Demonio] El proceso 1437 ha terminado.
-18:54:01 [Demonio] Se acabó el mundo.
+21:05:57 [Fausto] ---------------Génesis---------------
+21:05:57 [Fausto] El demonio ha sido creado
+21:05:57 [Fausto]  El proceso 802 'sleep 10; echo hola >> test1.txt' ha nacido.
+21:05:57 [Fausto]  El proceso 815 'yes > /dev/null' ha nacido.
+21:05:58 [Fausto]  El proceso 822 'echo hola_periodico >> test2.txt' ha nacido para ejecutarse periódicamente cada 5 segundos.
+21:05:59 [Fausto]  El proceso 837 'echo hola_periodico_lento >> test3.txt; sleep 20' ha nacido para ejecutarse periódicamente cada 5 segundos.
+21:06:02 [Demonio] El proceso 815 ha terminado.
+21:06:02 [Demonio] El proceso 815 resucita con pid 894.
+21:06:05 [Demonio] El proceso 894 ha sido eliminado manualmente.
+21:06:05 [Demonio] El proceso periódico 822 se reencarna con pid 981.
+21:06:08 [Demonio] El proceso 802 ha terminado.
+21:06:11 [Demonio] ---------------Apocalipsis---------------
+21:06:11 [Demonio] Iniciando la eliminación de procesos y listas.
+21:06:11 [Demonio] El proceso 981 ha terminado.
+21:06:11 [Demonio] El proceso 837 ha terminado.
+21:06:11 [Demonio] Se acabó el mundo.
