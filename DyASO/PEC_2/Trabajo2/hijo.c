@@ -8,6 +8,7 @@ void manejar_senal(int sig) {
         int accion = rand() % 2; // 0: atacar, 1: defenderse
         if (accion == 0) {
             printf("[HIJO %d] Atacando.\n", getpid());
+            sleep(1);
         } else {
             printf("[HIJO %d] Defendiéndose.\n", getpid());
             sleep(1);

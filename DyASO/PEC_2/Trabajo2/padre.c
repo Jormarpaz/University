@@ -122,7 +122,7 @@ void ejecutar_padre()
 
         printf("[PADRE] Hijos vivos tras la ronda %d: %d\n", ronda, hijos_vivos);
         ronda++;
-        sleep(1); // Esperar un momento antes de la siguiente ronda
+        sleep(2); // Esperar un momento antes de la siguiente ronda
     }
 
     terminar_hijos();
