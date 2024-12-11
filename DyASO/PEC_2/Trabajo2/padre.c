@@ -18,7 +18,7 @@ struct mensaje {
 };
 
 // IPC variables
-int shm_id, msg_id;
+int shm_id, msg_id, sem_id;
 int *lista;
 int barrera[2]; // Tubería sin nombre para la sincronización
 char fifo_path[256]; // Ruta del FIFO
@@ -48,6 +48,13 @@ void inicializar_IPC() {
         exit(1);
     }
 
+    // Crear semáforo
+    sem_id = semget(ipc_key, 1, IPC_CREAT | 0666);
+    if (sem_id == -1) {
+        perror("[PADRE] Error al crear semáforo");
+        exit(1);
+    }
+
     // Crear la tubería sin nombre
     if (pipe(barrera) == -1) {
         perror("[PADRE] Error al crear la tubería");
@@ -59,6 +66,7 @@ void liberar_IPC() {
     shmdt(lista);
     shmctl(shm_id, IPC_RMID, NULL);
     msgctl(msg_id, IPC_RMID, NULL);
+    semctl(sem_id, 0, IPC_RMID);
     close(barrera[0]);
     close(barrera[1]);
 }
@@ -158,7 +166,7 @@ void ejecutar_padre() {
     }
 
     liberar_IPC();
-    system("ipcs");
+    system("ipcs -q -s");
     fflush(stdout);
 }
 

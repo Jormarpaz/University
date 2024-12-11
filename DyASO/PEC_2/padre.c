@@ -9,7 +9,6 @@
 #include <string.h>
 #include <sys/wait.h>
 
-#define NUM_HIJOS 10
 #define SHM_KEY 9012
 #define MSG_KEY 5678
 
@@ -23,10 +22,19 @@ int shm_id, msg_id;
 int *lista;
 int barrera[2]; // Tubería sin nombre para la sincronización
 char fifo_path[256]; // Ruta del FIFO
+key_t ipc_key;
+int num_hijos;
 
 void inicializar_IPC() {
+    // Crear clave IPC usando ftok()
+    ipc_key = ftok(".", 'A');
+    if (ipc_key == -1) {
+        perror("[PADRE] Error al generar la clave IPC");
+        exit(1);
+    }
+
     // Crear memoria compartida
-    shm_id = shmget(SHM_KEY, sizeof(int) * NUM_HIJOS, IPC_CREAT | 0666);
+    shm_id = shmget(ipc_key, sizeof(int) * num_hijos, IPC_CREAT | 0666);
     if (shm_id == -1) {
         perror("[PADRE] Error al crear memoria compartida");
         exit(1);
@@ -34,7 +42,7 @@ void inicializar_IPC() {
     lista = shmat(shm_id, NULL, 0);
 
     // Crear cola de mensajes
-    msg_id = msgget(MSG_KEY, IPC_CREAT | 0666);
+    msg_id = msgget(ipc_key, IPC_CREAT | 0666);
     if (msg_id == -1) {
         perror("[PADRE] Error al crear cola de mensajes");
         exit(1);
@@ -64,7 +72,7 @@ void sincronizar_hijos(int hijos_vivos) {
 
 void recibir_resultados(int *hijos_vivos) {
     struct mensaje msg;
-    for (int i = 0; i < NUM_HIJOS; i++) {
+    for (int i = 0; i < num_hijos; i++) {
         if (lista[i] != 0) {
             if (msgrcv(msg_id, &msg, sizeof(msg.estado), lista[i], 0) != -1) {
                 if (strcmp(msg.estado, "KO") == 0) {
@@ -80,16 +88,18 @@ void recibir_resultados(int *hijos_vivos) {
 }
 
 void ejecutar_padre() {
-    int hijos_vivos = NUM_HIJOS;
+    int hijos_vivos = num_hijos;
 
     // Lanzar hijos
-    for (int i = 0; i < NUM_HIJOS; i++) {
+    for (int i = 0; i < num_hijos; i++) {
         pid_t pid = fork();
         if (pid == 0) {
             // Código del hijo
             char barrera_str[10];
+            char ipc_key_str[20];
             sprintf(barrera_str, "%d", barrera[0]); // Enviar descriptor de lectura
-            execl("./HIJO", "./HIJO", barrera_str, NULL);
+            sprintf(ipc_key_str, "%d", ipc_key); // Enviar clave IPC
+            execl("./HIJO", "./HIJO", barrera_str, ipc_key_str, NULL);
             perror("[HIJO] Error al ejecutar execl.");
             exit(1);
         } else if (pid > 0) {
@@ -104,9 +114,8 @@ void ejecutar_padre() {
     while (hijos_vivos > 1) {
         sincronizar_hijos(hijos_vivos);
         sleep(1); // Pausa para evitar condiciones de carrera
-
         printf("[PADRE] Enviando SIGUSR1 a los hijos...\n");
-        for (int i = 0; i < NUM_HIJOS; i++) {
+        for (int i = 0; i < num_hijos; i++) {
             if (lista[i] != 0) {
                 kill(lista[i], SIGUSR1);
             }
@@ -118,7 +127,7 @@ void ejecutar_padre() {
 
     // Determinar ganador
     if (hijos_vivos == 1) {
-        for (int i = 0; i < NUM_HIJOS; i++) {
+        for (int i = 0; i < num_hijos; i++) {
             if (lista[i] != 0) {
                 printf("[PADRE] El hijo %d (PID %d) ha ganado.\n", i + 1, lista[i]);
                 // Escribir en el FIFO el resultado
@@ -149,15 +158,19 @@ void ejecutar_padre() {
     }
 
     liberar_IPC();
+    system("ipcs");
+    fflush(stdout);
 }
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        fprintf(stderr, "Uso: %s <ruta_FIFO>\n", argv[0]);
+    if (argc < 3) {
+        fprintf(stderr, "Uso: %s <ruta_FIFO> <num_hijos>\n", argv[0]);
         exit(1);
     }
 
     strncpy(fifo_path, argv[1], sizeof(fifo_path));
+    num_hijos = atoi(argv[2]);
+
     inicializar_IPC();
     ejecutar_padre();
     return 0;
