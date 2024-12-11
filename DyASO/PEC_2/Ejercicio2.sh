@@ -1,11 +1,13 @@
 #!/bin/bash
+
+# Navegar al directorio de trabajo
 cd Trabajo2/
 
-# Compilar los archivos padre.c e hijo.c
-gcc -o PADRE padre.c -lrt
-gcc -o HIJO hijo.c -lrt
+# 1. Compilar los archivos fuente
+gcc -o PADRE padre.c -lrt -pthread
+gcc -o HIJO hijo.c -lrt -pthread
 
-# Crear FIFO resultado
+# 2. Crear FIFO 'resultado'
 FIFO="resultado"
 if [ ! -e "$FIFO" ]; then
     mkfifo "$FIFO"
@@ -14,9 +16,18 @@ else
     echo "[SCRIPT] FIFO ya existe."
 fi
 
-# Ejecutar el proceso PADRE
-./PADRE
+# 3. Lanzar un proceso `cat` en segundo plano para leer el resultado del FIFO
+cat $FIFO &
+CAT_PID=$!
+echo "[SCRIPT] Proceso cat lanzado con PID $CAT_PID."
 
-# Limpieza al final
+# 4. Ejecutar el proceso PADRE con el argumento FIFO
+echo "[SCRIPT] Ejecutando PADRE con el argumento $FIFO..."
+./PADRE "$FIFO"
+
+# 5. Esperar a que el proceso `cat` termine
+wait $CAT_PID
+
+# 6. Eliminar los archivos temporales y ejecutables
 rm -f PADRE HIJO $FIFO
 echo "[SCRIPT] Limpieza completada."
