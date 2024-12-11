@@ -166,7 +166,6 @@ void ejecutar_padre() {
     }
 
     liberar_IPC();
-    system("ipcs -q -s");
     fflush(stdout);
 }
 
@@ -181,5 +180,8 @@ int main(int argc, char *argv[]) {
 
     inicializar_IPC();
     ejecutar_padre();
+
+    system("ipcs -q -s -m");
+    
     return 0;
 }
