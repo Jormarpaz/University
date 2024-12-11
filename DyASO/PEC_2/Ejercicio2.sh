@@ -4,8 +4,8 @@
 cd Trabajo2/
 
 # 1. Compilar los archivos fuente
-gcc -o PADRE padre.c -lrt
-gcc -o HIJO hijo.c -lrt
+gcc -o PADRE padre.c -lrt -pthread
+gcc -o HIJO hijo.c -lrt -pthread
 
 # 2. Crear FIFO 'resultado' (para depuración con cat, opcional)
 FIFO="resultado"
@@ -23,7 +23,7 @@ echo "[SCRIPT] Proceso cat lanzado con PID $CAT_PID."
 
 # 4. Ejecutar el proceso PADRE
 echo "[SCRIPT] Ejecutando PADRE..."
-./PADRE
+./PADRE "$FIFO"
 
 # 5. Esperar a que el proceso `cat` termine
 wait $CAT_PID

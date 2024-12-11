@@ -1,135 +1,164 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <sys/wait.h>
 #include <unistd.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/shm.h>
+#include <sys/sem.h>
+#include <string.h>
+#include <sys/wait.h>
 
 #define NUM_HIJOS 10
+#define SHM_KEY 9012
+#define MSG_KEY 5678
 
-int lista[NUM_HIJOS];
-int estado_hijos[NUM_HIJOS]; // 0: vivo, 1: KO
+struct mensaje {
+    long mtype;
+    char estado[3]; // "OK" o "KO"
+};
 
-void terminar_hijos()
-{
-    for (int i = 0; i < NUM_HIJOS; i++)
-    {
-        if (lista[i] != 0)
-        {
-            printf("[PADRE] Intentando terminar hijo con PID %d...\n", lista[i]);
-            if (kill(lista[i], 0) == 0)
-            { // Comprobar si el proceso sigue vivo
-                if (kill(lista[i], SIGTERM) == 0)
-                {
-                    printf("[PADRE] Señal SIGTERM enviada a hijo con PID %d.\n", lista[i]);
-                }
-                else
-                {
-                    perror("[PADRE] Error al enviar SIGTERM");
+// IPC variables
+int shm_id, msg_id;
+int *lista;
+int barrera[2]; // Tubería sin nombre para la sincronización
+char fifo_path[256]; // Ruta del FIFO
+
+void inicializar_IPC() {
+    // Crear memoria compartida
+    shm_id = shmget(SHM_KEY, sizeof(int) * NUM_HIJOS, IPC_CREAT | 0666);
+    if (shm_id == -1) {
+        perror("[PADRE] Error al crear memoria compartida");
+        exit(1);
+    }
+    lista = shmat(shm_id, NULL, 0);
+
+    // Crear cola de mensajes
+    msg_id = msgget(MSG_KEY, IPC_CREAT | 0666);
+    if (msg_id == -1) {
+        perror("[PADRE] Error al crear cola de mensajes");
+        exit(1);
+    }
+
+    // Crear la tubería sin nombre
+    if (pipe(barrera) == -1) {
+        perror("[PADRE] Error al crear la tubería");
+        exit(1);
+    }
+}
+
+void liberar_IPC() {
+    shmdt(lista);
+    shmctl(shm_id, IPC_RMID, NULL);
+    msgctl(msg_id, IPC_RMID, NULL);
+    close(barrera[0]);
+    close(barrera[1]);
+}
+
+void sincronizar_hijos(int hijos_vivos) {
+    printf("[PADRE] Sincronizando hijos vivos...\n");
+    for (int i = 0; i < hijos_vivos; i++) {
+        write(barrera[1], "1", 1); // Enviar un byte por cada hijo vivo
+    }
+}
+
+void recibir_resultados(int *hijos_vivos) {
+    struct mensaje msg;
+    for (int i = 0; i < NUM_HIJOS; i++) {
+        if (lista[i] != 0) {
+            if (msgrcv(msg_id, &msg, sizeof(msg.estado), lista[i], 0) != -1) {
+                if (strcmp(msg.estado, "KO") == 0) {
+                    printf("[PADRE] Hijo %d (PID %d) está KO.\n", i + 1, lista[i]);
+                    kill(lista[i], SIGTERM);
+                    waitpid(lista[i], NULL, 0);
+                    lista[i] = 0;
+                    (*hijos_vivos)--;
                 }
             }
-            else
-            {
-                printf("[PADRE] El proceso con PID %d ya no existe.\n", lista[i]);
-            }
-            lista[i] = 0; // Limpiar la lista de PIDs
         }
     }
 }
 
-void ejecutar_padre()
-{
-    for (int i = 0; i < NUM_HIJOS; i++)
-    {
-        lista[i] = 0;
-        estado_hijos[i] = 0; // Todos los hijos están vivos inicialmente
-    }
+void ejecutar_padre() {
+    int hijos_vivos = NUM_HIJOS;
 
-    for (int i = 0; i < NUM_HIJOS; i++)
-    {
+    // Lanzar hijos
+    for (int i = 0; i < NUM_HIJOS; i++) {
         pid_t pid = fork();
-        if (pid == 0)
-        {
+        if (pid == 0) {
             // Código del hijo
-            execl("./HIJO", "./HIJO", (char *)NULL);
+            char barrera_str[10];
+            sprintf(barrera_str, "%d", barrera[0]); // Enviar descriptor de lectura
+            execl("./HIJO", "./HIJO", barrera_str, NULL);
             perror("[HIJO] Error al ejecutar execl.");
             exit(1);
-        }
-        else if (pid > 0)
-        {
+        } else if (pid > 0) {
             lista[i] = pid;
             printf("[PADRE] Hijo %d lanzado.\n", pid);
-        }
-        else
-        {
+        } else {
             perror("[PADRE] Error al crear hijo");
         }
     }
 
-    int hijos_vivos = NUM_HIJOS;
-    int ronda = 1;
+    // Rondas de combate
+    while (hijos_vivos > 1) {
+        sincronizar_hijos(hijos_vivos);
+        sleep(1); // Pausa para evitar condiciones de carrera
 
-    while (hijos_vivos >= 2)
-    {
-        printf("[PADRE] Iniciando ronda %d...\n", ronda);
-        for (int i = 0; i < NUM_HIJOS; i++)
-        {
-            if (lista[i] != 0 && estado_hijos[i] == 0)
-            {
-                printf("[PADRE] Enviando sincronización a hijo %d (PID %d)...\n", i + 1, lista[i]);
-                if (kill(lista[i], SIGUSR1) == -1)
-                {
-                    perror("[PADRE] Error al enviar señal de sincronización");
-                }
+        printf("[PADRE] Enviando SIGUSR1 a los hijos...\n");
+        for (int i = 0; i < NUM_HIJOS; i++) {
+            if (lista[i] != 0) {
+                kill(lista[i], SIGUSR1);
             }
         }
 
-        for (int i = 0; i < NUM_HIJOS; i++)
-        {
-            if (lista[i] != 0 && estado_hijos[i] == 0)
-            {
-                int status;
-                pid_t pid = waitpid(lista[i], &status, WNOHANG);
-                if (pid == 0)
-                {
-                    // El hijo sigue vivo, no hacemos nada
-                    continue;
-                }
-                else if (pid == -1)
-                {
-                    perror("[PADRE] Error al esperar al hijo");
-                }
-                else
-                {
-                    if (WIFEXITED(status))
-                    {
-                        int resultado = WEXITSTATUS(status);
-                        if (resultado == 1)
-                        {
-                            estado_hijos[i] = 1;
-                            printf("[PADRE] Hijo %d (PID %d) está KO.\n", i + 1, lista[i]);
-                            hijos_vivos--;
-                        }
-                        else
-                        {
-                            printf("[PADRE] Hijo %d (PID %d) ha terminado tras atacar.\n", i + 1, lista[i]);
-                            lista[i] = 0;
-                            hijos_vivos--;
-                        }
-                    }
-                }
-            }
-        }
-
-        printf("[PADRE] Hijos vivos tras la ronda %d: %d\n", ronda, hijos_vivos);
-        ronda++;
-        sleep(2); // Esperar un momento antes de la siguiente ronda
+        recibir_resultados(&hijos_vivos);
+        printf("[PADRE] Hijos vivos tras la ronda: %d\n", hijos_vivos);
     }
 
-    terminar_hijos();
+    // Determinar ganador
+    if (hijos_vivos == 1) {
+        for (int i = 0; i < NUM_HIJOS; i++) {
+            if (lista[i] != 0) {
+                printf("[PADRE] El hijo %d (PID %d) ha ganado.\n", i + 1, lista[i]);
+                // Escribir en el FIFO el resultado
+                FILE *fifo = fopen(fifo_path, "w");
+                if (fifo != NULL) {
+                    fprintf(fifo, "El hijo %d (PID %d) ha ganado.\n", i + 1, lista[i]);
+                    fclose(fifo);
+                } else {
+                    perror("[PADRE] Error al escribir en el FIFO");
+                }
+
+                // Finalizar al ganador
+                kill(lista[i], SIGTERM);
+                waitpid(lista[i], NULL, 0);
+                lista[i] = 0;
+                break;
+            }
+        }
+    } else {
+        printf("[PADRE] Empate. No quedan hijos vivos.\n");
+        FILE *fifo = fopen(fifo_path, "w");
+        if (fifo != NULL) {
+            fprintf(fifo, "Empate. No quedan hijos vivos.\n");
+            fclose(fifo);
+        } else {
+            perror("[PADRE] Error al escribir en el FIFO");
+        }
+    }
+
+    liberar_IPC();
 }
 
-int main()
-{
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        fprintf(stderr, "Uso: %s <ruta_FIFO>\n", argv[0]);
+        exit(1);
+    }
+
+    strncpy(fifo_path, argv[1], sizeof(fifo_path));
+    inicializar_IPC();
     ejecutar_padre();
     return 0;
 }

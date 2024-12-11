@@ -22,6 +22,7 @@ struct mensaje {
 int shm_id, msg_id;
 int *lista;
 int barrera[2]; // Tubería sin nombre para la sincronización
+char fifo_path[256]; // Ruta del FIFO
 
 void inicializar_IPC() {
     // Crear memoria compartida
@@ -120,6 +121,16 @@ void ejecutar_padre() {
         for (int i = 0; i < NUM_HIJOS; i++) {
             if (lista[i] != 0) {
                 printf("[PADRE] El hijo %d (PID %d) ha ganado.\n", i + 1, lista[i]);
+                // Escribir en el FIFO el resultado
+                FILE *fifo = fopen(fifo_path, "w");
+                if (fifo != NULL) {
+                    fprintf(fifo, "El hijo %d (PID %d) ha ganado.\n", i + 1, lista[i]);
+                    fclose(fifo);
+                } else {
+                    perror("[PADRE] Error al escribir en el FIFO");
+                }
+
+                // Finalizar al ganador
                 kill(lista[i], SIGTERM);
                 waitpid(lista[i], NULL, 0);
                 lista[i] = 0;
@@ -128,12 +139,25 @@ void ejecutar_padre() {
         }
     } else {
         printf("[PADRE] Empate. No quedan hijos vivos.\n");
+        FILE *fifo = fopen(fifo_path, "w");
+        if (fifo != NULL) {
+            fprintf(fifo, "Empate. No quedan hijos vivos.\n");
+            fclose(fifo);
+        } else {
+            perror("[PADRE] Error al escribir en el FIFO");
+        }
     }
 
     liberar_IPC();
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        fprintf(stderr, "Uso: %s <ruta_FIFO>\n", argv[0]);
+        exit(1);
+    }
+
+    strncpy(fifo_path, argv[1], sizeof(fifo_path));
     inicializar_IPC();
     ejecutar_padre();
     return 0;
