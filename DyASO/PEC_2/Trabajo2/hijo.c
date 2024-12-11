@@ -6,8 +6,6 @@
 #include <sys/msg.h>
 #include <string.h>
 
-#define MSG_KEY 5678
-
 struct mensaje {
     long mtype;
     char estado[3];
@@ -43,13 +41,15 @@ void manejar_signal(int sig) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        fprintf(stderr, "[HIJO] Error: No se pasó el descriptor de la barrera.\n");
+    if (argc < 3) {
+        fprintf(stderr, "[HIJO] Error: No se pasaron los argumentos necesarios.\n");
         exit(1);
     }
 
     int barrera_fd = atoi(argv[1]);
-    msg_id = msgget(MSG_KEY, 0);
+    key_t ipc_key = (key_t)strtoul(argv[2], NULL, 10);
+
+    msg_id = msgget(ipc_key, 0);
     if (msg_id == -1) {
         perror("[HIJO] Error al conectarse a la cola de mensajes");
         exit(1);
