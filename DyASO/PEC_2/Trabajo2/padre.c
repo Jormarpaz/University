@@ -62,7 +62,29 @@ void inicializar_IPC() {
     }
 }
 
+void limpiar_cola_mensajes() {
+    struct mensaje msg;
+    while (msgrcv(msg_id, &msg, sizeof(msg.estado), 0, IPC_NOWAIT) != -1) {
+        printf("[PADRE] Eliminando mensaje residual del hijo con PID %ld.\n", msg.mtype);
+    }
+    if (msgctl(msg_id, IPC_RMID, NULL) == -1) {
+        perror("[PADRE] Error al eliminar la cola de mensajes");
+    } else {
+        printf("[PADRE] Cola de mensajes eliminada.\n");
+    }
+}
+
+void esperar_hijos() {
+    int status;
+    pid_t pid;
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+        printf("[PADRE] Proceso hijo con PID %d finalizó.\n", pid);
+    }
+}
+
 void liberar_IPC() {
+    esperar_hijos();
+    limpiar_cola_mensajes();
     shmdt(lista);
     shmctl(shm_id, IPC_RMID, NULL);
     msgctl(msg_id, IPC_RMID, NULL);
