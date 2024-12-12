@@ -159,7 +159,6 @@ void ejecutar_padre() {
     if (hijos_vivos == 1) {
         for (int i = 0; i < num_hijos; i++) {
             if (lista[i] != 0) {
-                printf("[PADRE] El hijo %d (PID %d) ha ganado.\n", i + 1, lista[i]);
                 // Escribir en el FIFO el resultado
                 FILE *fifo = fopen(fifo_path, "w");
                 if (fifo != NULL) {
@@ -177,7 +176,6 @@ void ejecutar_padre() {
             }
         }
     } else {
-        printf("[PADRE] Empate. No quedan hijos vivos.\n");
         FILE *fifo = fopen(fifo_path, "w");
         if (fifo != NULL) {
             fprintf(fifo, "Empate. No quedan hijos vivos.\n");
@@ -197,12 +195,17 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    // Copia la ruta del FIFO del argumento argv[1] a la variable fifo_path
     strncpy(fifo_path, argv[1], sizeof(fifo_path));
     num_hijos = atoi(argv[2]);
 
+    // Inicializa los mecanismos de comunicación inter-procesos (IPC)
     inicializar_IPC();
+
+    // Ejecuta la función principal del proceso padre
     ejecutar_padre();
 
+    // Muestra el estado actual de los recursos IPC (colas de mensajes, semáforos y memoria compartida)
     system("ipcs -q -s -m");
     
     return 0;

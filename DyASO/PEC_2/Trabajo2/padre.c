@@ -18,12 +18,14 @@ struct mensaje {
 };
 
 // IPC variables
-int shm_id, msg_id, sem_id;
-int *lista;
+int shm_id; // Identificador de la memoria compartida
+int msg_id; // Identificador de la cola de mensajes
+int sem_id; // Identificador del semáforo
+int *lista; // Puntero a la lista de PIDs de los hijos
 int barrera[2]; // Tubería sin nombre para la sincronización
 char fifo_path[256]; // Ruta del FIFO
-key_t ipc_key;
-int num_hijos;
+key_t ipc_key; // Clave IPC generada con ftok()
+int num_hijos; // Número de hijos a crear
 
 void inicializar_IPC() {
     // Crear clave IPC usando ftok()
@@ -163,7 +165,7 @@ void ejecutar_padre() {
                 // Escribir en el FIFO el resultado
                 FILE *fifo = fopen(fifo_path, "w");
                 if (fifo != NULL) {
-                    fprintf(fifo, "El hijo %d (PID %d) ha ganado.\n", i + 1, lista[i]);
+                    fprintf(fifo, "[FIFO] El hijo %d (PID %d) ha ganado.\n", i + 1, lista[i]);
                     fclose(fifo);
                 } else {
                     perror("[PADRE] Error al escribir en el FIFO");
@@ -180,7 +182,7 @@ void ejecutar_padre() {
         printf("[PADRE] Empate. No quedan hijos vivos.\n");
         FILE *fifo = fopen(fifo_path, "w");
         if (fifo != NULL) {
-            fprintf(fifo, "Empate. No quedan hijos vivos.\n");
+            fprintf(fifo, "[FIFO] Empate. No quedan hijos vivos.\n");
             fclose(fifo);
         } else {
             perror("[PADRE] Error al escribir en el FIFO");
@@ -197,12 +199,17 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    // Copia la ruta del FIFO del argumento argv[1] a la variable fifo_path
     strncpy(fifo_path, argv[1], sizeof(fifo_path));
     num_hijos = atoi(argv[2]);
 
+    // Inicializa los mecanismos de comunicación inter-procesos (IPC)
     inicializar_IPC();
+
+    // Ejecuta la función principal del proceso padre
     ejecutar_padre();
 
+    // Muestra el estado actual de los recursos IPC (colas de mensajes, semáforos y memoria compartida)
     system("ipcs -q -s -m");
     
     return 0;
