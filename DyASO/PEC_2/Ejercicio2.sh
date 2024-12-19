@@ -1,29 +1,33 @@
 #!/bin/bash
-#este archivo es un scrip que:
-#1 compila los fuentes padre.c e hijo.c con gcc
-#2 crea el fihero fifo "resultado"
-#lanza un cat en segundo plano para leer "resultado"  
-#lanza el proceso padre
-#al acabar limpia todos los ficheros que ha creado
 
+# Navegar al directorio de trabajo
+cd Trabajo2/
 
-# Compilar padre.c e hijo.c
-gcc -o PADRE Trabajo2/padre.c -lrt
-gcc -o HIJO Trabajo2/hijo.c -lrt
+# 1. Compilar los archivos fuente
+gcc -o PADRE padre.c -lrt -pthread
+gcc -o HIJO hijo.c -lrt -pthread
 
-# 2. Crear FIFO resultado
+# 2. Crear FIFO 'resultado'
 FIFO="resultado"
-[ -e $FIFO ] || mkfifo $FIFO
+if [ ! -e "$FIFO" ]; then
+    mkfifo "$FIFO"
+    echo "[SCRIPT] FIFO 'resultado' creado."
+else
+    echo "[SCRIPT] FIFO ya existe."
+fi
 
-# 3. Lanzar cat en segundo plano
-cat $FIFO &
+# 3. Lanzar un proceso `cat` en segundo plano para leer el resultado del FIFO
+cat $FIFO &  # El proceso cat se ejecutará en segundo plano
 CAT_PID=$!
+echo "[SCRIPT] Proceso cat lanzado con PID $CAT_PID."
 
-# 4. Ejecutar el proceso PADRE
-./PADRE 10
+# 4. Ejecutar el proceso PADRE con el argumento FIFO y el número de hijos
+NUM_HIJOS=10  # Puedes cambiar el número de hijos aquí
+./PADRE "$FIFO" $NUM_HIJOS  # Pasamos FIFO y el número de hijos al ejecutable PADRE
 
-# 5. Limpiar recursos
+# 5. Esperar a que el proceso `cat` termine
 wait $CAT_PID
-rm -f PADRE HIJO $FIFO
-echo "Archivos temporales eliminados."
 
+# 6. Eliminar los archivos temporales y ejecutables
+rm -f PADRE HIJO $FIFO
+echo "[SCRIPT] Limpieza completada."
