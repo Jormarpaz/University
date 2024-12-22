@@ -1,0 +1,28 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import es.uned.cliente.*;
+
+public class ServicioSrOperadorImpl implements ServicioSrOperadorInterface {
+	
+	private ServicioDiscoClienteImpl discoCliente;
+
+    public ServicioSrOperadorImpl() {
+        this.discoCliente = new ServicioDiscoClienteImpl();  // Crear instancia de DiscoCliente
+    }
+
+    @Override
+    public byte[] descargarArchivo(String cliente, String archivo, String url) {
+        // Llamamos a DiscoCliente para descargar el archivo
+        return discoCliente.descargarArchivo(url);
+    }
+
+    @Override
+    public void incrementarDescargas(String archivo) {
+        // Incrementar el número de descargas en ServicioDatos (ya implementado)
+        datos.incrementarDescargas(archivo);
+    }
+}

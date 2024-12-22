@@ -1,0 +1,12 @@
+package es.uned.repositorio;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface ServicioClOperadorInterface extends Remote{
+
+	boolean subirArchivo(String cliente, String archivo, String url, long tamaño) throw RemoteException;
+
+	boolean borrarArchivo(String cliente, String archivo, String url) throws RemoteException;
+	
+}

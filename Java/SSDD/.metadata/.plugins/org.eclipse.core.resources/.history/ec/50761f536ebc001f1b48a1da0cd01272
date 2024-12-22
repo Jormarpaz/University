@@ -1,0 +1,34 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.rmi.RemoteException;
+
+import es.uned.cliente.*;
+
+public class ServicioClOperadorImpl implements ServicioClOperadorInterface {
+
+    private ServicioDiscoClienteImpl discoCliente;  // Instancia de DiscoCliente para manejo de archivos
+
+    public ServicioClOperadorImpl() {
+        this.discoCliente = new ServicioDiscoClienteImpl();  // Crear instancia de DiscoCliente
+    }
+
+    @Override
+    public boolean subirArchivo(String url, String nombreArchivo) throws RemoteException {
+        try {
+            // Simulación del contenido del archivo para el ejemplo
+            byte[] contenido = Files.readAllBytes(new File(url).toPath());
+            return discoCliente.subirArchivo("ficheros/", nombreArchivo, contenido);
+        } catch (IOException e) {
+            throw new RemoteException("Error al leer el archivo original: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean borrarArchivo(String nombreArchivo) throws RemoteException {
+        return discoCliente.borrarArchivo("ficheros/", nombreArchivo);
+    }
+}
+

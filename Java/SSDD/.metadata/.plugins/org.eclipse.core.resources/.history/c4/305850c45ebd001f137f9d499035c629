@@ -1,0 +1,170 @@
+package es.uned.servidor;
+
+import java.io.File;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import es.uned.repositorio.*;
+
+public class ServicioGestorImpl implements ServicioGestorInterface {
+	
+	private ServicioDatosImpl datos;
+
+    public ServicioGestorImpl(ServicioDatosImpl datos,ServicioClOperadorImpl servicioClOperador, ServicioSrOperadorImpl servicioSrOperador) {
+        this.datos = datos;
+    }
+
+    @Override
+    public boolean subirArchivo(int idCliente, String nombreArchivo, String rutaOrigen) throws RemoteException {
+        int idRepositorio = datos.obtenerRepositorioDeCliente(idCliente);
+        if (idRepositorio == -1) {
+            throw new RemoteException("No se encontró repositorio asignado para el cliente.");
+        }
+
+        // URL del ServicioClOperador en el repositorio
+        String urlClOperador = "rmi://localhost:1099/ServicioClOperador";
+        ServicioClOperadorInterface servicioClOperador = null; // Definir fuera del try
+
+        try {
+            servicioClOperador = (ServicioClOperadorInterface) Naming.lookup(urlClOperador);
+            System.out.println("Servicio encontrado: " + urlClOperador);
+        } catch (Exception e) {
+            System.out.println("Error al buscar el servicio: " + e.getMessage());
+            throw new RemoteException("Error al obtener el servicio de operador de cliente", e);
+        }
+
+        // Construir la ruta en el servidor con el idRepositorio
+        String rutaDestino = "../Repositorio/ficheros" + File.separator + idRepositorio + File.separator + idCliente + File.separator + nombreArchivo;
+
+        // Delegar la subida al ServicioClOperador, pasando la ruta del repositorio
+        return servicioClOperador.subirArchivo(rutaOrigen, rutaDestino);
+    }
+
+
+    @Override
+    public boolean descargarArchivo(int idCliente, String nombreArchivo) throws RemoteException {
+        int idRepositorio = datos.obtenerRepositorioDeCliente(idCliente);
+        if (idRepositorio == -1) {
+            throw new RemoteException("No se encontró repositorio asignado para el cliente.");
+        }
+
+        // URL del ServicioSrOperador en el repositorio
+        String urlSrOperador = "rmi://localhost:1099/ServicioSrOperador";
+        ServicioSrOperadorInterface servicioSrOperador = null; // Definir fuera del try
+
+        try {
+            servicioSrOperador = (ServicioSrOperadorInterface) Naming.lookup(urlSrOperador);
+            System.out.println("Servicio encontrado: " + urlSrOperador);
+        } catch (Exception e) {
+            System.out.println("Error al buscar el servicio: " + e.getMessage());
+            throw new RemoteException("Error al obtener el servicio de operador de servidor", e);
+        }
+
+        // Construir la ruta del archivo en el servidor con el idRepositorio
+        String rutaArchivo = "../Repositorio/ficheros/" + idRepositorio + "/" + idCliente + "/" + nombreArchivo;
+
+        // Delegar la descarga al ServicioSrOperador, pasando la ruta del archivo
+        boolean exito = servicioSrOperador.descargarArchivo(rutaArchivo, nombreArchivo);
+        
+        if (exito) {
+            // Incrementar el contador de descargas
+            datos.incrementarDescargas(nombreArchivo);
+        }
+
+        return exito;
+    }
+
+
+    @Override
+    public boolean borrarArchivo(int idCliente, String nombreArchivo) throws RemoteException {
+        int idRepositorio = datos.obtenerRepositorioDeCliente(idCliente);
+        if (idRepositorio == -1) {
+            throw new RemoteException("No se encontró repositorio asignado para el cliente.");
+        }
+
+        // Suponiendo que ya tienes el idRepositorio correcto
+        String urlClOperador = "rmi://localhost:1099/ServicioClOperador";
+        ServicioClOperadorInterface servicioClOperador = null; // Definir fuera del try
+
+        try {
+            servicioClOperador = (ServicioClOperadorInterface) Naming.lookup(urlClOperador);
+            System.out.println("Servicio encontrado: " + urlClOperador);
+        } catch (Exception e) {
+            System.out.println("Error al buscar el servicio: " + e.getMessage());
+            throw new RemoteException("Error al obtener el servicio de operador de cliente", e);
+        }
+
+        // Construir la ruta del archivo en el servidor con el idRepositorio
+        String rutaArchivo = "../Repositorio/ficheros/" + idRepositorio + "/" + idCliente + "/" + nombreArchivo;
+
+        // Delegar el borrado al ServicioClOperador, pasando la ruta del archivo
+        return servicioClOperador.borrarArchivo(rutaArchivo);
+    }
+
+    
+    @Override
+    public List<String> listarClientesRepo(int idRepositorio) throws RemoteException {
+        // Accede al mapa repositorio_clientes para obtener la lista de clientes
+        if (datos.repositorio_clientes.containsKey(idRepositorio)) {
+            return datos.repositorio_clientes.get(idRepositorio);
+        } else {
+            throw new RemoteException("Repositorio no encontrado.");
+        }
+    }
+
+
+    @Override
+    public List<String> listarFicheros(int idCliente, String nombreCliente) throws RemoteException {
+    	// Si no se proporciona el nombre del cliente, se resuelve a partir del idCliente    	
+        if (nombreCliente == null) {
+        	nombreCliente = datos.obtenerNombrePorId(idCliente);
+            if (nombreCliente == null) {
+                throw new RuntimeException("ID de cliente inválido.");
+            }
+        }
+        int idRepositorio = datos.obtenerRepositorioDeCliente(idCliente);
+        // Ruta donde están almacenados los ficheros del cliente
+        File carpetaCliente = new File("../Repositorio/ficheros/" + idRepositorio + "/" + idCliente + "/");
+
+        // Comprueba si la carpeta existe y lista los archivos
+        if (carpetaCliente.exists() && carpetaCliente.isDirectory()) {
+            String[] archivos = carpetaCliente.list();
+            if (archivos != null) {
+                return Arrays.asList(archivos);
+            }
+        }
+
+        // Si no se encuentran ficheros o la carpeta no existe, devuelve una lista vacía
+        return new ArrayList<>();
+    }
+
+
+    @Override
+    public List<String> listarClientesServer() throws RemoteException {
+        // Devuelve todos los nombres de clientes
+        return new ArrayList<>(datos.nombre_id.keySet());
+    }
+
+
+    @Override
+    public List<Integer> listarRepositorios() throws RemoteException {
+        // Devuelve todas las claves del mapa repositorio_clientes (IDs de repositorios)
+        return new ArrayList<>(datos.repositorio_clientes.keySet());
+    }
+
+
+    @Override
+    public Map<Integer, List<String>> listarRelaciones() throws RemoteException {
+        // Devuelve el mapa completo de relaciones repositorio-clientes
+        return datos.repositorio_clientes;
+    }
+    
+    @Override
+    public int obtenerNumeroDescargas(String nombreArchivo) throws RemoteException {
+        return datos.obtenerNumeroDescargas(nombreArchivo);
+    }
+}

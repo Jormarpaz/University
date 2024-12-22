@@ -1,0 +1,28 @@
+package es.uned.repositorio;
+
+import es.uned.cliente.*;
+
+public class ServicioSrOperadorImpl implements ServicioSrOperadorInterface {
+
+    private ServicioDiscoClienteImpl discoCliente;  // Instancia de DiscoCliente para manejo de archivos
+
+    public ServicioSrOperadorImpl() {
+        this.discoCliente = new ServicioDiscoClienteImpl();  // Crear instancia de DiscoCliente
+    }
+
+    @Override
+    public boolean descargarArchivo(String nombreArchivo, String destino) throws RemoteException {
+        byte[] contenido = discoCliente.descargarArchivo("ficheros/", nombreArchivo);
+        if (contenido == null) {
+            throw new RemoteException("El archivo no existe en el repositorio.");
+        }
+
+        try {
+            Files.write(new File(destino).toPath(), contenido);
+            System.out.println("Archivo descargado exitosamente a " + destino);
+            return true;
+        } catch (IOException e) {
+            throw new RemoteException("Error al guardar el archivo descargado: " + e.getMessage());
+        }
+    }
+}

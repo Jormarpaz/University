@@ -1,0 +1,16 @@
+package es.uned.servidor;
+
+import java.rmi.RemoteException;
+import java.rmi.Remote;
+
+public interface ServicioAutenticacionInterface extends Remote {
+	
+	public int autenticarCliente(String nombre, String contraseña) throws RemoteException;
+	
+	public int registrarCliente(String nombre, String contraseña) throws RemoteException;
+	
+	public boolean autenticarRepositorio(int idRepo) throws RemoteException;
+	
+	public int registrarRepositorio() throws RemoteException;
+
+}

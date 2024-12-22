@@ -1,0 +1,12 @@
+package es.uned.servidor;
+
+import java.rmi.RemoteException;
+import java.rmi.Remote;
+
+public interface ServicioDatosInterface extends Remote {
+	
+	public void incrementarDescargas(String nombreArchivo) throws RemoteException;
+	
+	public int obtenerNumeroDescargas(String nombreArchivo) throws RemoteException;
+	
+}

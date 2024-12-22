@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;Fichero.java&apos; to &apos;Comun/src/es.uned.comun&apos;&#x0D;&#x0A;- Original project: &apos;Fichero&apos;&#x0D;&#x0A;- Destination element: &apos;Comun/src/es.uned.comun&apos;&#x0D;&#x0A;- Original element: &apos;es.uned.fichero.Fichero.java&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="=Comun/src&lt;es.uned.comun" element1="/src&lt;es.uned.fichero{Fichero.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1734557961117" units="1" version="1.0"/>
+</session>

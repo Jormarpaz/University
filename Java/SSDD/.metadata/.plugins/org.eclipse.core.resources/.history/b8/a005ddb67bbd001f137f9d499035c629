@@ -1,0 +1,171 @@
+package es.uned.servidor;
+
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
+
+import es.uned.comun.*;
+import es.uned.repositorio.*;
+
+public class Servidor implements ServidorInterface {
+	
+	// Atributos de la clase para que estén disponibles en toda la clase
+    private static ServicioDatosImpl servicioDatos;
+    private static ServicioAutenticacionImpl servicioAutenticacion;
+    private static ServicioGestorImpl servicioGestor;
+    private static ServicioSrOperadorImpl servicioSrOperador;
+    private static ServicioClOperadorImpl servicioClOperador;
+
+    // Constructor de la clase
+    public Servidor() throws RemoteException {
+        // Inicializa los servicios
+        servicioDatos = new ServicioDatosImpl();
+        servicioAutenticacion = new ServicioAutenticacionImpl(servicioDatos);
+        servicioGestor = new ServicioGestorImpl(servicioDatos, servicioClOperador, servicioSrOperador);
+    }
+	
+	public static void main(String[] args) throws Exception{
+		try {
+            // Establece el CodeBase
+            Utiles.setCodeBase(ServidorInterface.class);
+            
+            // Crea una instancia del servidor
+            Servidor servidor = new Servidor();
+            
+            // Exporta el objeto remoto (ServidorInterface)
+            ServidorInterface remote = (ServidorInterface) UnicastRemoteObject.exportObject(servidor, 0);
+
+            // Crea el registro RMI en el puerto 1099
+            LocateRegistry.createRegistry(1099);
+            Registry registry = LocateRegistry.getRegistry(1099);
+            
+            // Registra el servidor con el nombre "Servidor"
+            registry.rebind("Servidor", remote);
+
+            System.out.println("Servidor en marcha...");
+
+            servidor.gui();
+            
+            // Espera de entrada del usuario para finalizar el servidor
+            System.out.println("Presiona Enter para detener el servidor...");
+            System.in.read();  // Mantiene el servidor activo hasta que se presione Enter
+            
+            // Desvincula y cierra la conexión cuando se detenga
+            registry.unbind("Servidor");
+            UnicastRemoteObject.unexportObject(servidor, true);
+            System.out.println("Servidor detenido.");
+
+        } catch (Exception e) {
+            System.out.println("Error al iniciar el servidor: " + e.getMessage());
+        }
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private void gui() throws RemoteException {
+		int opt = 0;
+		
+		do {
+			opt = Gui.menu("Menu Principal",new String[] {	"Listar Clientes",
+															"Listar Repositorios",
+															"Listar relacion Repositorios-Clientes",
+															"Salir"});
+			
+			switch (opt) {
+				case 0: listarClientesServer(); break;
+				case 1: listarRepositorios(); break;
+				case 2: listarRelaciones(); break;
+			}
+		}
+		while (opt != 3);
+	}
+	
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////	
+
+	@Override
+	public int registrarCliente(String nombre) throws RemoteException {
+        return servicioAutenticacion.registrarCliente(nombre);
+    }
+
+	@Override
+    public boolean autenticarCliente(String nombre, int id) throws RemoteException {
+        return servicioAutenticacion.autenticarCliente(nombre, id);
+    }
+    
+	@Override
+    public int registrarRepositorio() throws RemoteException {
+        return servicioAutenticacion.registrarRepositorio();
+    }
+    
+	@Override
+    public boolean autenticarRepositorio(int idRepositorio) throws RemoteException {
+        return servicioAutenticacion.autenticarRepositorio(idRepositorio);
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean subirArchivo(int idCliente, String nombreArchivo, String ruta) throws RemoteException {
+        return servicioGestor.subirArchivo(idCliente, nombreArchivo, ruta);
+    }
+
+    @Override
+    public boolean descargarArchivo(int idCliente, String nombreArchivo) throws RemoteException {
+        return servicioGestor.descargarArchivo(idCliente, nombreArchivo);
+    }
+
+    @Override 
+    public boolean borrarArchivo(int idCliente, String nombreArchivo) throws RemoteException {
+        return servicioGestor.borrarArchivo(idCliente, nombreArchivo);
+    }
+
+    @Override
+    public int obtenerNumeroDescargas(String archivo) throws RemoteException {
+        // Delegamos la llamada a ServicioDatos
+        return servicioGestor.obtenerNumeroDescargas(archivo);
+    }
+
+    @Override
+    public List<String> listarFicheros(int idCliente, String nombreCliente) throws RemoteException {
+        return servicioGestor.listarFicheros(idCliente, nombreCliente);
+    }
+
+    @Override
+    public List<String> listarClientesRepo(int idRepositorio) throws RemoteException {
+        return servicioGestor.listarClientesRepo(idRepositorio);
+    }
+    
+    @Override
+    public List<String> listarClientesCliente() throws RemoteException {
+        return servicioGestor.listarClientesRepo(idRepositorio);
+    }
+    
+    @Override
+    public List<String> listarClientesServer() throws RemoteException {
+        return servicioGestor.listarClientesServer();
+    }
+
+    @Override
+    public List<Integer> listarRepositorios() throws RemoteException {
+        return servicioGestor.listarRepositorios();
+    }
+
+    @Override
+    public Map<Integer, List<String>> listarRelaciones() throws RemoteException {
+        return servicioGestor.listarRelaciones();
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+    
+}

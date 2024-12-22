@@ -1,0 +1,9 @@
+package es.uned.repositorio;
+
+public interface ServicioClOperadorInterface{
+
+	boolean subirArchivo(String cliente, String archivo, String url, long tamaño);
+
+	boolean borrarArchivo(String cliente, String archivo, String url);
+	
+}

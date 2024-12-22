@@ -1,0 +1,47 @@
+package es.uned.servidor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import es.uned.repositorio.*;
+
+public class ServicioDatosImpl implements ServicioDatosInterface {
+	
+	public Map<Integer, String> sesion_nombre;
+    public Map<String, Integer> nombre_sesion;
+    public Map<String, String> nombre_contraseña;
+    public Map<Integer, ServicioSrOperadorInterface> repositorios;
+    public Map<Integer, List<String>> repositorio_clientes;
+    public Map<Integer, List<String>> cliente_ficheros;
+    public Map<String, Integer> ficheros_descargas;
+    public Map<Integer, List<Integer>> contactos;
+	
+	public ServicioDatosImpl() {
+		sesion_nombre = new HashMap<>();
+        nombre_sesion = new HashMap<>();
+        nombre_contraseña = new HashMap<>();
+        repositorios = new HashMap<>();
+        repositorio_clientes = new HashMap<>();
+        cliente_ficheros = new HashMap<>();
+        ficheros_descargas = new HashMap<>();
+        contactos = new HashMap<>();
+	}
+	
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	// Método para incrementar el contador de descargas
+    public synchronized void incrementarDescargas(String nombreArchivo) {
+        // Si el archivo ya tiene un contador, lo incrementamos, si no, lo inicializamos en 1
+        ficheros_descargas.put(nombreArchivo, ficheros_descargas.getOrDefault(nombreArchivo, 0) + 1);
+    }
+
+    // Método para obtener el número de descargas de un archivo
+    public synchronized int obtenerNumeroDescargas(String nombreArchivo) {
+        return ficheros_descargas.getOrDefault(nombreArchivo, 0);
+    }
+	
+	
+}

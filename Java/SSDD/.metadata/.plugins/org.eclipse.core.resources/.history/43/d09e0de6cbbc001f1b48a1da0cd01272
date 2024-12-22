@@ -1,0 +1,45 @@
+package es.uned.repositorio;
+
+import es.uned.cliente.*;
+import java.rmi.RemoteException;
+import java.rmi.Naming;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+public class ServicioSrOperadorImpl implements ServicioSrOperadorInterface {
+
+	@Override
+	public boolean descargarArchivo(String rutaArchivo, String destino) throws RemoteException {
+		
+	    // URL de servicio DiscoCliente
+	    String urlDiscoCliente = "rmi://localhost:1099/ServicioDiscoCliente";
+	    ServicioDiscoClienteInterface servicioDiscoCliente;
+
+	    try {
+	        // Obtener el servicio remoto de DiscoCliente
+	        servicioDiscoCliente = (ServicioDiscoClienteInterface) Naming.lookup(urlDiscoCliente);
+	        System.out.println("Servicio DiscoCliente encontrado.");
+	    } catch (Exception e) {
+	        System.out.println("Error al buscar el servicio de DiscoCliente: " + e.getMessage());
+	        throw new RemoteException("No se pudo conectar al servicio de DiscoCliente", e);
+	    }
+
+	    // Delegar la descarga al DiscoCliente
+	    byte[] contenido = servicioDiscoCliente.descargarArchivo(rutaArchivo);
+	    if (contenido == null) {
+	        throw new RemoteException("El archivo no existe en el repositorio.");
+	    }
+
+	    // Guardar el archivo descargado en el destino
+	    try {
+	        Files.write(new File(destino).toPath(), contenido);
+	        System.out.println("Archivo descargado exitosamente a " + destino);
+	        return true;
+	    } catch (IOException e) {
+	        throw new RemoteException("Error al guardar el archivo descargado: " + e.getMessage());
+	    }
+	}
+
+}
+

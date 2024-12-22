@@ -1,0 +1,78 @@
+package es.uned.servidor;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import es.uned.repositorio.*;
+import es.uned.servidor.*;
+
+public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface{
+	
+	private ServicioDatosInterface datos;
+	
+	protected ServicioAutenticacionImpl(ServicioDatosImpl datos) {
+		this.datos = datos;
+	}
+	
+	@Override
+	public int registrarCliente(String nombre, String contraseña) {
+		if (datos.nombre_contraseña.containsKey(nombre)) {
+            return 0; // Cliente ya registrado
+        }
+        int sesion = getSesion();
+        datos.sesion_nombre.put(sesion, nombre);
+        datos.nombre_sesion.put(nombre, sesion);
+        datos.nombre_contraseña.put(nombre, contraseña);
+        return sesion;
+	}
+	
+	public int autenticarCliente(String nombre, String contraseña) {
+        if (datos.nombre_contraseña.containsKey(nombre) && 
+            datos.nombre_contraseña.get(nombre).equals(contraseña)) {
+            return datos.nombre_sesion.get(nombre);
+        }
+        return 0; // Autenticación fallida
+    }
+	
+	public int registrarRepositorio(ServicioSrOperadorInterface srOperador) {
+        int idRepositorio = generarSesion();
+        datos.repositorios.put(idRepositorio, srOperador);
+        datos.repositorio_clientes.putIfAbsent(idRepositorio, new ArrayList<>());
+        return idRepositorio;
+    }
+	
+	public boolean autenticarRepositorio(int idRepositorio) {
+        return datos.repositorios.containsKey(idRepositorio);
+    }
+	
+	
+	private void asignarClienteARepositorio(String nombreCliente) {
+	    int idRepositorio = asignarRepositorio(); // Selecciona el repositorio disponible
+	    datos.repositorio_clientes.computeIfAbsent(idRepositorio, k -> new ArrayList<>()).add(nombreCliente);
+	}
+	
+	
+	private int asignarRepositorio() {
+	    int idRepositorioConMenosClientes = -1;
+	    int menorCantidadClientes = Integer.MAX_VALUE;
+
+	    for (Map.Entry<Integer, List<String>> entry : repositorio_clientes.entrySet()) {
+	        if (entry.getValue().size() < menorCantidadClientes) {
+	            menorCantidadClientes = entry.getValue().size();
+	            idRepositorioConMenosClientes = entry.getKey();
+	        }
+	    }
+
+	    return idRepositorioConMenosClientes;
+	}
+
+	private static int sesion = new Random().nextInt();
+	
+	public static int getSesion() {
+		return ++sesion;
+	}
+	
+}

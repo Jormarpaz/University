@@ -1,0 +1,24 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import java.io.IOException;
+
+public class ServicioClOperadorImpl implements ServicioClOperadorInterface {
+	
+	@Override
+    public boolean subirArchivo(String cliente, String archivo, String url, long tamaño) throws IOException {
+        // Lógica para subir el archivo en el repositorio físico
+        File file = new File(url);
+        // Realiza la operación de almacenamiento físico
+        return file.exists() || file.createNewFile();
+    }
+
+    @Override
+    public boolean borrarArchivo(String cliente, String archivo, String url) {
+        // Lógica para borrar el archivo
+        File file = new File(url);
+        return file.delete();
+    }
+    
+}
+

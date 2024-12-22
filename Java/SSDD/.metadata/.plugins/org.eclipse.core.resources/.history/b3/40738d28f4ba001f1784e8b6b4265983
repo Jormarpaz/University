@@ -1,0 +1,16 @@
+package es.uned.repositorio;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+import es.uned.comun.*;
+
+public interface ServicioSrOperadorInterface {
+
+	byte[] descargarArchivo(String cliente, String archivo, String url);
+
+	void incrementarDescargas(String archivo);
+	
+	
+	
+}

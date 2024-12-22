@@ -1,0 +1,48 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import es.uned.cliente.*;
+
+public class ServicioClOperadorImpl implements ServicioClOperadorInterface {
+	
+	private ServicioDiscoClienteImpl discoCliente;  // Instancia de DiscoCliente para manejo de archivos
+
+    public ServicioClOperadorImpl() {
+        this.discoCliente = new ServicioDiscoClienteImpl();  // Crear instancia de DiscoCliente
+    }
+
+    @Override
+    public boolean subirArchivo(int idCliente, String nombreArchivo, long tamaño) throws RemoteException {
+        // Crear carpeta del cliente si no existe
+        File carpetaCliente = new File("ficheros/" + idCliente);
+        if (!carpetaCliente.exists()) {
+            carpetaCliente.mkdirs();
+        }
+
+        // Crear el archivo dentro de la carpeta del cliente
+        File archivo = new File(carpetaCliente, nombreArchivo);
+        try {
+            if (archivo.createNewFile()) {
+                System.out.println("Archivo subido con éxito: " + archivo.getPath());
+                return true;
+            } else {
+                System.out.println("El archivo ya existe: " + archivo.getPath());
+                return false;
+            }
+        } catch (IOException e) {
+            System.out.println("Error al subir archivo: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+
+    @Override
+    public boolean borrarArchivo(String cliente, String archivo, String url) {
+        // Lógica para borrar el archivo
+        File file = new File(url);
+        return file.delete();
+    }
+    
+}
+

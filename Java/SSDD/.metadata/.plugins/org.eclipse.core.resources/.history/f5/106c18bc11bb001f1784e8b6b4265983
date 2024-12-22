@@ -1,0 +1,143 @@
+package es.uned.servidor;
+
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
+
+import es.uned.comun.*;
+import es.uned.repositorio.*;
+
+public class Servidor implements ServidorInterface {
+	
+	// Atributos de la clase para que estén disponibles en toda la clase
+    private static ServicioDatosImpl servicioDatos;
+    private static ServicioAutenticacionImpl servicioAutenticacion;
+    private static ServicioGestorImpl servicioGestor;
+    private static ServicioSrOperadorImpl servicioSrOperador;
+    private static ServicioClOperadorImpl servicioClOperador;
+
+    // Constructor de la clase
+    public Servidor() throws RemoteException {
+        // Inicializa los servicios
+        servicioDatos = new ServicioDatosImpl();
+        servicioAutenticacion = new ServicioAutenticacionImpl(servicioDatos);
+        servicioGestor = new ServicioGestorImpl(servicioDatos, servicioClOperador, servicioSrOperador);
+    }
+	
+	public static void main(String[] args) throws Exception{
+		Utiles.setCodeBase(ServidorInterface.class);
+
+		Servidor servidor = new Servidor();
+		ServidorInterface remote = (ServidorInterface) UnicastRemoteObject.exportObject(servidor, 8888);
+		
+		LocateRegistry.createRegistry(1099);
+		Registry registry = LocateRegistry.getRegistry(1099);
+		registry.rebind("Servidor", remote);
+
+		System.out.println("Servidor en marcha");
+		// Mantener el servidor corriendo
+        System.in.read();  // Esto evita que el servidor termine inmediatamente
+		gui();
+
+		registry.unbind("Servidor");
+		UnicastRemoteObject.unexportObject(servidor, true);
+		System.out.println("Detenido");
+		
+		
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private void gui() throws RemoteException {
+		int opt = 0;
+		
+		do {
+			opt = Gui.menu("Menu Principal",new String[] {	"Listar Clientes",
+															"Listar Repositorios",
+															"Listar relacion Repositorios-Clientes",
+															"Salir"});
+			
+			switch (opt) {
+				case 0: listarClientesServer(); break;
+				case 1: listarRepositorios(); break;
+				case 2: listarRelaciones(); break;
+			}
+		}
+		while (opt != 3);
+	}
+	
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////	
+
+	
+	public int registrarCliente(String nombre, String contraseña) throws RemoteException {
+        return servicioAutenticacion.registrarCliente(nombre, contraseña);
+    }
+
+    public int autenticarCliente(String nombre, String contraseña) throws RemoteException {
+        return servicioAutenticacion.autenticarCliente(nombre, contraseña);
+    }
+    
+    public int registrarRepositorio(int idRepositorio) throws RemoteException {
+        return servicioAutenticacion.registrarRepositorio(idRepositorio);
+    }
+    
+    public boolean autenticarRepositorio(int idRepositorio) throws RemoteException {
+        return servicioAutenticacion.autenticarRepositorio(idRepositorio);
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public boolean subirArchivo(int sesion, String nombreArchivo, long tamaño) throws RemoteException {
+        // Delega la subida al ServicioGestor
+        return servicioGestor.subirArchivo(sesion, nombreArchivo, tamaño);
+    }
+
+    public byte[] descargarArchivo(int sesion, String nombreArchivo) throws RemoteException {
+        // Delega la descarga al ServicioGestor
+        return servicioGestor.descargarArchivo(sesion, nombreArchivo);
+    }
+    
+    @Override
+    public int obtenerNumeroDescargas(String archivo) throws RemoteException {
+        // Delegamos la llamada a ServicioDatos
+        return servicioDatos.obtenerNumeroDescargas(archivo);
+    }
+
+    public boolean borrarArchivo(int sesion, String nombreArchivo) throws RemoteException {
+        // Delega el borrado al ServicioGestor
+        return servicioGestor.borrarArchivo(sesion, nombreArchivo);
+    }
+    
+    public List<String> listarFicheros(int sesion, String nombreCliente) throws RemoteException {
+        return servicioGestor.listarFicheros(sesion, nombreCliente);
+    }
+
+    public List<String> listarClientesRepo(int sesion, int idRepositorio) throws RemoteException {
+        return servicioGestor.listarClientesRepo(sesion, idRepositorio);
+    }
+    
+    public List<String> listarClientesServer() throws RemoteException {
+        return servicioGestor.listarClientesServer();
+    }
+
+    public List<Integer> listarRepositorios() throws RemoteException {
+        return servicioGestor.listarRepositorios();
+    }
+
+    public Map<Integer, List<String>> listarRelaciones() throws RemoteException {
+        return servicioGestor.listarRelaciones();
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+}

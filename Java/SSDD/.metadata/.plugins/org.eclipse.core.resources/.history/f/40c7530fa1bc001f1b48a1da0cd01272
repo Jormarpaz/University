@@ -1,0 +1,14 @@
+package es.uned.cliente;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface ServicioDiscoClienteInterface extends Remote {
+    
+	public boolean subirArchivo(String url, String nombreArchivo, byte[] contenido) throws RemoteException;
+	
+	public byte[] descargarArchivo(String url, String nombreArchivo) throws RemoteException;
+	
+	public boolean borrarArchivo(String url, String nombreArchivo) throws RemoteException;
+}
+

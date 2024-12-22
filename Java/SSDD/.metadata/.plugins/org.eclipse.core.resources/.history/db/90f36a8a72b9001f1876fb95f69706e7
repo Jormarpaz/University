@@ -1,0 +1,127 @@
+package es.uned.cliente;
+
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.List;
+
+import es.uned.comun.*;
+
+public class Cliente {
+	
+	private static int miSesion = 0;
+	private static ServidorInterface servidor;
+	
+	public static void main(String[] args) throws Exception {
+		
+		Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+		servidor = (ServidorInterface)registry.lookup("Servidor");
+		
+		login();
+	}
+	
+	private static void login() throws RemoteException {
+		int opt = 0;
+		
+		do {
+			opt = Gui.menu("Bienvenid@", new String[] {  "Registrarse",
+														 "Autenticarse",
+														 "Salir"});
+					
+			switch(opt) {
+				case 0 : registrarse(); break;
+				case 1 : autenticarse(); break;
+			}
+		}
+		while (opt != 2);
+		
+		if (miSesion != 0) {
+			gui();
+		}
+	}
+	
+	private static void gui() throws RemoteException {
+		int opt = 0;
+		
+		do {
+			opt = Gui.menu("Menu Principal",new String[] {	"Subir Archivos",
+															"Descargar Archivos",
+															"Borrar Archivos",
+															"Numero de descargas",
+															"Listar Archivos",
+															"Listar Clientes del Sistema",
+															"Salir"});
+			
+			switch (opt) {
+				case 0: subir(); break;
+				case 1: descargar(); break;
+				case 2: borrar(); break;
+				case 3: descargas(); break;
+				case 4: listararchivos(); break;
+				case 5: listarclientes(); break;
+			}
+		}
+		while (opt != 6);
+	}
+	
+	private static void registrarse() throws RemoteException {
+		String nombre = Gui.input("Registrarse",  "Introduzca su nombre: ");
+		String contraseña = Gui.input("Registrarse", "Introduzca su contraseña: ");
+		if (nombre != null && !nombre.isEmpty() && contraseña != null && !contraseña.isEmpty()) {
+	        miSesion = servidor.registrarCLiente(nombre, contraseña);
+	        if (miSesion != 0) {
+	            System.out.println("Registro exitoso. Su sesión es: " + miSesion);
+	        } else {
+	            System.out.println("El registro ha fallado.");
+	        }
+	    }
+	}
+	
+	private static void autenticarse() throws RemoteException {
+		String nombre = Gui.input("Autenticarse", "Introduzca su nombre: ");
+	    String contraseña = Gui.input("Autenticarse", "Introduzca su contraseña: ");
+	    if (nombre != null && !nombre.isEmpty() && contraseña != null && !contraseña.isEmpty()) { 
+	        miSesion = servidor.autenticarCliente(nombre, contraseña);
+	        if (miSesion != 0) {
+	            System.out.println("Autenticación exitosa. Sesión activa: " + miSesion);
+	        } else {
+	            System.out.println("Error: nombre o contraseña incorrectos.");
+	        }
+	    }
+	}
+	
+	private static void agregarContacto() throws RemoteException {
+		String contacto = Gui.input("Agregar Contacto",  "Introduzca el contacto: ");
+		if (contacto != null && !contacto.isEmpty()) {
+			int suSesion = servidor.agregar(contacto, miSesion);
+			System.out.println("La sesion de " + contacto + " es " + suSesion);
+		}
+	}
+	
+	private static void recibirMensajes() throws RemoteException {
+		System.out.println("=== Mensajes recibidos ===");
+		
+		List<Mensaje> mensajes = servidor.recibir(miSesion);
+		
+		for (Mensaje mensaje: mensajes) {
+			System.out.println("De " + mensaje.getRemitente());
+			System.out.println("\t" + mensaje.getCuerpo() + "\n");
+		}
+		
+		System.out.println();
+		
+		servidor.limpiarBuffer(miSesion);
+	}
+	
+	private static void enviarMensaje() throws RemoteException {
+		String opts[] = Gui.input("Enviar Mensaje",
+				new String[] {	"Ingrese la sesion del contacto: ",
+								"Ingrese el mensaje: "});
+		
+		int suSesion = Integer.parseInt(opts[0]);
+		String mensaje = opts[1];
+		
+		servidor.enviar(mensaje, miSesion, suSesion);		
+	}
+
+}

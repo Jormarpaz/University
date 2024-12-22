@@ -1,0 +1,75 @@
+package es.uned.servidor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import es.uned.repositorio.*;
+
+public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface{
+	
+	private ServicioDatosImpl datos;
+	
+	protected ServicioAutenticacionImpl(ServicioDatosImpl datos) {
+		this.datos = datos;
+	}
+	
+	private int generarId() {
+	    return (int) (Math.random() * 1000000); // Generador simple de IDs únicos
+	}
+	
+	@Override
+	public int registrarCliente(String nombre) {
+		try {
+	        if (datos.nombre_id.containsKey(nombre)) {
+	            return 0;  // Cliente ya registrado
+	        }
+
+	        int idCliente = generarId();  // Generar ID único
+	        datos.nombre_id.put(nombre, idCliente);  // Registrar cliente
+	        datos.id_nombre.put(idCliente, nombre);
+	        asignarClienteARepositorio(nombre);  // Asignar cliente a un repositorio automáticamente
+	        return idCliente;  // Devolver ID
+	    } catch (Exception e) {
+	        System.out.println("Error en registrar cliente: " + e.getMessage());
+	        return 0;
+	    }
+	}
+	
+	@Override
+	public boolean autenticarCliente(String nombre, int id) {
+	    // Verifica si el nombre existe y si el ID coincide
+	    return datos.nombre_id.containsKey(nombre) && datos.nombre_id.get(nombre) == id;
+	}
+	
+	public int registrarRepositorio() {
+		int idRepo = generarId();
+	    datos.repositorio_clientes.put(idRepo, new ArrayList<>()); // Inicializar lista de clientes
+	    return idRepo;
+	}
+	
+	public boolean autenticarRepositorio(int idRepositorio) {
+        return datos.repositorio_clientes.containsKey(idRepositorio);
+    }
+	
+	private void asignarClienteARepositorio(String nombreCliente) {
+	    int idRepositorio = asignarRepositorio(); // Selecciona el repositorio disponible
+	    datos.repositorio_clientes.computeIfAbsent(idRepositorio, k -> new ArrayList<>()).add(nombreCliente);
+	}
+	
+	
+	private int asignarRepositorio() {
+	    int idRepositorioConMenosClientes = -1;
+	    int menorCantidadClientes = Integer.MAX_VALUE;
+
+	    for (Map.Entry<Integer, List<String>> entry : datos.repositorio_clientes.entrySet()) {
+	        if (entry.getValue().size() < menorCantidadClientes) {
+	            menorCantidadClientes = entry.getValue().size();
+	            idRepositorioConMenosClientes = entry.getKey();
+	        }
+	    }
+
+	    return idRepositorioConMenosClientes;
+	}
+	
+}

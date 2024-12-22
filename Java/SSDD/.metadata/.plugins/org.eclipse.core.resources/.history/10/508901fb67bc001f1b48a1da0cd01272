@@ -1,0 +1,18 @@
+package es.uned.repositorio;
+
+import es.uned.cliente.*;
+
+public class ServicioSrOperadorImpl implements ServicioSrOperadorInterface {
+	
+	private ServicioDiscoClienteImpl discoCliente;
+
+    public ServicioSrOperadorImpl() {
+        this.discoCliente = new ServicioDiscoClienteImpl();  // Crear instancia de DiscoCliente
+    }
+
+    @Override
+    public byte[] descargarArchivo(String cliente, String archivo, String url) {
+        // Llamamos a DiscoCliente para descargar el archivo
+        return discoCliente.descargarArchivo(url);
+    }
+}

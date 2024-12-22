@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1.0">
+  <zoom_level>6</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>492</x>
+      <y>294</y>
+      <w>276</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>es.uned.servidor::Servidor
+--
+-servicioDatos: ServicioDatosImpl
+-servicioAutenticacion: ServicioAutenticacionImpl
+-servicioGestor: ServicioGestorImpl
+-servicioSrOperador: ServicioSrOperadorInterface
+-servicioClOperador: ServicioClOperadorInterface
+--
++Servidor(): ctor
++main(String[] args): void
+-gui(): void
++registrarCliente(String nombre): int
++autenticarCliente(String nombre, int id): boolean
++registrarRepositorio(): int
++autenticarRepositorio(int idRepositorio): boolean
++subirArchivo(int idCliente, String nombreArchivo, String ruta): boolean
++descargarArchivo(int idCliente, String nombreArchivo): boolean
++borrarArchivo(int idCliente, String nombreArchivo): boolean
++obtenerNumeroDescargas(String archivo): int
++listarFicheros(int idCliente, String nombreCliente): List&lt;String&gt;
++listarFicherosRepo(String nombreCliente): List&lt;String&gt;
++listarClientesRepo(int idRepositorio): List&lt;String&gt;
++listarClientesCliente(): List&lt;String&gt;
++listarClientesServer(): List&lt;String&gt;
++listarRepositorios(): List&lt;Integer&gt;
++listarRelaciones(): Map&lt;Integer, List&lt;String&gt;&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>774</x>
+      <y>294</y>
+      <w>438</w>
+      <h>174</h>
+    </coordinates>
+    <panel_attributes>es.uned.servidor::ServicioDatosImpl
+--
++nombre_id: Map&lt;String, Integer&gt;
++id_nombre: Map&lt;Integer, String&gt;
++repositorio_clientes: Map&lt;Integer, List&lt;String&gt;&gt;
++cliente_ficheros: Map&lt;Integer, List&lt;Fichero&gt;&gt;
++ficheros_descargas: Map&lt;String, Integer&gt;
+--
++ServicioDatosImpl(): ctor
++obtenerRepositorioDeCliente(int idCliente): int
++registrarArchivo(int idCliente, Fichero fichero): void
++incrementarDescargas(String nombreArchivo): // Método para incrementar el contador de descargas&#13;
+void
++obtenerNumeroDescargas(String nombreArchivo): // Método para obtener el número de descargas de un archivo&#13;
+int
++obtenerNombrePorId(int idCliente): String
++obtenerIdPorNombre(String nombreCliente): int
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>774</x>
+      <y>480</y>
+      <w>570</w>
+      <h>174</h>
+    </coordinates>
+    <panel_attributes>es.uned.servidor::ServicioGestorImpl
+--
+-datos: ServicioDatosImpl
+--
++ServicioGestorImpl(ServicioDatosImpl datos, ServicioClOperadorInterface servicioClOperador, ServicioSrOperadorInterface servicioSrOperador): ctor
++subirArchivo(int idCliente, String nombreArchivo, String rutaOrigen): boolean
++descargarArchivo(int idCliente, String nombreArchivo): boolean
++borrarArchivo(int idCliente, String nombreArchivo): boolean
++listarClientesRepo(int idRepositorio): List&lt;String&gt;
++listarFicheros(int idCliente, String nombreCliente): List&lt;String&gt;
++listarFicherosRepo(String nombreCliente): List&lt;String&gt;
++listarClientesServer(): List&lt;String&gt;
++listarClientesCliente(): List&lt;String&gt;
++listarRepositorios(): List&lt;Integer&gt;
++listarRelaciones(): Map&lt;Integer, List&lt;String&gt;&gt;
++obtenerNumeroDescargas(String nombreArchivo): int
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>492</x>
+      <y>570</y>
+      <w>276</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>es.uned.servidor::ServicioAutenticacionImpl
+--
+-datos: ServicioDatosImpl
+--
+#ServicioAutenticacionImpl(ServicioDatosImpl datos): ctor
+-generarId(): int
++registrarCliente(String nombre): int
++autenticarCliente(String nombre, int id): boolean
++registrarRepositorio(): int
++autenticarRepositorio(int idRepositorio): boolean
+-asignarClienteARepositorio(String nombreCliente, int idCliente): void
+-asignarRepositorio(): int
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

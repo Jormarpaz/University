@@ -1,0 +1,81 @@
+package es.uned.servidor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import es.uned.repositorio.*;
+
+public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface{
+	
+	private ServicioDatosImpl datos;
+	
+	protected ServicioAutenticacionImpl(ServicioDatosImpl datos) {
+		this.datos = datos;
+	}
+	
+	@Override
+	public int registrarCliente(String nombre, String contraseña) throws RemoteException {
+	    if (datos.contieneCliente(nombre)) {
+	        return 0; // Cliente ya registrado
+	    }
+	    int idCliente = datos.registrarCliente(nombre, contraseña); // Genera y registra el ID
+	    int idRepositorio = datos.asignarRepositorio(idCliente); // Asigna un repositorio al cliente
+	    servicioSrOperador.crearCarpeta(idRepositorio, idCliente); // Solicita al repositorio crear la carpeta del cliente
+	    return idCliente;
+	}
+	
+	public int autenticarCliente(String nombre, String contraseña) {
+        if (datos.nombre_contraseña.containsKey(nombre) && 
+            datos.nombre_contraseña.get(nombre).equals(contraseña)) {
+            return datos.nombre_sesion.get(nombre);
+        }
+        return 0; // Autenticación fallida
+    }
+	
+	public int registrarRepositorio() {
+		int idRepo = generarIdRepositorio();
+	    // Crear y registrar automáticamente un ServicioSrOperadorImpl
+	    ServicioSrOperadorImpl srOperador = new ServicioSrOperadorImpl();
+	    datos.repositorios.put(idRepo, srOperador); // Asociar el repositorio al operador
+	    datos.repositorio_clientes.put(idRepo, new ArrayList<>()); // Inicializar lista de clientes
+	    return idRepo;
+	}
+	
+	private int generarIdRepositorio() {
+	    return (int) (Math.random() * 1000000); // Generador simple de IDs únicos
+	}
+	
+	public boolean autenticarRepositorio(int idRepositorio) {
+        return datos.repositorios.containsKey(idRepositorio);
+    }
+	
+	
+	private void asignarClienteARepositorio(String nombreCliente) {
+	    int idRepositorio = asignarRepositorio(); // Selecciona el repositorio disponible
+	    datos.repositorio_clientes.computeIfAbsent(idRepositorio, k -> new ArrayList<>()).add(nombreCliente);
+	}
+	
+	
+	private int asignarRepositorio() {
+	    int idRepositorioConMenosClientes = -1;
+	    int menorCantidadClientes = Integer.MAX_VALUE;
+
+	    for (Map.Entry<Integer, List<String>> entry : datos.repositorio_clientes.entrySet()) {
+	        if (entry.getValue().size() < menorCantidadClientes) {
+	            menorCantidadClientes = entry.getValue().size();
+	            idRepositorioConMenosClientes = entry.getKey();
+	        }
+	    }
+
+	    return idRepositorioConMenosClientes;
+	}
+
+	private static int sesion = new Random().nextInt();
+	
+	public static int getSesion() {
+		return ++sesion;
+	}
+	
+}

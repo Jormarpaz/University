@@ -1,0 +1,75 @@
+package es.uned.servidor;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import es.uned.fichero.Fichero;
+
+public class ServicioDatosImpl implements ServicioDatosInterface {
+	
+    public Map<String, Integer> nombre_id;
+    public Map<Integer, String> id_nombre;
+    public Map<Integer, List<String>> repositorio_clientes;
+    public Map<Integer, List<Fichero>> cliente_ficheros;
+    public Map<String, Integer> ficheros_descargas;
+	
+	public ServicioDatosImpl() {
+        nombre_id = new HashMap<>();
+        id_nombre = new HashMap<>();
+        repositorio_clientes = new HashMap<>();
+        cliente_ficheros = new HashMap<>();
+        ficheros_descargas = new HashMap<>();
+	}
+	
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	@Override
+	public synchronized int obtenerRepositorioDeCliente(int idCliente) {
+	    // Obtener el nombre del cliente a partir de su ID
+	    String nombreCliente = id_nombre.get(idCliente);
+	    if (nombreCliente == null) {
+	        throw new RuntimeException("No se encontró un cliente con el ID especificado.");
+	    }
+
+	    // Buscar el repositorio que contiene al cliente
+	    for (Map.Entry<Integer, List<String>> entry : repositorio_clientes.entrySet()) {
+	        if (entry.getValue().contains(nombreCliente)) {
+	            return entry.getKey(); // Devuelve el ID del repositorio
+	        }
+	    }
+
+	    // Si no se encuentra el cliente en ningún repositorio, lanzamos una excepción
+	    throw new RuntimeException("El cliente no está asignado a ningún repositorio.");
+	}
+	
+	@Override
+	public void registrarArchivo(int idCliente, Fichero fichero) {
+	    cliente_ficheros.computeIfAbsent(idCliente, k -> new ArrayList<>()).add(fichero);
+	    System.out.println("Archivo registrado: " + fichero.obtenerNombre() + " para el cliente " + idCliente);
+	}
+	
+	@Override
+	// Método para incrementar el contador de descargas
+    public synchronized void incrementarDescargas(String nombreArchivo) {
+        // Si el archivo ya tiene un contador, lo incrementamos, si no, lo inicializamos en 1
+        ficheros_descargas.put(nombreArchivo, ficheros_descargas.getOrDefault(nombreArchivo, 0) + 1);
+    }
+	
+	@Override
+    // Método para obtener el número de descargas de un archivo
+    public synchronized int obtenerNumeroDescargas(String nombreArchivo) {
+        return ficheros_descargas.getOrDefault(nombreArchivo, 0);
+    }
+    
+	@Override
+    public String obtenerNombrePorId(int idCliente) {
+    	return id_nombre.getOrDefault(idCliente, null); // Devuelve el nombre o null si no existe
+    }
+	
+	
+}

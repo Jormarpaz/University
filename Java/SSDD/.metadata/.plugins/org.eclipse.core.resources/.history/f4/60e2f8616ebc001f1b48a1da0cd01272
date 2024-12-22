@@ -1,0 +1,55 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.rmi.RemoteException;
+import es.uned.cliente.*;
+import java.rmi.Naming;
+
+public class ServicioClOperadorImpl implements ServicioClOperadorInterface {
+
+    @Override
+    public boolean subirArchivo(String url, String nombreArchivo) throws RemoteException {
+        // URL de servicio DiscoCliente
+        String urlDiscoCliente = "rmi://localhost:1099/ServicioDiscoCliente";
+        ServicioDiscoClienteInterface servicioDiscoCliente = null; // Definir fuera del try
+
+        try {
+            // Obtener el servicio remoto de DiscoCliente
+            servicioDiscoCliente = (ServicioDiscoClienteInterface) Naming.lookup(urlDiscoCliente);
+            System.out.println("Servicio DiscoCliente encontrado.");
+
+        } catch (Exception e) {
+            System.out.println("Error al buscar el servicio de DiscoCliente: " + e.getMessage());
+            throw new RemoteException("No se pudo conectar al servicio de DiscoCliente", e);
+        }
+
+        // Leemos el archivo a subir
+        byte[] contenido = Files.readAllBytes(new File(url).toPath());
+
+        // Delegar la subida al DiscoCliente
+        return servicioDiscoCliente.subirArchivo("ficheros/", nombreArchivo, contenido);
+    }
+
+    @Override
+    public boolean borrarArchivo(String nombreArchivo) throws RemoteException {
+        // URL de servicio DiscoCliente
+        String urlDiscoCliente = "rmi://localhost:1099/ServicioDiscoCliente";
+        ServicioDiscoClienteInterface servicioDiscoCliente = null; // Definir fuera del try
+
+        try {
+            // Obtener el servicio remoto de DiscoCliente
+            servicioDiscoCliente = (ServicioDiscoClienteInterface) Naming.lookup(urlDiscoCliente);
+            System.out.println("Servicio DiscoCliente encontrado.");
+
+        } catch (Exception e) {
+            System.out.println("Error al buscar el servicio de DiscoCliente: " + e.getMessage());
+            throw new RemoteException("No se pudo conectar al servicio de DiscoCliente", e);
+        }
+
+        // Delegar el borrado al DiscoCliente
+        return servicioDiscoCliente.borrarArchivo("ficheros/", nombreArchivo);
+    }
+}
+
+

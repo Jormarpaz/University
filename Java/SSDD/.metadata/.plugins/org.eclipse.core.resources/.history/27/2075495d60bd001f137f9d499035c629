@@ -1,0 +1,82 @@
+package es.uned.cliente;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.rmi.RemoteException;
+
+import es.uned.fichero.Fichero;
+
+public class ServicioDiscoClienteImpl implements ServicioDiscoClienteInterface {
+
+	@Override
+	public boolean subirArchivo(String rutaDestino, Fichero fichero) throws RemoteException {
+	    File archivoDestino = new File(rutaDestino);
+	    try {
+	        // Verificar si el directorio padre existe, si no, crearlo
+	        File directorioPadre = archivoDestino.getParentFile();
+	        if (!directorioPadre.exists()) {
+	            directorioPadre.mkdirs();
+	        }
+	        
+	     // Escribir el contenido en el archivo
+	        OutputStream os = null;
+	        try {
+	            os = new FileOutputStream(archivoDestino);
+	            boolean exito = fichero.escribirEn(os);
+	            if (!exito) {
+	                throw new IOException("Checksum no coincide, posible corrupción.");
+	            }
+	            System.out.println("Archivo subido con éxito a: " + archivoDestino.getAbsolutePath());
+	        } catch (IOException e) {
+	            System.err.println("Error al guardar el archivo: " + e.getMessage());
+	            throw new RemoteException("Error al guardar el archivo.", e);
+	        } finally {
+	            if (os != null) {
+	                try {
+	                    os.close();
+	                } catch (IOException e) {
+	                    System.err.println("Error al cerrar el flujo de salida: " + e.getMessage());
+	                }
+	            }
+	        }
+	    } catch (IOException e) {
+	        throw new RemoteException("Error al guardar el archivo: " + e.getMessage());
+	    }
+		return null;
+	}
+
+
+	@Override
+	public Fichero descargarArchivo(String rutaArchivo) throws RemoteException {
+	    File file = new File(rutaArchivo);
+	    if (file.exists()) {
+		    System.out.println("Descargando archivo desde: " + file.getAbsolutePath());
+		 // Crear un objeto Fichero para representar el archivo
+		    String propietario = "propietario"; // Aquí puedes recuperar el propietario según el contexto
+		    return new Fichero(rutaArchivo, file.getName(), propietario);
+		} else {
+		    System.out.println("El archivo no existe: " + file.getAbsolutePath());
+		    return null;
+		}
+	}
+
+
+	@Override
+	public boolean borrarArchivo(String rutaArchivo) throws RemoteException {
+	    File file = new File(rutaArchivo);  // Usar la ruta completa proporcionada
+	    if (file.exists() && file.delete()) {
+	        System.out.println("Archivo borrado exitosamente: " + file.getAbsolutePath());
+	        return true;
+	    } else {
+	        System.out.println("No se pudo borrar el archivo: " + file.getAbsolutePath());
+	        return false;
+	    }
+	}
+
+}
+
+
+

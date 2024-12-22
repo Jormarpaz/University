@@ -1,0 +1,22 @@
+package es.uned.servidor;
+
+import java.rmi.RemoteException;
+import java.rmi.Remote;
+import java.util.List;
+import java.util.Map;
+
+public interface ServicioGestorInterface extends Remote {
+	
+	public List<String> listarClientesRepo(int idRepositorio) throws RemoteException;
+	
+	public List<String> listarClientesServer() throws RemoteException;
+
+	public List<Integer> listarRepositorios() throws RemoteException;
+
+	public Map<Integer, List<String>> listarRelaciones() throws RemoteException;
+
+	public List<String> listarFicheros(int sesion, String idCliente) throws RemoteException;
+
+	boolean subirArchivo(int sesion, String nombreArchivo, long tamaño) throws RemoteException;
+
+}

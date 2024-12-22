@@ -1,0 +1,31 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import es.uned.cliente.*;
+
+public class ServicioClOperadorImpl implements ServicioClOperadorInterface {
+	
+	private ServicioDiscoClienteImpl discoCliente;  // Instancia de DiscoCliente para manejo de archivos
+
+    public ServicioClOperadorImpl() {
+        this.discoCliente = new ServicioDiscoClienteImpl();  // Crear instancia de DiscoCliente
+    }
+
+    @Override
+    public boolean subirArchivo(String cliente, String archivo, String url, long tamaño) {
+        // Llamamos al método de DiscoCliente para subir el archivo
+        byte[] contenido = new byte[(int) tamaño];  // Simulamos el contenido del archivo (deberíamos obtenerlo realmente)
+        
+        // Llamada a DiscoCliente para subir el archivo
+        return discoCliente.subirArchivo(url, contenido); // Pasamos la URL y el contenido
+    }
+
+    @Override
+    public boolean borrarArchivo(String cliente, String archivo, String url) {
+        // Lógica para borrar el archivo
+        File file = new File(url);
+        return file.delete();
+    }
+    
+}
+

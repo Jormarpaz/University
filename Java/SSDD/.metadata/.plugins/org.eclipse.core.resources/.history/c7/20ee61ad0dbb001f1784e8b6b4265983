@@ -1,0 +1,191 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import es.uned.comun.*;
+
+public class Repositorio {
+	
+	private int miSesion = 0;
+	private int idRepo;
+	private ServidorInterface servidor;
+	
+	// Constructor
+    public Repositorio() throws RemoteException {
+        // Configuración inicial del repositorio
+        ServicioSrOperadorInterface srOperador = new ServicioSrOperadorImpl(); // Implementación del servicio
+        ServicioSrOperadorInterface remoteSrOperador = (ServicioSrOperadorInterface) UnicastRemoteObject.exportObject(srOperador, 0);
+
+        // Conexión con el servidor
+        try {
+            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+            servidor = (ServidorInterface) registry.lookup("Servidor");
+        } catch (Exception e) {
+            System.out.println("Error al conectar con el servidor: " + e.getMessage());
+            throw new RemoteException("No se pudo establecer conexión con el servidor.");
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+    	try {
+            Repositorio repositorio = new Repositorio(); // Crea una instancia del repositorio
+            repositorio.login(); // Llama al método login
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+    
+    private void void login() throws RemoteException {
+		int opt = 0;
+		
+		do {
+			opt = Gui.menu("Bienvenid@", new String[] {  "Registrar el repositorio",
+														 "Autenticar el repositorio",
+														 "Salir"});
+					
+			switch(opt) {
+				case 0 : registrar(); break;
+				case 1 : autenticar(); break;
+			}
+		}
+		while (opt != 2);
+		
+		if (miSesion != 0) {
+			gui();
+		}
+	}
+    
+    private static void gui() throws RemoteException {
+		int opt = 0;
+		
+		do {
+			opt = Gui.menu("Menu Principal",new String[] {	"Listar Clientes",
+															"Listar Ficheros-Cliente",
+															"Salir"});
+			
+			switch (opt) {
+				case 0: listarclientes(); break;
+				case 1: listarficheros(); break;
+			}
+		}
+		while (opt != 2);
+	}
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static int generarIdRepositorio() {
+        return (int) (Math.random() * 1000000); // Generador simple de IDs únicos
+    }
+    
+    
+    private static void registrar() throws RemoteException {
+        idRepo = generarIdRepositorio(); // Usa la variable de clase
+        miSesion = servidor.registrarRepositorio(idRepo); // Registra el repositorio en el servidor
+        if (miSesion != 0) {
+            System.out.println("Registro exitoso. Su ID único es: " + idRepo);
+        } else {
+            System.out.println("El registro ha fallado.");
+        }
+    }
+	
+    private static void autenticar() throws RemoteException {
+        String input = Gui.input("Autenticarse", "Introduzca su ID único: ");
+        if (input == null || input.trim().isEmpty()) {
+            System.out.println("Error: Por favor, introduzca un número válido.");
+            return;
+        }
+        
+        try {
+            int idRepositorio = Integer.parseInt(input);
+            boolean autenticado = servidor.autenticarRepositorio(idRepositorio);
+            if (autenticado) {
+                miSesion = idRepositorio;
+                System.out.println("Autenticación exitosa. Sesión activa: " + miSesion);
+            } else {
+                System.out.println("Error: ID de repositorio no válido.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Por favor, introduzca un número válido.");
+        }
+    }
+    
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    private static void listarclientes() throws RemoteException {
+        // Llama al servidor para obtener los clientes asociados a este repositorio
+        List<String> clientes = servidor.listarClientesRepo(miSesion, idRepo);
+
+        // Muestra los clientes en la consola
+        System.out.println("Clientes asociados al repositorio " + idRepo + ":");
+        if (clientes.isEmpty()) {
+            System.out.println("No hay clientes asociados a este repositorio.");
+        } else {
+            for (String cliente : clientes) {
+                System.out.println("- " + cliente);
+            }
+        }
+    }
+
+    private static void listarficheros() throws RemoteException {
+        String nombre = Gui.input("Listar Ficheros", "Introduzca el nombre del usuario: ");
+        if (nombre == null || nombre.isEmpty()) {
+            System.out.println("El nombre del usuario no puede estar vacío.");
+            return;
+        }
+
+        // Llama al servidor para obtener los ficheros del cliente
+        List<String> ficheros = servidor.listarFicheros(miSesion, nombre);
+
+        // Muestra los ficheros en la consola
+        System.out.println("Ficheros del cliente " + nombre + ":");
+        if (ficheros.isEmpty()) {
+            System.out.println("No hay ficheros para este cliente.");
+        } else {
+            for (String fichero : ficheros) {
+                System.out.println("- " + fichero);
+            }
+        }
+    }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public boolean recibirArchivo(String cliente, String nombreArchivo, long tamaño) throws RemoteException {
+	    // Crea la carpeta del cliente si no existe
+	    File carpetaCliente = new File("ficheros/" + cliente);
+	    if (!carpetaCliente.exists()) {
+	        carpetaCliente.mkdirs();
+	    }
+
+	    // Simula recibir y guardar el archivo (en este caso, crea un archivo vacío)
+	    try {
+	        File archivo = new File(carpetaCliente, nombreArchivo);
+	        if (archivo.exists()) {
+	            System.out.println("El archivo ya existe. Sobrescribiendo...");
+	        }
+	        boolean creado = archivo.createNewFile();
+	        return creado || archivo.exists(); // Éxito si el archivo se crea o ya existía
+	    } catch (IOException e) {
+	        System.out.println("Error al guardar el archivo: " + e.getMessage());
+	        return false;
+	    }
+	}
+
+
+
+}
+

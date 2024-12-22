@@ -1,0 +1,259 @@
+/*
+ * Nombre: Jorge
+ * Apellidos: Martinez Pazos
+ * Correo: jmartinez5741@alumno.uned.es
+ * 
+ */
+package es.uned.cliente;
+
+import java.io.File;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
+
+import es.uned.comun.*;
+
+public class Cliente {
+	
+	private static int idCliente;
+	private static ServidorInterface servidor;
+	
+	public Cliente() throws RemoteException {
+		try {
+	        // Conexión al servidor
+	        Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+	        servidor = (ServidorInterface) registry.lookup("Servidor");
+	        System.out.println("Conexión al servidor establecida correctamente.");
+	        
+	        // Inicialización del servicio de disco
+	        ServicioDiscoClienteInterface servicioDiscoCliente = new ServicioDiscoClienteImpl();
+	        
+	        // Exportar objeto remoto (RMI)
+	        ServicioDiscoClienteInterface remoteDiscoCliente = (ServicioDiscoClienteInterface) UnicastRemoteObject.exportObject(servicioDiscoCliente, 0);
+	        
+	        // Registrar el servicio en el RMI Registry
+	        registry.rebind("ServicioDiscoCliente", remoteDiscoCliente);
+	        
+	        System.out.println("Servicio DiscoCliente registrado correctamente.");
+
+	    } catch (Exception e) {
+	        System.out.println("Error al conectar con el servidor: " + e.getMessage());
+	        throw new RemoteException("No se pudo establecer conexión con el servidor.");
+	    }
+	}
+
+	
+	@SuppressWarnings("static-access")
+	public static void main(String[] args) throws Exception {
+		try {
+            Cliente cliente = new Cliente(); // Crea una instancia del repositorio
+            cliente.login(); // Llama al método login
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+		 
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static void login() throws RemoteException {
+		int opt = 0;
+		
+		do {
+			opt = Gui.menu("Bienvenid@", new String[] {  "Registrar un nuevo usuario.",
+														 "Autenticarse en el sistema (hacer login).",
+														 "Salir"});
+					
+			switch(opt) {
+				case 0 : registrarse(); break;
+				case 1 : autenticarse(); // Si ya estamos autenticados, accedemos al GUI directamente
+						if (idCliente != 0) {
+							break;
+						}
+						break;
+				case 2 : System.out.println("Saliendo del sistema...");break;
+			}
+		}
+		while (opt != 2);
+	}
+	
+	private static void gui() throws RemoteException {
+		int opt = 0;
+		
+		if (idCliente == 0) {
+		    System.out.println("Debe autenticarse antes de realizar esta acción.");
+		    login();  // Redirigir al login si no está autenticado
+		    return;
+		}
+		
+		do {
+			opt = Gui.menu("Menu Principal",new String[] {	"Subir fichero.",
+															"Bajar fichero.",
+															"Borrar fichero.",
+															"Número de veces que se ha bajado un fichero.",
+															"Listar ficheros.",
+															"Listar Clientes del sistema.",
+															"Salir"});
+			
+			switch (opt) {
+				case 0: subirArchivo(); break;
+				case 1: descargarArchivo(); break;
+				case 2: borrarArchivo(); break;
+				case 3: descargas(); break;
+				case 4: listararchivos(); break;
+				case 5: listarclientes(); break;
+				case 6: System.out.println("Saliendo del sistema...");
+						login();
+						break;
+			}
+		}
+		while (opt != 6);
+	}
+	
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	private static void registrarse() throws RemoteException { 
+	    String nombre = Gui.input("Registrarse", "Introduzca su nombre: ");
+	    try {
+	        idCliente = servidor.registrarCliente(nombre);
+	        if (idCliente != 0) {
+	            System.out.println("Registro exitoso. Su ID único es: " + idCliente);
+	        } else {
+	            System.out.println("El registro ha fallado.");
+	        }
+	    } catch (RemoteException e) {
+	        System.out.println("Error al conectar con el servidor durante el registro: " + e.getMessage());
+	    }
+	}
+	
+	private static void autenticarse() throws RemoteException {
+	    String nombre = Gui.input("Autenticarse", "Introduzca su nombre: ");
+	    String inputId = Gui.input("Autenticarse", "Introduzca su ID: ");
+	    
+	    try {
+	        int id = Integer.parseInt(inputId); // Convierte el ID ingresado a entero
+	        boolean autenticado = servidor.autenticarCliente(nombre, id);
+	        
+	        if (autenticado) {
+	            System.out.println("Autenticación exitosa.");
+	            idCliente = id;
+	            gui();
+	        } else {
+	            System.out.println("Error: nombre o ID incorrectos.");
+	        }
+	    } catch (NumberFormatException e) {
+	        System.out.println("Error: el ID debe ser un número válido.");
+	    }
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	private static void subirArchivo() throws RemoteException {
+	    String rutaArchivo = Gui.input("Subir Archivo", "Ingrese la ruta del archivo a subir (Usar url con '\\'):");
+	    if (rutaArchivo == null || rutaArchivo.isEmpty()) {
+	        System.out.println("Operación cancelada.");
+	        return;
+	    }
+
+	    File archivo = new File(rutaArchivo);
+	    if (!archivo.exists() || !archivo.canRead()) {
+	        System.out.println("El archivo no existe o no se puede leer.");
+	        return;
+	    } 
+
+	    boolean exito = servidor.subirArchivo(idCliente, archivo.getName(), archivo.getPath());
+	    if (!exito) {
+	    	System.out.println("Error al subir el archivo.");
+	    } 
+	}
+
+
+	
+	private static void descargarArchivo() throws RemoteException {
+	    String nombreArchivo = Gui.input("Descargar Archivo", "Ingrese el nombre del archivo a descargar:");
+	    if (nombreArchivo == null || nombreArchivo.isEmpty()) {
+	        System.out.println("Operación cancelada.");
+	        return;
+	    }
+
+	    boolean exito = servidor.descargarArchivo(idCliente, nombreArchivo);
+	    if (!exito) {
+	    	System.out.println("Error al descargar el archivo.");  
+	    }
+	}
+	
+	private static void borrarArchivo() throws RemoteException {
+	    String nombreArchivo = Gui.input("Borrar Archivo", "Ingrese el nombre del archivo a borrar:");
+	    if (nombreArchivo == null || nombreArchivo.isEmpty()) {
+	        System.out.println("Operación cancelada.");
+	        return;
+	    }
+
+	    boolean exito = servidor.borrarArchivo(idCliente, nombreArchivo);
+	    if (!exito) {
+	    	System.out.println("Error al borrar el archivo.");
+	    }
+	}
+
+	private static void descargas() throws RemoteException {
+	    String nombreArchivo = Gui.input("Número de Descargas", "Ingrese el nombre del archivo para ver su número de descargas:");
+	    if (nombreArchivo == null || nombreArchivo.isEmpty()) {
+	        System.out.println("Operación cancelada.");
+	        return;
+	    }
+
+	    // Llama al servidor para obtener el número de descargas
+	    int numDescargas = servidor.obtenerNumeroDescargas(nombreArchivo);
+	    System.out.println("El archivo '" + nombreArchivo + "' ha sido descargado " + numDescargas + " veces.");
+	}
+	
+	private static void listararchivos() throws RemoteException {
+	    // Llama al servidor para obtener la lista de archivos del cliente
+	    List<String> archivos = servidor.listarFicheros(idCliente, null); // null para indicar que queremos los nuestros
+
+	    System.out.println("Tus archivos en el servidor: ");
+	    if (archivos.isEmpty()) {
+	        System.out.println("No tienes archivos en el servidor.");
+	    } else {
+	    	// Iteramos sobre cada archivo en la carpeta
+            for (String archivo : archivos) {
+                try {
+                    // Obtener el número de descargas para cada archivo
+                    int numeroDescargas = servidor.obtenerNumeroDescargas(archivo);  // Asumiendo que este método existe y funciona correctamente
+
+                    // Mostrar el nombre del archivo y su número de descargas
+                    System.out.println("Archivo: " + archivo + " - Número de descargas: " + numeroDescargas);
+                } catch (RemoteException e) {
+                    System.err.println("Error al obtener el número de descargas para " + archivo + ": " + e.getMessage());
+                }
+            }
+	    }
+	}
+	
+	private static void listarclientes() throws RemoteException {
+	    // Llama al servidor para obtener la lista de clientes
+	    List<String> clientes = servidor.listarClientesCliente();
+
+	    System.out.println("Clientes registrados en el sistema:");
+	    if (clientes.isEmpty()) {
+	        System.out.println("No hay otros clientes registrados.");
+	    } else {
+	        for (String cliente : clientes) {
+	            System.out.println("- " + cliente);
+	        }
+	    }
+	}
+
+	
+	
+}

@@ -1,0 +1,68 @@
+package es.uned.repositorio;
+
+import es.uned.cliente.*;
+import java.rmi.RemoteException;
+import java.rmi.Naming;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+public class ServicioSrOperadorImpl implements ServicioSrOperadorInterface {
+
+	@Override
+	public boolean descargarArchivo(String rutaArchivo, String nombreArchivo) throws RemoteException {
+		
+	    // URL de servicio DiscoCliente
+	    String urlDiscoCliente = "rmi://localhost:1099/ServicioDiscoCliente";
+	    ServicioDiscoClienteInterface servicioDiscoCliente;
+
+	    try {
+	        // Obtener el servicio remoto de DiscoCliente
+	        servicioDiscoCliente = (ServicioDiscoClienteInterface) Naming.lookup(urlDiscoCliente);
+	        System.out.println("Servicio DiscoCliente encontrado.");
+	    } catch (Exception e) {
+	        System.out.println("Error al buscar el servicio de DiscoCliente: " + e.getMessage());
+	        throw new RemoteException("No se pudo conectar al servicio de DiscoCliente", e);
+	    }
+	    
+	    // Delegar la descarga al DiscoCliente
+	    byte[] contenido = servicioDiscoCliente.descargarArchivo(rutaArchivo);
+	    if (contenido == null) {
+	        throw new RemoteException("El archivo no existe en el repositorio.");
+	    }
+	    
+	    // Obtener la ruta estándar de Descargas
+	    String rutaDestino = getRutaDescarga() + File.separator + nombreArchivo;
+	    
+	    // Asegúrate de que el directorio de destino existe, si no, créalo
+	    File destinoArchivo = new File(rutaDestino);
+	    File directorioDestino = destinoArchivo.getParentFile();
+	    if (directorioDestino != null && !directorioDestino.exists()) {
+	        directorioDestino.mkdirs();  // Crear directorios si no existen
+	    }
+
+	    // Guardar el archivo descargado en el destino
+	    try {
+	        Files.write(destinoArchivo.toPath(), contenido);
+	        System.out.println("Archivo descargado exitosamente a " + rutaDestino);
+	        return true;
+	    } catch (IOException e) {
+	        throw new RemoteException("Error al guardar el archivo descargado: " + e.getMessage());
+	    }
+	}
+	
+	public String getRutaDescarga() {
+	    // Obtener el directorio de usuario dependiendo del sistema operativo
+	    String userHome = System.getProperty("user.home");
+
+	    // Asegurarse de que esté en la ruta de Descargas para ambos sistemas
+	    String rutaDescargas = userHome + File.separator + "Downloads";
+
+	    // Si quieres personalizar aún más la ruta, por ejemplo, asegurarte que sea en la carpeta del cliente
+	    // podrías agregar más a la ruta, pero de momento esto garantiza que va a "Downloads" del sistema.
+
+	    return rutaDescargas;
+	}
+
+}
+

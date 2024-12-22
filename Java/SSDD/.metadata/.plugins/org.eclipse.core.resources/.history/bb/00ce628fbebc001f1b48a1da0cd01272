@@ -1,0 +1,76 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.rmi.RemoteException;
+import java.rmi.Naming;
+
+import es.uned.cliente.*;
+
+public class ServicioClOperadorImpl implements ServicioClOperadorInterface {
+	
+	private final String basePath;
+	
+	public ServicioClOperadorImpl(String basePath) {
+		this.basePath = basePath;
+	}
+
+	@Override
+	public boolean subirArchivo(String rutaOrigen, String nombreArchivo, String rutaDestino) throws RemoteException {
+	    // URL del ServicioDiscoCliente
+	    String urlDiscoCliente = "rmi://localhost:1099/ServicioDiscoCliente";
+	    ServicioDiscoClienteInterface servicioDiscoCliente;
+
+	    try {
+	        servicioDiscoCliente = (ServicioDiscoClienteInterface) Naming.lookup(urlDiscoCliente);
+	        System.out.println("Servicio DiscoCliente encontrado.");
+	    } catch (Exception e) {
+	        System.out.println("Error al buscar el servicio de DiscoCliente: " + e.getMessage());
+	        throw new RemoteException("No se pudo conectar al servicio de DiscoCliente", e);
+	    }
+
+	    try {
+            byte[] contenido = Files.readAllBytes(new File(ruta).toPath());
+
+            // Construir la ruta completa en el repositorio
+            File archivoDestino = new File(basePath + "/" + rutaDestino);
+
+            // Crear carpetas si no existen
+            File directorioPadre = archivoDestino.getParentFile();
+            if (!directorioPadre.exists()) {
+                directorioPadre.mkdirs();
+            }
+
+            // Guardar el archivo
+            Files.write(archivoDestino.toPath(), contenido);
+            System.out.println("Archivo subido con éxito a: " + archivoDestino.getAbsolutePath());
+            return true;
+        } catch (IOException e) {
+            throw new RemoteException("Error al guardar el archivo: " + e.getMessage());
+        }
+	}
+
+
+	@Override
+	public boolean borrarArchivo(String rutaArchivo) throws RemoteException {
+	    // URL del ServicioDiscoCliente
+	    String urlDiscoCliente = "rmi://localhost:1099/ServicioDiscoCliente";
+	    ServicioDiscoClienteInterface servicioDiscoCliente = null;
+
+	    try {
+	        // Obtener el servicio remoto de DiscoCliente
+	        servicioDiscoCliente = (ServicioDiscoClienteInterface) Naming.lookup(urlDiscoCliente);
+	        System.out.println("Servicio DiscoCliente encontrado.");
+	    } catch (Exception e) {
+	        System.out.println("Error al buscar el servicio de DiscoCliente: " + e.getMessage());
+	        throw new RemoteException("No se pudo conectar al servicio de DiscoCliente", e);
+	    }
+
+	    // Delegar el borrado al DiscoCliente con la ruta completa del archivo
+	    return servicioDiscoCliente.borrarArchivo(rutaArchivo);
+	}
+
+}
+
+

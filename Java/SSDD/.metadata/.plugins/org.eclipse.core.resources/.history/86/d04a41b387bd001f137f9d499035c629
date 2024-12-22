@@ -1,0 +1,79 @@
+/*
+ * Nombre: Jorge
+ * Apellidos: Martinez Pazos
+ * Correo: jmartinez5741@alumno.uned.es
+ * 
+ */
+package es.uned.repositorio;
+
+import es.uned.cliente.*;
+import es.uned.fichero.Fichero;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.rmi.RemoteException;
+import java.rmi.Naming;
+import java.io.File;
+import java.io.IOException;
+
+public class ServicioSrOperadorImpl implements ServicioSrOperadorInterface {
+
+	@Override
+	public boolean descargarArchivo(String rutaArchivo, String nombreArchivo, String propietario) throws RemoteException {
+		
+	    // URL de servicio DiscoCliente
+	    String urlDiscoCliente = "rmi://localhost:1099/ServicioDiscoCliente";
+	    ServicioDiscoClienteInterface servicioDiscoCliente;
+
+	    try {
+	        // Obtener el servicio remoto de DiscoCliente
+	        servicioDiscoCliente = (ServicioDiscoClienteInterface) Naming.lookup(urlDiscoCliente);
+	    } catch (Exception e) {
+	    	System.out.println("Error al buscar el servicio de DiscoCliente: " + e.getMessage());
+	        return false;  // Retorna false si no se puede obtener el servicio
+	    }
+	    
+	    // Delegar la descarga al DiscoCliente
+	    Fichero fichero  = servicioDiscoCliente.descargarArchivo(rutaArchivo, propietario);
+	    if (fichero == null) {
+	        return false;  // Retorna false si el archivo no se encuentra
+	    }
+
+	    // Obtener la ruta estándar de Descargas
+	    String rutaDestino = getRutaDescarga() + File.separator + fichero.obtenerNombre();
+
+	    // Asegúrate de que el directorio de destino existe, si no, créalo
+	    File destinoArchivo = new File(rutaDestino);
+	    File directorioDestino = destinoArchivo.getParentFile();
+	    if (directorioDestino != null && !directorioDestino.exists()) {
+	        directorioDestino.mkdirs();  // Crear directorios si no existen
+	    }
+
+	    // Guardar el archivo descargado en el destino
+	    try (OutputStream os = new FileOutputStream(destinoArchivo)) {
+	        boolean exito = fichero.escribirEn(os); // Escribe el contenido usando el método de `Fichero`
+	        if (!exito) {
+	        	 System.out.println("Checksum no coincide, posible corrupción.");
+	             return false;  // Retorna false si el checksum no coincide
+	         }
+	        return true;
+	    } catch (IOException e) {
+	    	System.out.println("Error al guardar el archivo descargado: " + e.getMessage());
+	        return false;  // Retorna false si ocurre un error al guardar el archivo
+	    }
+	}
+	
+	public String getRutaDescarga() {
+	    // Obtener el directorio de usuario dependiendo del sistema operativo
+	    String userHome = System.getProperty("user.home");
+
+	    // Asegurarse de que esté en la ruta de Descargas para ambos sistemas
+	    String rutaDescargas = userHome + File.separator + "Downloads";
+
+	    // Si quieres personalizar aún más la ruta, por ejemplo, asegurarte que sea en la carpeta del cliente
+	    // podrías agregar más a la ruta, pero de momento esto garantiza que va a "Downloads" del sistema.
+
+	    return rutaDescargas;
+	}
+
+}
+

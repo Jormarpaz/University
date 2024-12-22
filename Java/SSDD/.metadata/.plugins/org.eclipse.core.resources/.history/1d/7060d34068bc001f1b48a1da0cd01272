@@ -1,0 +1,51 @@
+package es.uned.cliente;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class ServicioDiscoClienteImpl implements ServicioDiscoClienteInterface {
+	
+	// Método para subir un archivo
+    public boolean subirArchivo(String url, byte[] contenido) {
+        File file = new File(url);
+        
+        try {
+            // Verifica si el directorio donde se va a guardar el archivo existe, si no, lo crea
+            Path path = Paths.get(url).getParent();
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+
+            // Escribe el archivo
+            Files.write(file.toPath(), contenido);
+            System.out.println("Archivo subido con éxito a " + url);
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error al subir el archivo: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Método para descargar un archivo
+    public byte[] descargarArchivo(String url) {
+        File file = new File(url);
+        try {
+            if (file.exists()) {
+                // Lee el archivo y lo retorna como un array de bytes
+                return Files.readAllBytes(file.toPath());
+            } else {
+                System.out.println("El archivo no existe en la ruta: " + url);
+                return null;
+            }
+        } catch (IOException e) {
+            System.out.println("Error al descargar el archivo: " + e.getMessage());
+            return null;
+        }
+    }
+    
+}
+
+

@@ -1,0 +1,41 @@
+package es.uned.repositorio;
+
+import java.io.File;
+import es.uned.cliente.*;
+
+public class ServicioClOperadorImpl implements ServicioClOperadorInterface {
+	
+	private ServicioDiscoClienteImpl discoCliente;  // Instancia de DiscoCliente para manejo de archivos
+
+    public ServicioClOperadorImpl() {
+        this.discoCliente = new ServicioDiscoClienteImpl();  // Crear instancia de DiscoCliente
+    }
+
+    @Override
+    public boolean subirArchivo(String ruta, String nombreArchivo) throws RemoteException {
+        File archivoOrigen = new File(ruta);
+        if (!archivoOrigen.exists()) {
+            throw new RemoteException("El archivo no existe en la ruta especificada.");
+        }
+
+        File carpetaCliente = new File("ficheros/");
+        if (!carpetaCliente.exists()) {
+            carpetaCliente.mkdirs(); // Crear carpeta si no existe
+        }
+
+        File archivoDestino = new File(carpetaCliente, nombreArchivo);
+        try {
+            Files.copy(archivoOrigen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            return true;
+        } catch (IOException e) {
+            throw new RemoteException("Error al guardar el archivo: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean borrarArchivo(String nombreArchivo) throws RemoteException {
+        File archivo = new File("ficheros/" + nombreArchivo);
+        return archivo.delete();
+    }
+}
+
