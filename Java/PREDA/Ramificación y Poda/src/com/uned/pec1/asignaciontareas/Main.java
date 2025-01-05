@@ -4,87 +4,129 @@
  */
 package com.uned.pec1.asignaciontareas;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
-/**
- *
- * @author jorge
- */
 public class Main {
+
     public static void main(String[] args) {
         boolean traza = false;
-        
-        //-h
-        if (args.length == 0 || args[0].equals("-h")) {
-            mostrarAyuda();
-            return;
-        }
-        
-        //-t
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-t")) {
-                traza = true;
-            }
-        }
-        
-        
-        
+        String ficheroEntrada = null;
+        String ficheroSalida = null;
+
         try {
-            //Comprobar argumentos
-            if (args.length < 2){
-                System.out.println("Uso: java -jar tareas.jar [fichero entrada] [fichero salida]");
-                return;
+            // Procesar argumentos
+            for (String arg : args) {
+                if (arg.equals("-t")) {
+                    traza = true;
+                } else if (arg.equals("-h")) {
+                    mostrarAyuda();
+                    return;
+                } else if (arg.endsWith(".txt")) {
+                    if (ficheroEntrada == null) {
+                        ficheroEntrada = arg;
+                    } else if (ficheroSalida == null) {
+                        ficheroSalida = arg;
+                    } else {
+                        throw new IllegalArgumentException("Demasiados archivos proporcionados.");
+                    }
+                } else {
+                    throw new IllegalArgumentException("Argumento no válido: " + arg);
+                }
             }
-            
-            String ficheroEntrada = args[args.length -2];
-            String ficheroSalida = args[args.length -1];
-            
-            //Leer la tabla de costes
-            int[][] tablaCostes = leerTablaCostes(ficheroEntrada);
-            
-            //Calcular la asignación óptima
-            AsignadorTareas asignador = new AsignadorTareas(tablaCostes, traza);
-            int[][] asignacion = asignador.calcularAsignacionOptima();
-            
-            //Escribir la salida
-            escribirResultado(ficheroSalida, asignacion);
-            
-        } catch(Exception e) {
-            e.printStackTrace();
-        }    
+
+            // Leer parámetros
+            int[][] matrizCostes;
+            if (ficheroEntrada != null) {
+                matrizCostes = leerParametros(ficheroEntrada);
+            } else {
+                matrizCostes = leerParametrosDesdeConsola();
+            }
+
+            // Ejecutar el algoritmo
+            String resultado = AsignadorTareas.ejecutarAlgoritmo(matrizCostes, traza);
+
+            // Guardar o mostrar el resultado
+            if (ficheroSalida != null) {
+                escribirResultado(ficheroSalida, resultado);
+            } else {
+                System.out.println(resultado);
+            }
+
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error: " + e.getMessage());
+            mostrarAyuda();
+        } catch (Exception e) {
+            System.err.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    
+    
+    private static int[][] leerParametros(String ficheroEntrada) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(ficheroEntrada))) {
+            // Leer las dimensiones de la matriz desde la primera línea
+            String[] dimensiones = br.readLine().split(" ");
+            int filas = Integer.parseInt(dimensiones[0]);
+            int columnas = Integer.parseInt(dimensiones[1]);
+
+            // Crear la matriz de costes
+            int[][] matriz = new int[filas][columnas];
+
+            // Leer las filas de la matriz
+            for (int i = 0; i < filas; i++) {
+                String[] valores = br.readLine().split(" ");
+                for (int j = 0; j < columnas; j++) {
+                    matriz[i][j] = Integer.parseInt(valores[j]);
+                }
+            }
+
+            return matriz;
+        }
     }
     
-    private static int[][] leerTablaCostes(String ficheroEntrada) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(ficheroEntrada));
-        String[] dimensiones = br.readLine().split(" ");
-        int filas = Integer.parseInt(dimensiones[0]);
-        int columnas = Integer.parseInt(dimensiones[1]);
-        
-        int[][] tabla = new int[filas][columnas];
+    private static int[][] leerParametrosDesdeConsola() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Introduce el número de filas de la matriz:");
+        int filas = scanner.nextInt();
+
+        System.out.println("Introduce el número de columnas de la matriz:");
+        int columnas = scanner.nextInt();
+
+        int[][] matriz = new int[filas][columnas];
+        System.out.println("Introduce los valores de la matriz (fila por fila):");
+
         for (int i = 0; i < filas; i++) {
-            String[] valores = br.readLine().split(" ");
+            System.out.println("Introduce los valores de la fila " + (i + 1) + " separados por espacios:");
             for (int j = 0; j < columnas; j++) {
-                tabla[i][j] = Integer.parseInt(valores[j]);
+                matriz[i][j] = scanner.nextInt();
             }
         }
-        br.close();
-        return tabla; 
+
+        return matriz;
     }
-        
-    private static void escribirResultado(String ficheroSalida, int[][] asignacion) throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(ficheroSalida));
-        for (int[] par : asignacion) {
-            bw.write(par[0] + " " + par[1]);
-            bw.newLine();
+    
+    private static void escribirResultado(String ficheroSalida, String resultado) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ficheroSalida))) {
+            bw.write(resultado);
         }
-        bw.close();
     }
+
+
+
     
     private static void mostrarAyuda() {
-        System.out.println("SINTAXIS: tareas [-t] [-h] [fichero entrada] [fichero salida]");
-        System.out.println("-t                  Traza el algoritmo");
-        System.out.println("-h                  Muestra esta ayuda");
-        System.out.println("[fichero entrada]   Nombre del fichero de entrada ");
-        System.out.println("[fichero salida]    Nombre del fichero de salida ");
+        System.out.println("SINTAXIS: java -jar tareas.jar [-t][-h] [fichero entrada] [fichero salida]");
+        System.out.println("-t    Traza del algoritmo.");
+        System.out.println("-h    Muestra esta ayuda.");
+        System.out.println("[fichero entrada]   Archivo con la tabla de costes.");
+        System.out.println("[fichero salida]    Archivo para guardar los resultados (opcional).");
     }
 }
+
+

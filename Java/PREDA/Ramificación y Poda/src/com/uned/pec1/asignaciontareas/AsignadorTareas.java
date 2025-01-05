@@ -4,68 +4,73 @@
  */
 package com.uned.pec1.asignaciontareas;
 
-import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.Arrays;
 
-/**
- *
- * @author jorge
- */
 public class AsignadorTareas {
-    private int[][] tablaCostes;
-    private boolean traza;
-    
-    public AsignadorTareas(int[][] tablaCostes, boolean traza) {
-        this.tablaCostes = tablaCostes;
-        this.traza = traza;
-    }
-    
-    public int[][] calcularAsignacionOptima(){
-        PriorityQueue<Nodo> cola = new PriorityQueue<>((a, b) -> a.coste - b.coste);
-        
-        Nodo nodoInicial = new Nodo(0, 0, new ArrayList<>());
-        cola.add(nodoInicial);
-        
-        Nodo mejorSolucion = null;
-        
-        while(!cola.isEmpty()) {
-            Nodo nodoActual = cola.poll();
-            
-            if(traza) {
-                System.out.println("Procesando nodo en nivel " + nodoActual.nivel + " con coste acumulado " + nodoActual.coste);
-                System.out.println("Asignaciones hasta el momento: " + nodoActual.asignaciones);
+
+    public static String ejecutarAlgoritmo(int[][] matrizCostes, boolean traza) {
+        try {
+            // Validar que la matriz no esté vacía
+            if (matrizCostes.length == 0 || matrizCostes[0].length == 0) {
+                throw new IllegalArgumentException("La matriz de entrada está vacía.");
             }
+
+            // Inicializar el algoritmo de Ramificación y Poda
+            AlgoritmoRamificacionYPoda algoritmo = new AlgoritmoRamificacionYPoda(matrizCostes, traza);
             
-            
-            if (nodoActual.nivel == tablaCostes.length) {
-                if (mejorSolucion == null || nodoActual.coste < mejorSolucion.coste) {
-                    mejorSolucion = nodoActual;
-                    if(traza) {
-                        System.out.println("Mejor solución encontrada con coste " + mejorSolucion.coste);
-                    }
+            // Inicializar las asignaciones y estimaciones
+            boolean[] tareasAsignadas = new boolean[matrizCostes.length];
+            int[] agentes = new int[matrizCostes.length];
+            Arrays.fill(agentes, -1);
+
+            // Calcular estimaciones iniciales
+            int estimacionOptima = 0;
+            int estimacionPesimista = 0;
+            for (int tarea = 0; tarea < matrizCostes[0].length; tarea++) {
+                int minimo = Integer.MAX_VALUE;
+                int maximo = Integer.MIN_VALUE;
+                for (int agente = 0; agente < matrizCostes.length; agente++) {
+                    minimo = Math.min(minimo, matrizCostes[agente][tarea]);
+                    maximo = Math.max(maximo, matrizCostes[agente][tarea]);
                 }
-            } else {
-                for (Nodo hijo : nodoActual.generarHijos(tablaCostes)) {
-                    cola.add(hijo);
-                    if (traza) {
-                        System.out.println("Generando hijo: " + hijo.asignaciones + " con coste " + hijo.coste);
-                    }
-                }
+                estimacionOptima += minimo;
+                estimacionPesimista += maximo;
             }
-        }
-        
-        if (mejorSolucion != null) {
-            System.out.println("Asignacion optima final: ");
-            for(int i = 0; i < mejorSolucion.asignaciones.size(); i++) {
-                System.out.println("Agente " + (i + 1) + " realiza la tarea " + (mejorSolucion.asignaciones.get(i) + 1));
+
+            // Crear el nodo raíz
+            Nodo nodoRaiz = new Nodo(
+                tareasAsignadas,       // Ninguna tarea asignada
+                agentes,               // Sin agentes asignados
+                0,                     // Coste inicial
+                estimacionOptima,      // Estimación optimista inicial
+                estimacionPesimista,   // Estimación pesimista inicial
+                0,                     // Nivel inicial
+                0                      // Cota inicial
+            );
+
+
+            // Ejecutar el algoritmo
+            algoritmo.ejecutar(nodoRaiz);
+
+            // Validar si se encontró una solución
+            if (algoritmo.obtenerMejorSolucion() == null) {
+                return "No se encontró una solución óptima.";
             }
+
+            // Generar el resultado en el formato esperado
+            Matriz matriz = new Matriz(matrizCostes); // Usamos una matriz auxiliar para formatear el resultado
+            return matriz.generarResultado(algoritmo.obtenerMejorSolucion().obtenerAsignaciones());
+
+        } catch (IllegalArgumentException e) {
+            return "Error de validación: " + e.getMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error inesperado durante la ejecución del algoritmo.";
         }
-        
-        int[][] asignacion = new int[tablaCostes.length][2];
-        for(int i = 0; i < mejorSolucion.asignaciones.size(); i++) {
-            asignacion[i][0] = i +1; //Agente
-            asignacion[i][1] = mejorSolucion.asignaciones.get(i) + 1; //Tarea
-        }
-        return asignacion;
     }
 }
+
+
+
+
+

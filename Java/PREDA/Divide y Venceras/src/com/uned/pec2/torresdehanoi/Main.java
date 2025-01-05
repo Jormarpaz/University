@@ -5,50 +5,63 @@
 package com.uned.pec2.torresdehanoi;
 
 import java.io.*;
+import java.util.Scanner;
 
 /**
- *
  * @author jorge
  */
 public class Main {
     public static void main(String[] args) {
         boolean traza = false;
-
-        // -h: Mostrar ayuda
-        if (args.length == 0 || args[0].equals("-h")) {
-            mostrarAyuda();
-            return;
-        }
-
-        // -t: Activar trazas
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-t")) {
-                traza = true;
-            }
-        }
-
+        String ficheroEntrada = null;
+        String ficheroSalida = null;
+        
         try {
-            // Comprobar argumentos
-            if (args.length < 2) {
-                System.out.println("Uso: java -jar hanoi.jar [-t] [fichero entrada] [fichero salida]");
-                return;
+            // 1. Validación de los argumentos y asignación de traza
+            for (int i = 0; i < args.length; i++) {
+                String arg = args[i];
+                if (arg.equals("-t")) {
+                    traza = true; // Activar traza
+                } else if (arg.equals("-h")) {
+                    mostrarAyuda();
+                    return;
+                } else if (arg.endsWith(".txt")) {
+                    if (ficheroEntrada == null) {
+                        ficheroEntrada = arg; // Primer archivo que se encuentra es de entrada
+                    } else {
+                        ficheroSalida = arg; // Segundo archivo es de salida (si existe)
+                    }
+                } else {
+                    throw new IllegalArgumentException("Argumento no válido: " + arg);
+                }
             }
 
-            String ficheroEntrada = args[args.length - 2];
-            String ficheroSalida = args[args.length - 1];
+            // 2. Leer los parámetros del problema
+            int[] parametros;
+            if (ficheroEntrada != null && new File(ficheroEntrada).exists()) {
+                parametros = leerParametros(ficheroEntrada);
+            } else if (ficheroEntrada == null) { // Si no hay fichero de entrada, pedir por consola
+                parametros = leerParametrosDesdeConsola();
+            } else {
+                parametros = leerParametrosDesdeConsola(); // Si no existe el archivo, pedir por consola
+            }
 
-            // Leer datos del fichero de entrada
-            int[] parametros = leerParametros(ficheroEntrada);
-
-            // Resolver Torres de Hanoi
+            // 3. Resolver el problema
             Solucionador solucionador = new Solucionador(parametros[0], parametros[1], parametros[2], traza);
             String resultado = solucionador.resolver();
 
-            // Escribir resultado en el fichero de salida
-            escribirResultado(ficheroSalida, resultado);
+            // 4. Escribir resultado en archivo o por consola
+            if (ficheroSalida != null) {
+                escribirResultado(ficheroSalida, resultado);
+            } else {
+                System.out.println(resultado); // Si no hay fichero de salida, se imprime por consola
+            }
 
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+            mostrarAyuda();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error inesperado: " + e.getMessage());
         }
     }
 
@@ -59,6 +72,17 @@ public class Main {
         int destino = Integer.parseInt(valores[1]);
         int numDiscos = Integer.parseInt(valores[2]);
         br.close();
+        return new int[]{origen, destino, numDiscos};
+    }
+    
+    private static int[] leerParametrosDesdeConsola() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduce el poste origen:");
+        int origen = scanner.nextInt();
+        System.out.println("Introduce el poste destino:");
+        int destino = scanner.nextInt();
+        System.out.println("Introduce el número de discos:");
+        int numDiscos = scanner.nextInt();
         return new int[]{origen, destino, numDiscos};
     }
 

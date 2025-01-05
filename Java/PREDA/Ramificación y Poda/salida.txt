@@ -1,3 +1,11 @@
-1 1
-2 3
-3 2
+4 4
+11 12 18 40 
+14 15 13 22 
+11 17 19 23 
+17 14 20 28 
+
+Asignaciones optimas:
+Tarea 1 -> Agente 1
+Tarea 2 -> Agente 4
+Tarea 3 -> Agente 2
+Tarea 4 -> Agente 3

@@ -4,35 +4,186 @@
  */
 package com.uned.pec1.asignaciontareas;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-/**
- *
- * @author jorge
- */
-public class Nodo {
-    int nivel; //Nivel en el arbol
-    int coste; //Coste acumulado
-    List<Integer> asignaciones; //Tareas asignadas a agentes
-    
-    public Nodo(int nivel, int coste, List<Integer> asignaciones) {
-        this.nivel = nivel;
+public class Nodo implements Comparable<Nodo> {
+
+    private final boolean[] tareasAsignadas; // Representa las tareas asignadas (true = asignada)
+    private final int[] agentes; // Representa los agentes asignados a las tareas
+    private int coste; // Coste acumulado
+    private int estimacionOptima; // Estimación del coste óptimo
+    private int estimacionPesimista; // Estimación del coste pesimista
+    private int cota; // Valor usado para decidir si se poda
+    private final int nivel; // Nivel del nodo en el árbol
+
+    /**
+     * Constructor principal de la clase Nodo.
+     */
+    public Nodo(boolean[] tareasAsignadas, int[] agentes, int coste, int estimacionOptima, int estimacionPesimista, int cota, int nivel) {
+        this.tareasAsignadas = Arrays.copyOf(tareasAsignadas, tareasAsignadas.length);
+        this.agentes = Arrays.copyOf(agentes, agentes.length);
         this.coste = coste;
-        this.asignaciones = new ArrayList<>(asignaciones);
+        this.estimacionOptima = estimacionOptima;
+        this.estimacionPesimista = estimacionPesimista;
+        this.cota = cota;
+        this.nivel = nivel;
+    }
+
+    /**
+     * Constructor con copia. Crea un nuevo nodo hijo a partir de un nodo padre.
+     */
+    public Nodo(Nodo nodoPadre) {
+        this.tareasAsignadas = Arrays.copyOf(nodoPadre.tareasAsignadas, nodoPadre.tareasAsignadas.length);
+        this.agentes = Arrays.copyOf(nodoPadre.agentes, nodoPadre.agentes.length);
+        this.coste = nodoPadre.coste;
+        this.estimacionOptima = nodoPadre.estimacionOptima;
+        this.estimacionPesimista = nodoPadre.estimacionPesimista;
+        this.cota = nodoPadre.cota;
+        this.nivel = nodoPadre.nivel + 1;
+    }
+
+    /**
+     * Método para crear un nodo hijo al asignar una nueva tarea a un agente.
+     */
+    public Nodo crearHijo(int agente, int[][] tablaCostes) {
+        boolean[] nuevasTareas = Arrays.copyOf(tareasAsignadas, tareasAsignadas.length);
+        int[] nuevosAgentes = Arrays.copyOf(agentes, agentes.length);
+
+        nuevasTareas[nivel] = true; // Marca la tarea actual como asignada
+        nuevosAgentes[nivel] = agente;
+
+        int nuevoCoste = coste + tablaCostes[agente][nivel];
+        int nuevaEstimacionOptima = calcularEstimacionOptima(tablaCostes, nuevasTareas, nivel + 1);
+        int nuevaEstimacionPesimista = calcularEstimacionPesimista(tablaCostes, nuevasTareas, nivel + 1);
+        int nuevaCota = Math.max(nuevaEstimacionOptima, nuevaEstimacionPesimista);
+
+        return new Nodo(nuevasTareas, nuevosAgentes, nuevoCoste, nuevaEstimacionOptima, nuevaEstimacionPesimista, nuevaCota, nivel + 1);
+    }
+
+    /**
+     * Método para calcular la estimación óptima.
+     */
+    private int calcularEstimacionOptima(int[][] tablaCostes, boolean[] tareas, int nivelActual) {
+        int sumaMinimos = 0;
+        for (int i = nivelActual; i < tablaCostes.length; i++) {
+            int minimo = Integer.MAX_VALUE;
+            for (int j = 0; j < tablaCostes[i].length; j++) {
+                if (!tareas[j]) {
+                    minimo = Math.min(minimo, tablaCostes[i][j]);
+                }
+            }
+            sumaMinimos += minimo;
+        }
+        return sumaMinimos;
+    }
+
+    /**
+     * Método para calcular la estimación pesimista.
+     */
+    private int calcularEstimacionPesimista(int[][] tablaCostes, boolean[] tareas, int nivelActual) {
+        int suma = 0;
+        for (int tarea = nivelActual; tarea < tablaCostes.length; tarea++) {
+            int maximo = Integer.MIN_VALUE;
+            for (int[] tablaCoste : tablaCostes) {
+                if (!tareas[tarea]) {
+                    maximo = Math.max(maximo, tablaCoste[tarea]);
+                }
+            }
+            suma += maximo;
+        }
+        return suma;
     }
     
-    public List<Nodo> generarHijos(int[][] tablaCostes) {
-        List<Nodo> hijos = new ArrayList<>();
-        for(int tarea = 0; tarea < tablaCostes[0].length; tarea++) {
-            if(!asignaciones.contains(tarea)) {
-                List<Integer> nuevaAsignacion = new ArrayList<>(asignaciones);
-                nuevaAsignacion.add(tarea);
-                int nuevoCoste = coste + tablaCostes[nivel][tarea];
-                hijos.add(new Nodo(nivel +1, nuevoCoste, nuevaAsignacion));
+    public boolean agenteAsignado(int agente) {
+    for (int asignado : agentes) {
+        if (asignado == agente) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+    /**
+     * Métodos getter para acceder a los atributos del nodo.
+     * @return 
+     */
+    public int[] obtenerAsignaciones() {
+        return agentes;
+    }
+
+    public boolean tareaAsignada(int tarea) {
+        return tareasAsignadas[tarea];
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public int getCoste() {
+        return coste;
+    }
+    
+    public int[] getAgentes() {
+        return agentes; // Un arreglo de enteros que representa la asignación de tareas
+    }
+    
+    public boolean[] getTareasAsignadas() {
+        return tareasAsignadas;
+    }
+
+    public int getEstimacionOptima() {
+        return estimacionOptima;
+    }
+
+    public int getEstimacionPesimista() {
+        return estimacionPesimista;
+    }
+
+    public int getCota() {
+        return cota;
+    }
+    
+    public void setCoste(int coste) {
+        this.coste = coste;
+    }
+
+    public void setEstimacionOptima(int estimacion) {
+        this.estimacionOptima = estimacion;
+    }
+
+    public void setEstimacionPesimista(int estimacion) {
+        this.estimacionPesimista = estimacion;
+    }
+
+    public void setCota(int cota) {
+        this.cota = cota;
+    }
+
+    @Override
+    public int compareTo(Nodo otro) {
+        return Integer.compare(this.estimacionOptima, otro.estimacionOptima);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Asignaciones: ");
+        // Mostrar tareas primero y luego agentes
+        for (int i = 0; i < tareasAsignadas.length; i++) {
+            if (tareasAsignadas[i]) {
+                sb.append("Tarea ").append(i + 1).append(" -> Agente ").append(agentes[i] + 1).append("; ");
             }
         }
-        return hijos;
+        sb.append("\nCoste acumulado: ").append(coste);
+        sb.append(", Estimacion Optima: ").append(estimacionOptima);
+        sb.append(", Estimacion Pesimista: ").append(estimacionPesimista);
+        sb.append(", Cota: ").append(cota);
+        sb.append(", Nivel: ").append(nivel);
+        return sb.toString();
     }
-    
 }
+
+
+
+
