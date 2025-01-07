@@ -6,15 +6,25 @@ package com.uned.pec1.asignaciontareas;
 
 import java.util.Arrays;
 
+/**
+ * @author jorge
+ */
 public class Nodo implements Comparable<Nodo> {
-
-    private final boolean[] tareasAsignadas; // Representa las tareas asignadas (true = asignada)
-    private final int[] agentes; // Representa los agentes asignados a las tareas
-    private int coste; // Coste acumulado
-    private int estimacionOptima; // Estimación del coste óptimo
-    private int estimacionPesimista; // Estimación del coste pesimista
-    private int cota; // Valor usado para decidir si se poda
-    private final int nivel; // Nivel del nodo en el árbol
+    
+    // Tareas asignadas
+    private final boolean[] tareasAsignadas; 
+    // Agentes asignados a las tareas
+    private final int[] agentes; 
+    // Coste acumulado
+    private int coste; 
+    // Estimacion del coste optimo
+    private int estimacionOptima; 
+    // Estimación del coste pesimista
+    private int estimacionPesimista; 
+    // Valor usado para decidir si se poda
+    private int cota; 
+    // Nivel del nodo en el arbol
+    private final int nivel; 
 
     /**
      * Constructor principal de la clase Nodo.
@@ -42,9 +52,7 @@ public class Nodo implements Comparable<Nodo> {
         this.nivel = nodoPadre.nivel + 1;
     }
 
-    /**
-     * Método para crear un nodo hijo al asignar una nueva tarea a un agente.
-     */
+    // Crear un nodo hijo al asignar una nueva tarea a un agente.
     public Nodo crearHijo(int agente, int[][] tablaCostes) {
         boolean[] nuevasTareas = Arrays.copyOf(tareasAsignadas, tareasAsignadas.length);
         int[] nuevosAgentes = Arrays.copyOf(agentes, agentes.length);
@@ -60,9 +68,7 @@ public class Nodo implements Comparable<Nodo> {
         return new Nodo(nuevasTareas, nuevosAgentes, nuevoCoste, nuevaEstimacionOptima, nuevaEstimacionPesimista, nuevaCota, nivel + 1);
     }
 
-    /**
-     * Método para calcular la estimación óptima.
-     */
+    // Calcular la estimacion optima.
     private int calcularEstimacionOptima(int[][] tablaCostes, boolean[] tareas, int nivelActual) {
         int sumaMinimos = 0;
         for (int i = nivelActual; i < tablaCostes.length; i++) {
@@ -77,9 +83,7 @@ public class Nodo implements Comparable<Nodo> {
         return sumaMinimos;
     }
 
-    /**
-     * Método para calcular la estimación pesimista.
-     */
+    // Calcular la estimacion pesimista.
     private int calcularEstimacionPesimista(int[][] tablaCostes, boolean[] tareas, int nivelActual) {
         int suma = 0;
         for (int tarea = nivelActual; tarea < tablaCostes.length; tarea++) {
@@ -94,6 +98,7 @@ public class Nodo implements Comparable<Nodo> {
         return suma;
     }
     
+    // Comprobar si el agente está asignado
     public boolean agenteAsignado(int agente) {
     for (int asignado : agentes) {
         if (asignado == agente) {

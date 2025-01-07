@@ -11,6 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * @author jorge
+ */
 public class Main {
 
     public static void main(String[] args) {
@@ -64,9 +67,8 @@ public class Main {
             System.err.println("Error inesperado: " + e.getMessage());
         }
     }
-
     
-    
+    // Leer los parametros con archivo
     private static int[][] leerParametros(String ficheroEntrada) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(ficheroEntrada))) {
             // Leer las dimensiones de la matriz desde la primera línea
@@ -86,16 +88,20 @@ public class Main {
             }
 
             return matriz;
+        } catch (IOException e) {
+            System.out.println("No se encontro el archivo de entrada, por lo que se procedera a pedir los datos por consola.");
+            return leerParametrosDesdeConsola();
         }
     }
     
+    // Leer los parametros sin archivo
     private static int[][] leerParametrosDesdeConsola() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Introduce el número de filas de la matriz:");
+        System.out.println("Introduce el numero de agentes de la matriz:");
         int filas = scanner.nextInt();
 
-        System.out.println("Introduce el número de columnas de la matriz:");
+        System.out.println("Introduce el numero de tareas de la matriz:");
         int columnas = scanner.nextInt();
 
         int[][] matriz = new int[filas][columnas];
@@ -116,9 +122,6 @@ public class Main {
             bw.write(resultado);
         }
     }
-
-
-
     
     private static void mostrarAyuda() {
         System.out.println("SINTAXIS: java -jar tareas.jar [-t][-h] [fichero entrada] [fichero salida]");

@@ -4,6 +4,9 @@
  */
 package com.uned.pec1.asignaciontareas;
 
+/**
+ * @author jorge
+ */
 public class AlgoritmoRamificacionYPoda {
 
     private final int[][] tablaCostes;
@@ -14,23 +17,32 @@ public class AlgoritmoRamificacionYPoda {
     private final int[] maximos;
     private int cota;
 
+    /**
+     * Constructor principal de la clase AlgoritmoRamificacionYPoda.
+     */
     public AlgoritmoRamificacionYPoda(int[][] tablaCostes, boolean mostrarTraza) {
         this.tablaCostes = tablaCostes;
         this.colaPrioridad = new Monticulo<>(100);
         this.mostrarTraza = mostrarTraza;
-        this.minimos = calcularExtremos(tablaCostes, true); // Mínimos de los costes
-        this.maximos = calcularExtremos(tablaCostes, false); // Máximos de los costes
+        // Minimos de los costes
+        this.minimos = calcularExtremos(tablaCostes, true); 
+        // Maximos de los costes
+        this.maximos = calcularExtremos(tablaCostes, false); 
     }
 
     public void ejecutar(Nodo nodoInicial) {
-        cota = calcularEstimacion(maximos, nodoInicial, false);  // Usa la estimación pesimista del nodo inicial.
-
+        // cota = EstimacionPes
+        cota = calcularEstimacion(maximos, nodoInicial, false);  
+        
+        // Insertar nodoRaiz en monticulo
         colaPrioridad.agregar(nodoInicial);
 
+        // Con la traza activada
         if (mostrarTraza) {
             System.out.println("Ejecutando el algoritmo de Ramificacion y Poda.");
         }
-
+        
+        // Mientras nMonticuloVacio(monticulo)
         while (!colaPrioridad.estaVacio()) {
             Nodo nodoActual = colaPrioridad.extraer();
 
@@ -40,17 +52,21 @@ public class AlgoritmoRamificacionYPoda {
                         " y estimacion optimista " + nodoActual.getEstimacionOptima());
             }
 
+            // Si solucion
             if (esSolucionCompleta(nodoActual)) {
+                // mejorSolucion <- hijo
                 actualizarMejorSolucion(nodoActual);
                 if (mostrarTraza) {
                     System.out.println("Mejor solucion provisional encontrada con coste " + mejorSolucion.getCoste());
                 }
             } else {
+                // Insertar hijo en monticulo
                 expandirNodo(nodoActual);
             }
         }
     }
 
+    // Nuevo nodo a insertar en el monticulo
     private void expandirNodo(Nodo nodo) {
         if (mostrarTraza) {
             System.out.println("Expandiendo nodo en nivel " + nodo.getNivel() + " con coste " + nodo.getCoste());

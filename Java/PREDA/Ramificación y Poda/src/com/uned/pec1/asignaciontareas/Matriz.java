@@ -6,13 +6,19 @@ package com.uned.pec1.asignaciontareas;
 
 import java.io.*;
 
+/**
+ * @author jorge
+ */
 public class Matriz {
 
     private final String rutaArchivo;
     private int filas;
     private int columnas;
     private int[][] tabla;
-
+    
+    /**
+     * Constructor principal de la clase Matriz.
+     */
     public Matriz(String rutaArchivo) {
         this.rutaArchivo = rutaArchivo;
         File file = new File(rutaArchivo);
@@ -21,18 +27,22 @@ public class Matriz {
         }
     }
     
-    // Constructor para inicializar directamente con una matriz
+    /**
+     * Constructor principal de la clase Matriz a partir de otra Matriz.
+     */
     public Matriz(int[][] matrizCostes) {
         this.rutaArchivo = null;
         this.filas = matrizCostes.length;
         this.columnas = matrizCostes[0].length;
         this.tabla = matrizCostes;
     }
-
+    
+    // Devuelve la tabla
     public int[][] obtenerTabla() {
         return tabla;
     }
 
+    // Leer la Matriz desde el archivo
     public void cargarDesdeArchivo() throws IOException {
         try (BufferedReader lector = new BufferedReader(new FileReader(rutaArchivo))) {
             String[] dimensiones = lector.readLine().split(" ");
@@ -55,19 +65,19 @@ public class Matriz {
             }
         }
     }
+    
+    // Guardar en archivo salida el resultado
+    public void guardarEnArchivo(String datos, String rutaSalida) throws IOException {
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(rutaSalida))) {
+            escritor.write(datos);
+        }
+    }
 
+    // Pasar a texto el resultado obtenido
     public String generarResultado(int[] asignaciones) {
         StringBuilder resultado = new StringBuilder();
-        resultado.append(filas).append(" ").append(columnas).append("\n");
 
-        for (int[] fila : tabla) {
-            for (int valor : fila) {
-                resultado.append(valor).append(" ");
-            }
-            resultado.append("\n");
-        }
-
-        resultado.append("\nAsignaciones optimas:\n");
+        resultado.append("Asignaciones optimas:\n");
         // Cambiar de Agente -> Tarea a Tarea -> Agente
         for (int i = 0; i < asignaciones.length; i++) {
             resultado.append("Tarea ").append(i + 1)
@@ -77,15 +87,7 @@ public class Matriz {
 
         return resultado.toString();
     }
-
-
-
-    public void guardarEnArchivo(String datos, String rutaSalida) throws IOException {
-        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(rutaSalida))) {
-            escritor.write(datos);
-        }
-    }
-
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

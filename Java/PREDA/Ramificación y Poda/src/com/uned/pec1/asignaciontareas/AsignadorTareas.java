@@ -6,16 +6,19 @@ package com.uned.pec1.asignaciontareas;
 
 import java.util.Arrays;
 
+/**
+ * @author jorge
+ */
 public class AsignadorTareas {
 
     public static String ejecutarAlgoritmo(int[][] matrizCostes, boolean traza) {
         try {
-            // Validar que la matriz no esté vacía
+            // Validar que la matriz no este vacia
             if (matrizCostes.length == 0 || matrizCostes[0].length == 0) {
                 throw new IllegalArgumentException("La matriz de entrada está vacía.");
             }
 
-            // Inicializar el algoritmo de Ramificación y Poda
+            // Inicializar el algoritmo de Ramificacion y Poda
             AlgoritmoRamificacionYPoda algoritmo = new AlgoritmoRamificacionYPoda(matrizCostes, traza);
             
             // Inicializar las asignaciones y estimaciones
@@ -52,20 +55,21 @@ public class AsignadorTareas {
             // Ejecutar el algoritmo
             algoritmo.ejecutar(nodoRaiz);
 
-            // Validar si se encontró una solución
+            // Validar si solucion
             if (algoritmo.obtenerMejorSolucion() == null) {
-                return "No se encontró una solución óptima.";
+                return "No se encontro una solucion optima.";
             }
 
             // Generar el resultado en el formato esperado
-            Matriz matriz = new Matriz(matrizCostes); // Usamos una matriz auxiliar para formatear el resultado
+            // Matriz auxiliar para formatear el resultado
+            Matriz matriz = new Matriz(matrizCostes); 
             return matriz.generarResultado(algoritmo.obtenerMejorSolucion().obtenerAsignaciones());
 
         } catch (IllegalArgumentException e) {
             return "Error de validación: " + e.getMessage();
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error inesperado durante la ejecución del algoritmo.";
+            return "Error inesperado durante la ejecucion del algoritmo.";
         }
     }
 }
