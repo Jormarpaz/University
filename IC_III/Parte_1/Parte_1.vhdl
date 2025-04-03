@@ -1,4 +1,7 @@
 -- a)
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_Std.all;
 entity funciones_logicas is
     port (  x: in std_logic;
             y: in std_logic;
@@ -15,6 +18,9 @@ architecture comportamiento of funciones_logicas is
         G <= (x and y) or (not x and z) or (y and z);
     end comportamiento;
 -- c)
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_Std.all;
 entity puerta_AND is
     port (  a : in std_logic;
             b : in std_logic;
@@ -27,10 +33,13 @@ architecture comportamiento_AND of puerta_AND is
         c <= a and b;
     end comportamiento_AND;
 
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_Std.all;
 entity puerta_OR is
     port (  a: in std_logic;
             b: in std_logic;
-            c: out std_logic;
+            c: out std_logic
     );
 end puerta_OR;
 
@@ -39,9 +48,12 @@ architecture comportamiento_OR of puerta_OR is
         c <= a or b;  -- Operación OR
     end comportamiento_OR;
 
+library IEEE;
+use IEEE.Std_logic_1164.all;
+use IEEE.Numeric_Std.all;
 entity puerta_NOT is
     port(   a: in std_logic;
-            b: out std_logic;
+            b: out std_logic
     );
 end puerta_NOT;
 
@@ -54,14 +66,14 @@ architecture comportamiento_NOT of puerta_NOT is
 architecture estructura of funciones_logicas is
     -- Señales
     signal not_x, not_y, not_z : std_logic; 
-    signal and1_out, and2_out, and3_out, and4_out, and5_out : std_logic;
-    signal or1_out, or2_out : std_logic
+    signal and1_out, and2_out, and3_out, and4_out, and5_out, and6_out : std_logic;
+    signal or1_out, or2_out : std_logic;
 
     -- Componentes
     component puerta_AND
         port(   a: in std_logic;
                 b: in std_logic;
-                c: out std_logic;
+                c: out std_logic
         );
     end component;
 
@@ -103,18 +115,14 @@ architecture estructura of funciones_logicas is
     U13: puerta_OR port map (or2_out, and6_out, G);
     end estructura;
 
+-- e)
 
 entity tb_funciones_logicas is
 end tb_funciones_logicas;
 
--- e)
 library IEEE;
 use IEEE.Std_logic_1164.all;
 use IEEE.Numeric_Std.all;
-
-entity tb_funciones_logicas is
-end tb_funciones_logicas;
-
 architecture testbench of tb_funciones_logicas is
     component funciones_logicas
         Port ( x : in std_logic;
