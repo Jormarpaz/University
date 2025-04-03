@@ -35,13 +35,27 @@ que recibirá una palabra intento y una palabra secreta y devolverá la palabra 
 newTry :: String -> String -> Try
 newTry attempt secret = 
     let
-        -- Primero marcamos las letras correctas (C)
-        marked = zipWith markCorrect attempt secret
-        -- Contamos las letras restantes en la palabra secreta (excluyendo las correctas)
-        remaining = countRemaining marked secret
+        -- Primero marcamos correctas (C) o no (N)
+        prelim = zipWith (\a s -> if a == s then (a, C) else (a, N)) attempt secret
+        -- Letras secretas no marcadas como correctas
+        remaining = [s | (a, s) <- zip attempt secret, a /= s]
+
+        -- Función para actualizar y eliminar de 'remaining' cuando sea necesario
+        update _ (a, C) remList = ((a, C), remList)  -- Mantener los correctos
+        update _ (a, N) remList
+            | a `elem` remList = ((a, I), removeFirst a remList)  -- Si está en la palabra, marcar I y eliminar una instancia
+            | otherwise = ((a, N), remList)  -- Si no, sigue siendo incorrecta
+
+        -- Procesamos la lista acumulando el estado de 'remaining'
+        process [] remList = ([], remList)
+        process (x:xs) remList = 
+            let (newX, newRem) = update x x remList
+                (rest, finalRem) = process xs newRem
+            in (newX : rest, finalRem)
+
+        (finalList, _) = process prelim remaining
     in
-        -- Luego marcamos las letras incorrectamente colocadas (I) o no presentes (N)
-        markIncorrect marked remaining
+        finalList
 
 -- Marca las letras correctas (misma posición)
 markCorrect :: Char -> Char -> (Char, Clue)
@@ -64,6 +78,13 @@ markIncorrect marked remaining =
              Just n | n > 0 -> (char, I)
              _ -> (char, N)
     | pair@(char, clue) <- marked ]
+
+-- Función para eliminar la primera aparición de un elemento en una lista
+removeFirst :: Eq a => a -> [a] -> [a]
+removeFirst _ [] = []  -- Si la lista está vacía, no hay nada que eliminar
+removeFirst x (y:ys)
+    | x == y    = ys  -- Si encontramos el elemento, lo eliminamos y devolvemos el resto
+    | otherwise = y : removeFirst x ys  -- Si no es el elemento, seguimos buscando
 
 {-
 que devolverá la lista de letras admitidas etiquetando todas ellas como no
