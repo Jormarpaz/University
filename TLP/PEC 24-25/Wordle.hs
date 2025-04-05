@@ -57,28 +57,6 @@ newTry attempt secret =
     in
         finalList
 
--- Marca las letras correctas (misma posición)
-markCorrect :: Char -> Char -> (Char, Clue)
-markCorrect a s = if a == s then (a, C) else (a, N)
-
--- Cuenta las letras restantes en la palabra secreta (excluyendo las correctas)
-countRemaining :: Try -> String -> [(Char, Int)]
-countRemaining marked secret =
-    let
-        correctChars = [ c | (c, C) <- marked ]
-        secret' = filter (`notElem` correctChars) secret
-    in
-        [ (c, length (filter (==c) secret')) | c <- letters ]
-
--- Marca las letras como incorrectamente colocadas (I) o no presentes (N)
-markIncorrect :: Try -> [(Char, Int)] -> Try
-markIncorrect marked remaining =
-    [ if clue == C then pair
-      else case lookup char remaining of
-             Just n | n > 0 -> (char, I)
-             _ -> (char, N)
-    | pair@(char, clue) <- marked ]
-
 -- Función para eliminar la primera aparición de un elemento en una lista
 removeFirst :: Eq a => a -> [a] -> [a]
 removeFirst _ [] = []  -- Si la lista está vacía, no hay nada que eliminar
@@ -101,16 +79,22 @@ que recibirá la lista de letras admitidas etiquetadas según estén o no presen
 updateLS :: Try -> Try -> Try -- >updateLS initialLS (newTry "comino" "camion") 8 lineas
 updateLS letterStates attempt = 
     let
-        updateSingleLetter (char, oldClue) = 
-            case lookup char attempt of
-                Nothing -> (char, oldClue)
-                Just newClue ->
-                    case (oldClue, newClue) of
-                        (C, _) -> (char, C)
-                        (_, C) -> (char, C)
-                        (I, _) -> (char, I)
-                        (_, I) -> (char, I)
-                        _      -> (char, N)
+        bestClue char = case [cl | (c, cl) <- attempt, c == char] of
+            [] -> Nothing
+            clues
+                | C `elem` clues -> Just C
+                | I `elem` clues -> Just I
+                | otherwise      -> Just N
+
+        updateSingleLetter (char, oldClue) = case bestClue char of
+            Nothing -> (char, oldClue)
+            Just newClue -> case (oldClue, newClue) of
+                (C, _) -> (char, C)
+                (_, C) -> (char, C)
+                (I, I) -> (char, I)
+                (I, _) -> (char, I)
+                (_, I) -> (char, I)
+                _      -> (char, N)
     in
         map updateSingleLetter letterStates
 
