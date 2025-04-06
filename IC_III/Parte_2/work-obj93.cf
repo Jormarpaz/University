@@ -1,0 +1,25 @@
+v 4
+file . "test/tb_comparador_Nbits.vhd" "56059b9ec3c80df37ef59b046d516dd2924a9b26" "20250406150329.087":
+  entity tb_comparador_nbits at 1( 0) + 0 on 27;
+  architecture test of tb_comparador_nbits at 8( 133) + 0 on 28;
+file . "src/comparador_1bit.vhd" "acb51223137c5058b6225e804cd788b397cb5843" "20250406150302.729":
+  entity comparador_1bit at 1( 0) + 0 on 23;
+  architecture estructura of comparador_1bit at 13( 308) + 0 on 24;
+file . "src/gates/not_gate.vhd" "be5176e1392fbf793abbe5be305e9d2e31c9298c" "20250405120928.294":
+  entity not_gate at 1( 0) + 0 on 15;
+  architecture behavior of not_gate at 11( 154) + 0 on 16;
+file . "src/gates/and_gate.vhd" "4dfbacac39ea48c11b5b98fb3981e27ddc126f08" "20250405120920.370":
+  entity and_gate at 1( 0) + 0 on 11;
+  architecture behavior of and_gate at 11( 157) + 0 on 12;
+file . "src/gates/or_gate.vhd" "710f39bf3adf3fe97499cac72bc254e6004e7120" "20250405120924.782":
+  entity or_gate at 1( 0) + 0 on 13;
+  architecture behavior of or_gate at 11( 155) + 0 on 14;
+file . "src/gates/xnor_gate.vhd" "f81a23ecf9341bece519968803c369f8a84b6f8a" "20250405120931.233":
+  entity xnor_gate at 1( 0) + 0 on 17;
+  architecture behavior of xnor_gate at 11( 159) + 0 on 18;
+file . "test/tb_comparador_1bit.vhd" "35cc0f72299fb7b44f07577570276c0f8941f67e" "20250405120948.758":
+  entity tb_comparador_1bit at 1( 0) + 0 on 21;
+  architecture behavioral of tb_comparador_1bit at 8( 131) + 0 on 22;
+file . "src/comparador_Nbits.vhd" "7a4141da9ebe4ccbe3e3605288dddb1ff93cc471" "20250406150310.896":
+  entity comparador_nbits at 1( 0) + 0 on 25;
+  architecture estructura of comparador_nbits at 13( 274) + 0 on 26;

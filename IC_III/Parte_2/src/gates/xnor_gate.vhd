@@ -1,6 +1,7 @@
 library IEEE;
-use IEEE.Std_logic_1164.all;
-use IEEE.Numeric_Std.all;
+use IEEE.std_logic_1164.all;
+
+
 entity xnor_gate is
     port (  a, b: in std_logic;
             y: out std_logic

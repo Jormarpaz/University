@@ -1,6 +1,6 @@
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
 
 entity tb_comparador_Nbits is
 end tb_comparador_Nbits;
@@ -37,6 +37,8 @@ begin
     process
         variable error_count : integer := 0;
     begin
+        -- Caso 1: ein=1, gin=0 (operación normal)
+        report "Probando modo normal (ein=1, gin=0)";
         gin <= '0';
         ein <= '1';
         
@@ -48,27 +50,63 @@ begin
                 wait for 10 ns;
                 
                 -- Verificar resultados
-                if (i > j and gout /= '1') or (i <= j and gout = '1') then
+                if (i > j and gout /= '1') then
+                    report "Error: x=" & integer'image(i) & " > y=" & integer'image(j) & 
+                           " pero gout=0" severity error;
+                    error_count := error_count + 1;
+                elsif (i <= j and gout = '1') then
+                    report "Error: x=" & integer'image(i) & " <= y=" & integer'image(j) & 
+                           " pero gout=1" severity error;
                     error_count := error_count + 1;
                 end if;
                 
-                if (i = j and eout /= '1') or (i /= j and eout = '1') then
+                if (i = j and eout /= '1') then
+                    report "Error: x=" & integer'image(i) & " = y=" & integer'image(j) & 
+                           " pero eout=0" severity error;
+                    error_count := error_count + 1;
+                elsif (i /= j and eout = '1') then
+                    report "Error: x=" & integer'image(i) & " != y=" & integer'image(j) & 
+                           " pero eout=1" severity error;
                     error_count := error_count + 1;
                 end if;
             end loop;
         end loop;
         
-        -- Probar con gin=1, ein=0
-        gin <= '1';
+        -- Caso 2: ein=0 (bloquea igualdad)
+        report "Probando ein=0 (debería bloquear eout)";
+        gin <= '0';
         ein <= '0';
-        x <= "1111";
-        y <= "1111";
+        x <= "1010";  -- 10
+        y <= "1010";  -- 10
         wait for 10 ns;
-        if gout /= '1' or eout /= '0' then
+        if eout /= '0' then
+            report "Error: ein=0 pero eout=1 con x=y" severity error;
             error_count := error_count + 1;
         end if;
         
-        report "Simulación finalizada. Errores: " & integer'image(error_count);
+        -- Caso 3: gin=1 (fuerza mayor que si bits iguales)
+        report "Probando gin=1 (debería propagar mayor que)";
+        gin <= '1';
+        ein <= '1';
+        x <= "0101";  -- 5
+        y <= "0101";  -- 5
+        wait for 10 ns;
+        if gout /= '1' then
+            report "Error: gin=1 con x=y pero gout=0" severity error;
+            error_count := error_count + 1;
+        end if;
+        if eout /= '1' then
+            report "Error: ein=1 con x=y pero eout=0" severity error;
+            error_count := error_count + 1;
+        end if;
+        
+        -- Resumen final
+        if error_count = 0 then
+            report "¡Todos los tests pasaron correctamente!" severity note;
+        else
+            report "Prueba fallida con " & integer'image(error_count) & " errores" severity error;
+        end if;
+        
         wait;
     end process;
 end test;
