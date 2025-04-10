@@ -1,0 +1,43 @@
+v 4
+file . "src/comparador_Nbits.vhd" "3556b587e65b22e0fca95134eb679f21bd250d06" "20250409221422.929":
+  entity comparador_nbits at 1( 0) + 0 on 133;
+  architecture estructura of comparador_nbits at 12( 275) + 0 on 134;
+file . "src/gates/xnor_gate.vhd" "72f3da7e09b5d9a2f1a5d0db4495385a3d7cf957" "20250409172315.451":
+  entity xnor_gate at 1( 0) + 0 on 49;
+  architecture behavior of xnor_gate at 10( 161) + 0 on 50;
+file . "src/gates/or_gate.vhd" "7c1de356fd10e6b1a155f18189732b6dba048317" "20250409172315.451":
+  entity or_gate at 1( 0) + 0 on 47;
+  architecture behavior of or_gate at 10( 157) + 0 on 48;
+file . "src/gates/not_gate.vhd" "c82d34ed5f24f0e904090ceec37eba3e5659cd5d" "20250409172315.451":
+  entity not_gate at 1( 0) + 0 on 45;
+  architecture behavior of not_gate at 10( 156) + 0 on 46;
+file . "src/gates/and_gate.vhd" "9400c152a337b4af85912a918c04ddd7aae6826c" "20250409172315.450":
+  entity and_gate at 1( 0) + 0 on 43;
+  architecture behavior of and_gate at 10( 159) + 0 on 44;
+file . "src/comparador_1bit.vhd" "94a18f8bfd4b2681d826a6d9f941347f2fe7c44c" "20250409221420.299":
+  entity comparador_1bit at 1( 0) + 0 on 131;
+  architecture estructura of comparador_1bit at 13( 257) + 0 on 132;
+file . "test/tb_comparador_1bit.vhd" "35cc0f72299fb7b44f07577570276c0f8941f67e" "20250409221427.893":
+  entity tb_comparador_1bit at 1( 0) + 0 on 135;
+  architecture behavioral of tb_comparador_1bit at 8( 131) + 0 on 136;
+file . "test/tb_comparador_Nbits.vhd" "6cadf3a31cf42d0d7cba7ce22ffc1736facdefe8" "20250409221427.895":
+  entity tb_comparador_nbits at 1( 0) + 0 on 137;
+  architecture test of tb_comparador_nbits at 8( 133) + 0 on 138;
+file . "src/gates/puerta_and.vhd" "88a41e6cea4413b36085d6997667b0a514b495fe" "20250409221415.806":
+  entity puerta_and at 1( 0) + 0 on 123;
+  architecture comportamiento of puerta_and at 10( 163) + 0 on 124;
+file . "src/gates/puerta_and_4.vhd" "0edfe60a09854217921c271834326aff32c28b58" "20250409203032.653":
+  entity puerta_and_4inputs at 1( 0) + 0 on 69;
+  architecture comportamiento of puerta_and_4inputs at 11( 187) + 0 on 70;
+file . "src/gates/puerta_not.vhd" "b270918eee2ee67d4c9b11216015c1048b192769" "20250409221415.807":
+  entity puerta_not at 1( 0) + 0 on 125;
+  architecture comportamiento of puerta_not at 10( 160) + 0 on 126;
+file . "src/gates/puerta_or.vhd" "0c09893c9de8b7b4a8aae5f9ba13d40bdb39757a" "20250409221415.807":
+  entity puerta_or at 1( 0) + 0 on 127;
+  architecture comportamiento of puerta_or at 10( 161) + 0 on 128;
+file . "src/gates/puerta_or_4.vhd" "a5b45af7454e10e2c9dcefda34784590f3fcd854" "20250409203032.658":
+  entity puerta_or_4inputs at 1( 0) + 0 on 75;
+  architecture comportamiento of puerta_or_4inputs at 11( 185) + 0 on 76;
+file . "src/gates/puerta_xnor.vhd" "31d5e397be1bc685ec76da46527f9357a4bb6dd2" "20250409221415.808":
+  entity puerta_xnor at 1( 0) + 0 on 129;
+  architecture comportamiento of puerta_xnor at 10( 165) + 0 on 130;

@@ -1,0 +1,17 @@
+v 4
+file . "test/tb_funciones_logicas.vhd" "76c37f7c2fda640657d681c0bdcb63757e0877c0" "20250409221243.376":
+  entity tb_funciones_logicas at 1( 0) + 0 on 31;
+  architecture test of tb_funciones_logicas at 8( 135) + 0 on 32;
+file . "src/gates/or_gate.vhd" "0c09893c9de8b7b4a8aae5f9ba13d40bdb39757a" "20250410081132.878":
+  entity puerta_or at 1( 0) + 0 on 37;
+  architecture comportamiento of puerta_or at 10( 161) + 0 on 38;
+file . "src/gates/not_gate.vhd" "b270918eee2ee67d4c9b11216015c1048b192769" "20250410081132.878":
+  entity puerta_not at 1( 0) + 0 on 35;
+  architecture comportamiento of puerta_not at 10( 160) + 0 on 36;
+file . "src/gates/and_gate.vhd" "88a41e6cea4413b36085d6997667b0a514b495fe" "20250410081132.877":
+  entity puerta_and at 1( 0) + 0 on 33;
+  architecture comportamiento of puerta_and at 10( 163) + 0 on 34;
+file . "src/funciones_logicas.vhd" "c000611525e1ae8d36ce7599e535e43757854113" "20250409221239.118":
+  entity funciones_logicas at 1( 0) + 0 on 28;
+  architecture comportamiento of funciones_logicas at 11( 185) + 0 on 29;
+  architecture estructura of funciones_logicas at 19( 444) + 0 on 30;
