@@ -48,7 +48,7 @@ class ProtectedUnit {
     private final BlockingQueue<Message> queueA;
     private final BlockingQueue<Message> queueB;
     private final BlockingQueue<Message> queueC;
-    private static final int MAX_QUEUE_SIZE = 4; // Tamaño máximo antes de considerar sobrecarga
+    private static final int MAX_QUEUE_SIZE = 5;
 
     public ProtectedUnit(BlockingQueue<Message> queueA, 
                         BlockingQueue<Message> queueB, 
@@ -59,28 +59,35 @@ class ProtectedUnit {
     }
 
     public void routeMessage(Message message) {
-        try {
-            // Intenta usar Linea_A primero si no está sobrecargada
+        synchronized (queueA) {
             if (queueA.size() < MAX_QUEUE_SIZE) {
-                queueA.put(message);
-                System.out.println(message.getId() + " enrutado a Linea_A");
-                Thread.sleep(1000);
-            } 
-            // Si Linea_A está sobrecargada, intenta Linea_B
-            else if (queueB.size() < MAX_QUEUE_SIZE) {
-                queueB.put(message);
-                System.out.println( message.getId() + " enrutado a Linea_B (Linea_A sobrecargada)");
-                Thread.sleep(1000);
-            } 
-            // Si ambas están sobrecargadas, usa Linea_C
-            else {
-                queueC.put(message);
-                System.out.println( message.getId() + " enrutado a Linea_C (Lineas A y B sobrecargadas)");
-                Thread.sleep(1000);
+                queueA.offer(message);
+                System.out.println(
+                    "Estado colas - A: " + queueA.size() + ", B: " + queueB.size() + ", C: " + queueC.size() + "\n" +
+                    message.getId() + " enrutado a Linea_A"
+                );
+                return;
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.err.println("Error al encolar mensaje: " + e.getMessage());
+        }
+        synchronized (queueB) {
+            if (queueB.size() < MAX_QUEUE_SIZE) {
+                queueB.offer(message);
+                System.out.println(
+                    "Estado colas - A: " + queueA.size() + ", B: " + queueB.size() + ", C: " + queueC.size() + "\n" +
+                    message.getId() + " enrutado a Linea_B (Linea_A llena)"
+                );
+                return;
+            }
+        }
+        synchronized (queueC) {
+            if (queueC.offer(message)) {
+                System.out.println(
+                    "Estado colas - A: " + queueA.size() + ", B: " + queueB.size() + ", C: " + queueC.size() + "\n" +
+                    message.getId() + " enrutado a Linea_C (Lineas A y B llenas)"
+                );
+            } else {
+                System.err.println("Todas las líneas están llenas. Mensaje descartado: " + message.getId());
+            }
         }
     }
 }
