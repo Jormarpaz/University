@@ -37,7 +37,7 @@ public class Router {
         Router router = new Router();
         
         // Simular varias llamadas entrantes
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 17; i++) {
             router.receiveCall(new Message("Mensaje " + i));
         }
     }
@@ -48,7 +48,7 @@ class ProtectedUnit {
     private final BlockingQueue<Message> queueA;
     private final BlockingQueue<Message> queueB;
     private final BlockingQueue<Message> queueC;
-    private static final int MAX_QUEUE_SIZE = 5; // Tamaño máximo antes de considerar sobrecarga
+    private static final int MAX_QUEUE_SIZE = 4; // Tamaño máximo antes de considerar sobrecarga
 
     public ProtectedUnit(BlockingQueue<Message> queueA, 
                         BlockingQueue<Message> queueB, 
@@ -63,17 +63,20 @@ class ProtectedUnit {
             // Intenta usar Linea_A primero si no está sobrecargada
             if (queueA.size() < MAX_QUEUE_SIZE) {
                 queueA.put(message);
-                System.out.println("Mensaje " + message.getId() + " enrutado a Linea_A");
+                System.out.println(message.getId() + " enrutado a Linea_A");
+                Thread.sleep(1000);
             } 
             // Si Linea_A está sobrecargada, intenta Linea_B
             else if (queueB.size() < MAX_QUEUE_SIZE) {
                 queueB.put(message);
-                System.out.println("Mensaje " + message.getId() + " enrutado a Linea_B (Linea_A sobrecargada)");
+                System.out.println( message.getId() + " enrutado a Linea_B (Linea_A sobrecargada)");
+                Thread.sleep(1000);
             } 
             // Si ambas están sobrecargadas, usa Linea_C
             else {
                 queueC.put(message);
-                System.out.println("Mensaje " + message.getId() + " enrutado a Linea_C (Lineas A y B sobrecargadas)");
+                System.out.println( message.getId() + " enrutado a Linea_C (Lineas A y B sobrecargadas)");
+                Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
