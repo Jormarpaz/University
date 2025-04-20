@@ -9,17 +9,17 @@ public class Router {
     private final ProtectedUnit protectedUnit;
 
     public Router() {
-        // Crear colas para cada línea
+        // Colas para cada línea
         BlockingQueue<Message> queueA = new LinkedBlockingQueue<>();
         BlockingQueue<Message> queueB = new LinkedBlockingQueue<>();
         BlockingQueue<Message> queueC = new LinkedBlockingQueue<>();
 
-        // Crear controladores de línea
+        // Controladores de línea
         this.lineAController = new LineController("Linea_A", queueA);
         this.lineBController = new LineController("Linea_B", queueB);
         this.lineCController = new LineController("Linea_C", queueC);
 
-        // Crear unidad protegida con las tres líneas
+        // Unidad protegida con las tres líneas
         this.protectedUnit = new ProtectedUnit(queueA, queueB, queueC);
 
         // Iniciar los controladores como threads
