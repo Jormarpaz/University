@@ -22,8 +22,11 @@ letters :: [Char]
 letters = "abcdefghijklmnopqrstuvwxyz"
 
 -- Que recibirá una palabra intento y comprobará si contiene únicamente letras validas.
+
 validLetters :: String -> Bool
 validLetters str = [ c | c <- str, c `elem` letters] == str
+
+
 {-
 que recibirá una palabra intento y una palabra secreta y devolverá la palabra intento etiquetando cada una de sus letras con la siguiente información:
 ◦ C → esta letra está en la palabra secreta y en esta misma posición.
@@ -32,10 +35,11 @@ que recibirá una palabra intento y una palabra secreta y devolverá la palabra 
 -}
 -- hay que fijarse en las letras, en comodo y comino hay varias o, pero solo 2 son correctas y una incorrecta
 -- provocando que esta no tenga que ser evaluada mas
+
 newTry :: String -> String -> Try
 newTry attempt secret = 
     let
-        -- Primero marcamos correctas (C) o no (N)
+        -- Primero marcar correctas (C) o (N)
         prelim = zipWith (\a s -> if a == s then (a, C) else (a, N)) attempt secret
         -- Letras secretas no marcadas como correctas
         remaining = [s | (a, s) <- zip attempt secret, a /= s]
@@ -44,7 +48,7 @@ newTry attempt secret =
         update _ (a, C) remList = ((a, C), remList)  -- Mantener los correctos
         update _ (a, N) remList
             | a `elem` remList = ((a, I), removeFirst a remList)  -- Si está en la palabra, marcar I y eliminar una instancia
-            | otherwise = ((a, N), remList)  -- Si no, sigue siendo incorrecta
+            | otherwise = ((a, N), remList)  -- Sino, sigue siendo incorrecta
 
         -- Procesamos la lista acumulando el estado de 'remaining'
         process [] remList = ([], remList)
@@ -57,25 +61,33 @@ newTry attempt secret =
     in
         finalList
 
+
+
 -- Función para eliminar la primera aparición de un elemento en una lista
+
 removeFirst :: Eq a => a -> [a] -> [a]
 removeFirst _ [] = []  -- Si la lista está vacía, no hay nada que eliminar
 removeFirst x (y:ys)
     | x == y    = ys  -- Si encontramos el elemento, lo eliminamos y devolvemos el resto
     | otherwise = y : removeFirst x ys  -- Si no es el elemento, seguimos buscando
 
+
 {-
 que devolverá la lista de letras admitidas etiquetando todas ellas como no
 utilizadas. Para ello se utilizará el identificador U, de manera similar a los identificadores C, I y N utilizados por newTry.
 -}
+
 initialLS :: Try
 initialLS = [(c, U) | c <- letters]
+
+
 {-
 que recibirá la lista de letras admitidas etiquetadas según estén o no presentes en
  la palabra secreta y una palabra intento etiquetada por newTry. Esta función devolverá la
  lista de letras admitidas etiquetadas, actualizando la información según la etiquetación de la
  palabra intento.
 -}
+
 updateLS :: Try -> Try -> Try -- >updateLS initialLS (newTry "comino" "camion") 8 lineas
 updateLS letterStates attempt = 
     let
