@@ -72,7 +72,6 @@ public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface
         return datos.repositorio_clientes.containsKey(idRepositorio);
     }
 	
-	@SuppressWarnings("unused")
 	private void asignarClienteARepositorio(String nombreCliente, int idCliente) {
 	    int idRepositorio = asignarRepositorio(); // Selecciona el repositorio disponible
 	    // Si no hay repositorio disponible, lanzar error

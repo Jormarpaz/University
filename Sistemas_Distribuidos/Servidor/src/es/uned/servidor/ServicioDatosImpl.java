@@ -56,7 +56,6 @@ public class ServicioDatosImpl implements ServicioDatosInterface {
 	}
 	
 	@Override
-	@SuppressWarnings("unused")
 	public void registrarArchivo(int idCliente, Fichero fichero) {
 	    cliente_ficheros.computeIfAbsent(idCliente, k -> new ArrayList<>()).add(fichero);
 	}
