@@ -1,0 +1,1000 @@
+add	Ir al cine	20240103
+move	20240103	20240709
+delete	20240709
+add	Asistir a un evento	20240119
+iteratorFuture
+delete	20240119
+add	Lavar el coche	20250702
+delete	20250702
+add	Ver una serie	20250103
+delete	20250103
+add	Redecorar una habitación	20250928
+delete	20250928
+add	Comprar ropa	20250915
+add	Pasear al perro	20251216
+add	Redecorar una habitación	20241219
+move	20250915	20240407
+add	Pasear al perro	20250527
+add	Probar un nuevo restaurante	20241213
+move	20250527	20251203
+move	20241213	20240520
+discard
+move	20241219	20250916
+add	Ordenar la casa	20251017
+add	Aprender a programar	20250727
+delete	20250916
+execute
+delete	20251203
+move	20250727	20250715
+delete	20251216
+add	Revisar correos	20251015
+add	Actualizar el currículum	20250301
+add	Escribir un diario	20251119
+discard
+move	20251119	20250805
+move	20251015	20251203
+add	Revisar correos	20261016
+delete	20261016
+move	20251017	20250923
+iteratorFuture
+delete	20251203
+add	Comprar comida	20260630
+move	20250923	20251129
+delete	20260630
+execute
+move	20251129	20250720
+execute
+add	Comprar ropa	20261111
+add	Llamar a mamá	20251121
+execute
+discard
+add	Hacer ejercicio al aire libre	20261204
+discard
+delete	20261204
+add	Ir a un concierto	20270712
+execute
+add	Hacer una presentación	20280718
+add	Lavar el coche	20270927
+move	20280718	20280413
+discard
+discard
+add	Redecorar una habitación	20290409
+discard
+add	Ver un documental	20300811
+move	20300811	20300813
+move	20300813	20291217
+move	20291217	20290825
+add	Jugar un videojuego	20300418
+delete	20300418
+move	20290825	20301115
+iteratorFuture
+execute
+add	Limpiar la nevera	20311017
+add	Hacer ejercicio	20311006
+move	20311006	20311214
+move	20311017	20310201
+execute
+move	20311214	20310726
+add	Hacer una llamada importante	20321117
+move	20310726	20320521
+delete	20321117
+add	Hacer la declaración de impuestos	20321029
+move	20320521	20310626
+move	20321029	20321113
+delete	20310626
+delete	20321113
+add	Ir al médico	20320523
+add	Probar un nuevo restaurante	20320610
+delete	20320523
+delete	20320610
+iteratorPast
+add	Ir al cine	20310329
+discard
+iteratorPast
+iteratorPast
+add	Hacer un voluntariado	20310707
+add	Crear una lista de tareas	20320409
+move	20310707	20310624
+delete	20320409
+move	20310624	20320427
+move	20320427	20320716
+move	20320716	20320312
+execute
+add	Hacer la declaración de impuestos	20331208
+add	Hacer yoga	20320420
+discard
+add	Revisar cuentas bancarias	20330817
+add	Comprar comida	20320604
+add	Redecorar una habitación	20321222
+delete	20320604
+iteratorFuture
+move	20321222	20321122
+move	20331208	20320617
+delete	20330817
+move	20320617	20330331
+delete	20321122
+iteratorFuture
+move	20330331	20330523
+execute
+add	Cocinar una nueva receta	20331105
+discard
+iteratorPast
+add	Ir al cine	20340830
+iteratorFuture
+execute
+add	Revisar correos	20351117
+add	Actualizar redes sociales	20341212
+add	Hacer ejercicio al aire libre	20350403
+move	20351117	20350313
+iteratorFuture
+move	20350313	20350826
+add	Actualizar el currículum	20350315
+delete	20350826
+add	Hacer una caminata	20350805
+add	Hacer una caminata	20341113
+discard
+delete	20350315
+delete	20350403
+add	Meditar	20351216
+iteratorFuture
+add	Ir a un concierto	20350305
+add	Ir al cine	20341203
+move	20341203	20341124
+delete	20350805
+add	Hacer un voluntariado	20350701
+add	Hacer ejercicio al aire libre	20350205
+iteratorFuture
+execute
+discard
+delete	20351216
+add	Reunión de trabajo	20350223
+move	20350205	20350320
+add	Llamar a mamá	20350221
+add	Meditar	20350824
+execute
+add	Asistir a una entrevista	20350528
+move	20350701	20361215
+delete	20350824
+add	Hacer una donación	20361116
+iteratorFuture
+move	20361215	20361120
+delete	20361116
+delete	20350305
+add	Hacer la compra	20360731
+move	20350320	20361117
+delete	20350223
+move	20350528	20351219
+add	Redecorar una habitación	20360606
+add	Hacer un voluntariado	20350818
+add	Asistir a una clase en línea	20361229
+delete	20351219
+add	Leer un libro	20360404
+add	Aprender a programar	20360820
+delete	20361120
+delete	20361117
+move	20361229	20361025
+delete	20360606
+add	Tomar fotografías	20361002
+move	20360731	20360822
+add	Aprender a programar	20360531
+execute
+add	Aprender a programar	20351012
+move	20360822	20351015
+add	Jugar un videojuego	20360109
+delete	20360531
+iteratorFuture
+iteratorFuture
+move	20360109	20350922
+execute
+move	20361025	20361230
+add	Ir a un concierto	20351022
+iteratorFuture
+delete	20351015
+add	Asistir a un evento	20360410
+add	Hacer una revisión del coche	20361016
+delete	20361016
+add	Comprar comida	20351004
+discard
+move	20361230	20361201
+execute
+delete	20360404
+delete	20351022
+execute
+add	Estudiar IA	20370214
+add	Hacer la compra	20360623
+iteratorFuture
+delete	20370214
+execute
+iteratorFuture
+move	20360820	20370626
+move	20361002	20360908
+move	20370626	20370904
+add	Hacer una llamada importante	20370228
+add	Crear una lista de tareas	20370418
+move	20361201	20371114
+add	Configurar un nuevo dispositivo	20371109
+delete	20360908
+move	20370228	20370308
+discard
+move	20370904	20370725
+discard
+discard
+delete	20371114
+move	20371109	20370817
+delete	20370817
+iteratorPast
+iteratorPast
+add	Reunión de trabajo	20371003
+execute
+iteratorPast
+add	Hacer una donación	20380215
+execute
+add	Hacer una presentación	20390601
+move	20390601	20381026
+add	Escribir un diario	20381204
+add	Hacer una caminata	20390929
+execute
+delete	20390929
+discard
+add	Estudiar IA	20390907
+move	20390907	20390422
+delete	20390422
+iteratorPast
+add	Hacer una revisión del coche	20390217
+move	20390217	20391231
+delete	20391231
+iteratorPast
+iteratorPast
+iteratorPast
+iteratorPast
+add	Leer un libro	20391213
+move	20391213	20391106
+add	Ir a un concierto	20390605
+iteratorFuture
+delete	20390605
+iteratorFuture
+delete	20391106
+add	Ver un documental	20390702
+delete	20390702
+add	Hacer una revisión del coche	20390810
+move	20390810	20390605
+discard
+iteratorPast
+add	Revisar correos	20400112
+add	Ver una serie	20401014
+discard
+execute
+add	Tomar un café con un amigo	20410213
+move	20410213	20411109
+discard
+iteratorPast
+iteratorPast
+iteratorPast
+add	Ver una serie	20420311
+delete	20420311
+iteratorPast
+add	Limpiar la nevera	20420908
+delete	20420908
+iteratorPast
+add	Reunión de trabajo	20420429
+move	20420429	20420922
+add	Meditar	20411209
+add	Aprender a programar	20420715
+move	20420922	20420313
+add	Escribir un diario	20420501
+delete	20420715
+move	20420313	20420311
+discard
+iteratorFuture
+discard
+execute
+add	Hacer yoga	20420902
+iteratorFuture
+execute
+iteratorPast
+add	Comprar un regalo	20431111
+add	Reunión de trabajo	20430922
+move	20430922	20430904
+move	20430904	20420911
+add	Asistir a una clase en línea	20421126
+add	Aprender a programar	20430326
+discard
+move	20431111	20430919
+execute
+iteratorFuture
+add	Hacer la compra	20430415
+add	Reunión de trabajo	20430123
+add	Comprar comida	20430805
+delete	20430415
+execute
+add	Escribir un informe	20440622
+add	Aprender un idioma	20430615
+move	20430326	20441001
+execute
+delete	20430805
+move	20441001	20441020
+add	Escribir un informe	20440429
+discard
+add	Hacer ejercicio al aire libre	20440606
+add	Tomar un café con un amigo	20440515
+delete	20440606
+move	20440622	20440930
+move	20440515	20431013
+discard
+delete	20440930
+add	Limpiar la nevera	20440801
+add	Meditar	20441204
+iteratorFuture
+add	Aprender un idioma	20440131
+delete	20441204
+add	Hacer una llamada importante	20440918
+add	Investigar sobre una inversión	20440213
+discard
+execute
+execute
+move	20440801	20451128
+delete	20441020
+add	Asistir a una clase en línea	20450419
+delete	20451128
+execute
+add	Lavar el coche	20450225
+discard
+add	Reunión de trabajo	20450707
+add	Hacer ejercicio	20460401
+add	Reunión de trabajo	20450601
+iteratorFuture
+add	Hacer una presentación	20450523
+discard
+execute
+move	20450707	20461123
+add	Ir a un concierto	20451013
+discard
+execute
+delete	20461123
+add	Configurar un nuevo dispositivo	20460619
+add	Ir al cine	20460802
+move	20460401	20460210
+execute
+add	Lavar el coche	20470118
+add	Planear unas vacaciones	20460507
+delete	20470118
+move	20460507	20470831
+add	Hacer una presentación	20460412
+execute
+execute
+delete	20470831
+delete	20460802
+iteratorPast
+add	Hacer un voluntariado	20461019
+iteratorFuture
+execute
+iteratorPast
+iteratorPast
+iteratorPast
+add	Limpiar la nevera	20461028
+move	20461028	20470926
+move	20470926	20470708
+add	Pasear al perro	20461029
+discard
+move	20470708	20471122
+add	Jugar un videojuego	20470401
+iteratorFuture
+move	20470401	20470705
+discard
+iteratorFuture
+discard
+add	Hacer una revisión del coche	20481105
+execute
+add	Escribir un diario	20491007
+iteratorFuture
+move	20491007	20490920
+move	20490920	20490703
+delete	20490703
+add	Configurar un nuevo dispositivo	20490921
+add	Actualizar software	20491010
+add	Comprar un regalo	20490811
+move	20490811	20490915
+add	Hacer una llamada importante	20490120
+move	20490921	20490619
+execute
+move	20490619	20490630
+delete	20490915
+delete	20491010
+add	Revisar cuentas bancarias	20490821
+add	Crear una lista de tareas	20491122
+discard
+move	20490821	20491208
+move	20491208	20500617
+add	Comprar ropa	20500717
+delete	20500717
+add	Revisar correos	20491120
+delete	20500617
+delete	20491122
+add	Aprender un idioma	20501029
+move	20501029	20491214
+add	Investigar sobre una inversión	20500225
+delete	20500225
+delete	20491120
+move	20491214	20500626
+move	20500626	20491208
+discard
+iteratorPast
+add	Ver un documental	20501021
+discard
+add	Crear una lista de tareas	20501224
+discard
+add	Investigar sobre una inversión	20511124
+move	20511124	20510501
+add	Crear una lista de tareas	20510822
+iteratorFuture
+move	20510822	20510111
+add	Aprender un idioma	20511006
+iteratorFuture
+delete	20510111
+iteratorFuture
+add	Reunión de trabajo	20510118
+delete	20510501
+iteratorFuture
+discard
+execute
+add	Asistir a una clase en línea	20511128
+add	Ver un documental	20520926
+delete	20520926
+move	20511128	20511028
+move	20511028	20511023
+delete	20511023
+add	Revisar correos	20520607
+add	Revisar cuentas bancarias	20521118
+execute
+iteratorFuture
+add	Probar un nuevo restaurante	20521109
+add	Actualizar software	20530925
+move	20530925	20531022
+move	20521118	20531016
+move	20521109	20531005
+add	Hacer una presentación	20530313
+move	20531005	20530508
+add	Actualizar software	20530502
+move	20531022	20520621
+discard
+move	20530313	20530514
+execute
+delete	20530508
+add	Hacer la declaración de impuestos	20530720
+add	Ver una serie	20531029
+discard
+add	Configurar un nuevo dispositivo	20540210
+delete	20540210
+delete	20530720
+move	20531016	20540808
+move	20531029	20540422
+add	Hacer una presentación	20530521
+execute
+add	Asistir a una entrevista	20530604
+delete	20540808
+execute
+iteratorFuture
+discard
+add	Probar un nuevo restaurante	20550621
+delete	20550621
+iteratorPast
+iteratorPast
+add	Hacer la declaración de impuestos	20550818
+move	20550818	20540430
+add	Aprender un idioma	20550727
+delete	20540430
+move	20550727	20540630
+move	20540630	20540701
+move	20540701	20551118
+iteratorFuture
+add	Asistir a una entrevista	20551126
+discard
+move	20551126	20560823
+execute
+add	Escribir un informe	20570515
+execute
+add	Escribir un informe	20570919
+add	Hacer la declaración de impuestos	20570807
+discard
+move	20570919	20570913
+delete	20570913
+iteratorPast
+iteratorPast
+add	Limpiar la nevera	20571025
+add	Hacer un voluntariado	20580209
+execute
+iteratorFuture
+move	20580209	20571124
+add	Hacer un voluntariado	20580316
+delete	20580316
+delete	20571124
+iteratorPast
+iteratorPast
+add	Asistir a una entrevista	20580305
+move	20580305	20581101
+execute
+iteratorPast
+iteratorPast
+add	Hacer una llamada importante	20590820
+delete	20590820
+add	Ordenar la casa	20591205
+move	20591205	20581202
+add	Comprar un regalo	20590823
+move	20590823	20590714
+add	Crear una lista de tareas	20590307
+move	20581202	20590721
+execute
+add	Asistir a una entrevista	20601126
+iteratorFuture
+move	20601126	20600617
+delete	20590714
+add	Hacer ejercicio	20590517
+move	20590721	20591124
+delete	20590517
+move	20600617	20590828
+delete	20591124
+iteratorFuture
+delete	20590828
+iteratorPast
+add	Revisar correos	20600516
+delete	20600516
+iteratorPast
+add	Tomar un café con un amigo	20600317
+discard
+iteratorPast
+add	Ver una serie	20610724
+delete	20610724
+add	Investigar sobre una inversión	20601011
+delete	20601011
+add	Hacer una donación	20600805
+add	Hacer la compra	20610523
+add	Hacer una caminata	20611104
+move	20611104	20610320
+add	Lavar el coche	20610614
+iteratorFuture
+delete	20610320
+delete	20610614
+discard
+move	20610523	20601018
+add	Cocinar una nueva receta	20610328
+move	20601018	20601011
+iteratorFuture
+discard
+add	Limpiar la nevera	20611114
+add	Probar un nuevo restaurante	20611204
+delete	20611204
+delete	20610328
+add	Lavar el coche	20601112
+add	Hacer una caminata	20610128
+add	Leer un libro	20610217
+iteratorFuture
+delete	20611114
+iteratorFuture
+discard
+delete	20610217
+delete	20610128
+add	Actualizar software	20610615
+delete	20610615
+add	Actualizar redes sociales	20610412
+delete	20610412
+iteratorPast
+add	Leer un libro	20610215
+delete	20610215
+iteratorPast
+add	Reunión de trabajo	20611028
+move	20611028	20610804
+execute
+add	Ordenar la casa	20621008
+delete	20621008
+add	Hacer yoga	20620505
+iteratorFuture
+delete	20620505
+add	Cocinar una nueva receta	20620412
+iteratorFuture
+execute
+add	Jugar un videojuego	20631015
+move	20631015	20630403
+discard
+add	Hacer una llamada importante	20641111
+move	20641111	20630613
+move	20630613	20640119
+iteratorFuture
+discard
+add	Aprender a programar	20650904
+execute
+iteratorPast
+iteratorPast
+iteratorPast
+iteratorPast
+add	Hacer ejercicio	20660711
+discard
+add	Hacer una donación	20661204
+execute
+add	Leer un libro	20670518
+move	20670518	20670310
+add	Actualizar software	20670620
+iteratorFuture
+move	20670620	20671221
+delete	20671221
+discard
+iteratorPast
+add	Asistir a un evento	20680915
+add	Hacer una donación	20680818
+move	20680915	20670924
+add	Aprender a programar	20671113
+iteratorFuture
+discard
+discard
+iteratorFuture
+delete	20680818
+iteratorPast
+iteratorPast
+add	Ver un documental	20680605
+move	20680605	20680306
+add	Hacer una revisión del coche	20680508
+move	20680306	20681128
+iteratorFuture
+delete	20681128
+add	Llamar a mamá	20680717
+execute
+move	20680717	20690401
+add	Aprender a programar	20691013
+add	Hacer una revisión del coche	20690712
+delete	20690401
+delete	20690712
+add	Lavar el coche	20680629
+iteratorFuture
+delete	20691013
+iteratorFuture
+execute
+add	Meditar	20691007
+delete	20691007
+add	Redecorar una habitación	20690226
+delete	20690226
+add	Asistir a una clase en línea	20690722
+add	Hacer ejercicio	20691014
+delete	20691014
+add	Hacer ejercicio	20680716
+execute
+discard
+iteratorPast
+iteratorPast
+iteratorPast
+add	Configurar un nuevo dispositivo	20700119
+move	20700119	20701125
+execute
+add	Llamar a mamá	20710603
+delete	20710603
+iteratorPast
+iteratorPast
+add	Hacer la declaración de impuestos	20710314
+execute
+add	Configurar un nuevo dispositivo	20720102
+delete	20720102
+add	Hacer la declaración de impuestos	20710424
+discard
+add	Escribir un informe	20720211
+delete	20720211
+iteratorPast
+add	Lavar el coche	20711017
+move	20711017	20721207
+delete	20721207
+iteratorPast
+add	Cocinar una nueva receta	20720715
+add	Comprar un regalo	20710912
+add	Crear una lista de tareas	20711117
+move	20710912	20720419
+add	Hacer una caminata	20720505
+delete	20720505
+add	Tomar un café con un amigo	20720913
+discard
+add	Actualizar redes sociales	20721020
+delete	20720419
+iteratorFuture
+execute
+move	20720913	20730409
+delete	20721020
+move	20730409	20730428
+move	20730428	20721001
+execute
+iteratorPast
+iteratorPast
+iteratorPast
+iteratorPast
+add	Asistir a un evento	20730112
+execute
+iteratorPast
+add	Revisar cuentas bancarias	20730820
+move	20730820	20740410
+delete	20740410
+iteratorPast
+add	Comprar un regalo	20731012
+execute
+iteratorPast
+iteratorPast
+add	Actualizar software	20741002
+add	Meditar	20740507
+add	Hacer un voluntariado	20740316
+move	20740507	20731220
+delete	20731220
+add	Configurar un nuevo dispositivo	20740517
+execute
+execute
+add	Meditar	20750731
+add	Investigar sobre una inversión	20750428
+add	Pasear al perro	20750102
+move	20750428	20740519
+delete	20741002
+discard
+discard
+delete	20750731
+add	Asistir a un evento	20751103
+move	20751103	20760528
+move	20760528	20750307
+discard
+add	Hacer una presentación	20760218
+discard
+add	Tomar un café con un amigo	20760401
+iteratorFuture
+add	Hacer yoga	20760722
+discard
+add	Aprender a programar	20770603
+delete	20760722
+delete	20770603
+add	Hacer la declaración de impuestos	20771207
+add	Planear unas vacaciones	20760903
+iteratorFuture
+move	20760903	20770909
+add	Investigar sobre una inversión	20760528
+add	Leer un libro	20770924
+delete	20760528
+move	20771207	20770831
+execute
+execute
+move	20770924	20781203
+delete	20781203
+add	Aprender a programar	20780211
+delete	20780211
+iteratorPast
+iteratorPast
+iteratorPast
+iteratorPast
+add	Hacer una revisión del coche	20770927
+add	Reunión de trabajo	20781102
+delete	20770927
+execute
+add	Ir al médico	20790920
+discard
+iteratorPast
+add	Actualizar redes sociales	20790927
+add	Escribir un diario	20800427
+add	Escribir un diario	20800111
+add	Hacer una donación	20800928
+delete	20800928
+delete	20790927
+add	Actualizar software	20800815
+discard
+move	20800815	20810222
+discard
+move	20810222	20801107
+move	20801107	20801117
+iteratorFuture
+move	20801117	20800922
+iteratorFuture
+move	20800922	20800614
+move	20800614	20801015
+move	20801015	20801213
+add	Redecorar una habitación	20801208
+delete	20801213
+delete	20801208
+iteratorPast
+iteratorPast
+iteratorPast
+iteratorPast
+add	Hacer la compra	20800601
+iteratorFuture
+discard
+iteratorPast
+iteratorPast
+add	Llamar a mamá	20801124
+delete	20801124
+iteratorPast
+add	Estudiar IA	20800611
+add	Reunión de trabajo	20810531
+add	Hacer la declaración de impuestos	20810410
+add	Asistir a una clase en línea	20810726
+delete	20810410
+iteratorFuture
+delete	20800611
+add	Hacer una presentación	20810820
+discard
+iteratorFuture
+move	20810726	20820810
+execute
+delete	20820810
+add	Hacer un voluntariado	20811229
+execute
+iteratorPast
+add	Hacer yoga	20821212
+delete	20821212
+add	Revisar correos	20820130
+execute
+add	Probar un nuevo restaurante	20830503
+add	Investigar sobre una inversión	20830927
+add	Revisar cuentas bancarias	20821017
+add	Pasear al perro	20830814
+add	Hacer ejercicio al aire libre	20830517
+move	20830517	20820331
+delete	20821017
+move	20820331	20820808
+add	Hacer una presentación	20820727
+execute
+add	Hacer la compra	20820917
+execute
+delete	20830927
+move	20820917	20830708
+delete	20830814
+add	Hacer ejercicio al aire libre	20830818
+delete	20830818
+discard
+add	Hacer una donación	20840907
+add	Hacer la declaración de impuestos	20830907
+move	20830907	20840530
+iteratorFuture
+execute
+iteratorFuture
+add	Hacer una donación	20840323
+discard
+execute
+move	20840907	20850124
+discard
+iteratorPast
+iteratorPast
+iteratorPast
+add	Cocinar una nueva receta	20861017
+add	Tomar un café con un amigo	20850510
+iteratorFuture
+discard
+discard
+add	Ver un documental	20870214
+move	20870214	20870911
+delete	20870911
+iteratorPast
+iteratorPast
+add	Hacer la declaración de impuestos	20871030
+iteratorFuture
+move	20871030	20861230
+move	20861230	20861219
+discard
+add	Redecorar una habitación	20870516
+add	Reunión de trabajo	20870805
+execute
+delete	20870805
+add	Hacer una donación	20870608
+add	Tomar fotografías	20870718
+move	20870608	20871023
+move	20871023	20870926
+execute
+iteratorFuture
+add	Hacer yoga	20881218
+add	Limpiar la nevera	20880807
+add	Ir al médico	20870908
+discard
+delete	20870926
+add	Hacer ejercicio	20880109
+move	20880807	20881015
+add	Escribir un diario	20871122
+execute
+move	20881218	20881114
+add	Configurar un nuevo dispositivo	20880316
+move	20881015	20871208
+add	Actualizar redes sociales	20880423
+move	20881114	20871227
+discard
+add	Hacer yoga	20881123
+add	Revisar correos	20880115
+move	20880115	20881213
+move	20880423	20880708
+move	20881123	20871222
+add	Actualizar redes sociales	20880329
+delete	20880329
+add	Meditar	20881021
+move	20871227	20880525
+discard
+add	Hacer una llamada importante	20880218
+add	Comprar comida	20880905
+delete	20880109
+delete	20881021
+execute
+add	Hacer ejercicio al aire libre	20880404
+move	20880905	20881216
+move	20880708	20890228
+move	20881213	20890901
+iteratorFuture
+delete	20880525
+move	20880316	20890630
+iteratorFuture
+add	Ir al médico	20880406
+execute
+delete	20881216
+move	20880406	20880420
+iteratorFuture
+add	Hacer una presentación	20891017
+move	20890228	20880620
+execute
+delete	20890901
+add	Hacer un voluntariado	20881102
+delete	20890630
+add	Limpiar la nevera	20880615
+move	20891017	20890808
+delete	20881102
+discard
+discard
+execute
+add	Asistir a un evento	20901209
+iteratorFuture
+iteratorFuture
+iteratorFuture
+delete	20901209
+add	Investigar sobre una inversión	20900503
+execute
+iteratorPast
+iteratorPast
+add	Hacer una presentación	20910715
+add	Ver un documental	20910708
+delete	20910708
+delete	20910715
+add	Hacer la declaración de impuestos	20910903
+iteratorFuture
+move	20910903	20910414
+delete	20910414
+add	Hacer una caminata	20900714
+move	20900714	20911202
+move	20911202	20900613
+add	Asistir a un evento	20901128
+delete	20901128
+execute
+add	Reunión de trabajo	20900804
+move	20900804	20910724
+delete	20910724
+iteratorPast
+add	Actualizar el currículum	20910215
+add	Redecorar una habitación	20910130
+iteratorFuture
+move	20910215	20910319
+move	20910130	20900902
+add	Reunión de trabajo	20901011
+add	Comprar comida	20901210
+execute
+add	Hacer una llamada importante	20910801
+move	20910801	20901002
+execute
+discard
+add	Tomar fotografías	20910829
+move	20910829	20910803
+move	20910803	20911213
+add	Configurar un nuevo dispositivo	20910317
+delete	20911213
+move	20910319	20910702
+move	20910702	20910823
+execute
+move	20910823	20910919
+add	Hacer una revisión del coche	20911015
+add	Jugar un videojuego	20910712
+delete	20910919
+execute
+iteratorFuture
+discard
+iteratorFuture
+add	Hacer un voluntariado	20910819
+execute
+add	Comprar ropa	20911115
+move	20911115	20920615
+move	20911015	20921219
+delete	20920615
+discard
+iteratorPast
+iteratorPast
+iteratorPast
+add	Asistir a un evento	20930415
+move	20930415	20930917

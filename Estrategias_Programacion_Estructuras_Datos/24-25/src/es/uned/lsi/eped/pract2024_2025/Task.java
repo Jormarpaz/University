@@ -14,21 +14,29 @@ public class Task implements TaskIF {
 		this.completado = false; // Inicialmente no completado
 	}
 
+	@Override
 	/* Marca la tarea como completada */
 	public void setCompleted() {
 		this.completado = true;
 	}
 	
+	@Override
 	/* Devuelve el texto de la tarea */
 	public String getText() {
 		return this.texto;
 	}
 
+	@Override
 	/* Devuelve la fecha de la tarea */
 	public int getDate() {
 		return this.date;
 	}
 
+	public void setDate(int date){
+		this.date = date;
+	}
+
+	@Override
 	/* Devuelve si la tarea ha sido completada o no */
 	public boolean getCompletion() {
 		return this.completado;
