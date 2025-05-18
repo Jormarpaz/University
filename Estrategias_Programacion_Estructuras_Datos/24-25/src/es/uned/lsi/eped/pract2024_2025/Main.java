@@ -1,4 +1,4 @@
-package es.uned.lsi.eped.pract2024_2025;
+package src.es.uned.lsi.eped.pract2024_2025;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,56 +1,46 @@
-package es.uned.lsi.eped.pract2024_2025;
+package src.es.uned.lsi.eped.pract2024_2025;
 
 public class Task implements TaskIF {
-
-	public boolean completado;
-	public String texto;
-	public int date;
-
+        
+        private String text;
+        private int date;
+        private boolean completed;
 	/* Declaración de atributos para almacenar la información de una tarea */
-	/* Constructor de la clase Task */
-	public Task(String texto, int date) {
-		this.texto = texto;
-		this.date = date;
-		this.completado = false; // Inicialmente no completado
-	}
 
-	@Override
+        public Task(String text, int date) {
+            this.text = text;
+            this.date = date;
+            this.completed = false;
+        }
+        
 	/* Marca la tarea como completada */
+        @Override
 	public void setCompleted() {
-		this.completado = true;
-	}
+            this.completed = true;
+        }
 	
-	@Override
 	/* Devuelve el texto de la tarea */
+        @Override
 	public String getText() {
-		return this.texto;
-	}
+            return this.text;
+        }
 
-	@Override
 	/* Devuelve la fecha de la tarea */
+        @Override
 	public int getDate() {
-		return this.date;
-	}
+            return this.date;
+        }
 
-	public void setDate(int date){
-		this.date = date;
-	}
-
-	@Override
 	/* Devuelve si la tarea ha sido completada o no */
+        @Override
 	public boolean getCompletion() {
-		return this.completado;
-	}
+            return this.completed;
+        }
 
 	/* Compara la tarea actual con una tarea llamante */
+        @Override
 	public int compareTo(TaskIF T) {
-		if (this.date > T.date) {
-			return 1; // num > 0 si la tarea llamante es posterior a T
-		} else if (this.date < T.date) {
-			return -1; // num < 0 si la tarea llamante es anterior a T
-		} else {
-			return 0; // num = 0 si tienen la misma fecha
-		}
-	}
+            return this.date - T.getDate(); // Resto las fechas
+        }
 
 }

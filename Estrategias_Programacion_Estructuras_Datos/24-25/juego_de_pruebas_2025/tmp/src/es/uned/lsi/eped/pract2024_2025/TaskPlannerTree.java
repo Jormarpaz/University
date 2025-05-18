@@ -1,93 +1,94 @@
-package es.uned.lsi.eped.pract2024_2025;
+package src.es.uned.lsi.eped.pract2024_2025;
+
 
 import es.uned.lsi.eped.DataStructures.*;
 
 public class TaskPlannerTree implements TaskPlannerIF{
-
-	/* Declaración de atributos para almacenar la información del planificador de tareas */
-
 	/* Estructura que almacena las tareas pasadas */
-	protected BSTree pastTasks;
+	protected BSTreeIF<TaskIF> pastTasks;
 	/* La estructura que almacena las tareas futuras debe ser un BSTree */
 	protected BSTreeIF<TaskIF> futureTasks;
-
-	public TaskPlannerTree() {
-		this.futureTasks = new BSTree();
-		this.pastTasks = new BSTree();
-	}
-
-	@Override
+        
+        /* Declaración de atributos para almacenar la información del planificador de tareas */
+        public TaskPlannerTree() {
+            this.pastTasks = new BSTree<>();
+            this.futureTasks = new BSTree<>();
+        }
+        
+        
 	/* Añade una nueva tarea
 	 * @param text: descripción de la tarea
 	 * @param date: fecha en la que la tarea debe completarse
 	 */
+        @Override
 	public void add(String text,int date) {
-		TaskIF tarea = new Task(text,date);
-		futureTasks.add(tarea);
-	}
+            TaskIF newTask = new Task(text, date);
+            futureTasks.add(newTask);
+        }
 
-	@Override
 	/* Elimina una tarea
 	 * @param date: fecha de la tarea que se debe eliminar
 	 */
+        @Override
 	public void delete(int date) {
-		IteratorIF<TaskIF> iterador = iteratorFuture();
-		while(iterador.hasNext()){
-			TaskIF tarea = iterador.getNext();
-			if (tarea.getDate() == date){
-				futureTasks.remove(tarea);
-			}
-		}
-	}
+            TaskIF tarea = new Task("", date);
+            futureTasks.remove(tarea);
+        }
 
-	@Override
 	/* Reprograma una tarea
 	 * @param origDate: fecha actual de la tarea
 	 * @param newDate: nueva fecha de la tarea
 	 */
+        @Override
 	public void move(int origDate,int newDate) {
-		IteradorIF<TaskIF> iterador = iteradorFuture();
-		while(iterador.hasNext()){
-			TaskIF tarea = iterador.getNext();
-			if (tarea.getDate() == origDate){
-				futureTasks.remove(tarea);
-				tarea.setDate(newDate);
-				futureTasks.add(tarea);
-			}
-		}
-	}
+            IteratorIF<TaskIF> iterador = iteratorFuture();
+            
+            while(iterador.hasNext()){
+                TaskIF fecha_a_mover = iterador.getNext();
+                if (fecha_a_mover.getDate() == origDate){
+                    futureTasks.remove(fecha_a_mover);
+                    TaskIF nuevaFecha = new Task(fecha_a_mover.getText(),newDate);
+                    futureTasks.add(nuevaFecha);
+                    break;
+                }
+            }
+        }
 
-	@Override
 	/* Ejecuta la próxima tarea:
 	 * la mete en el histórico marcándola como completada
 	 */
+        @Override
 	public void execute() {
-		TaskIF tarea = futureTasks.getRoot();
-		tarea.setCompleted();
-		futureTasks.remove(tarea);
-		pastTasks.add(tarea);
-	}
+            if (!futureTasks.isEmpty()) {
+                TaskIF task = futureTasks.getRoot();
+                task.setCompleted();
+                futureTasks.remove(task);
+                pastTasks.add(task);
+            }
+        }
 
-	@Override
 	/* Descarta la próxima tarea:
 	 * la mete en el histórico marcándola como no completada
 	 */
+        @Override
 	public void discard() {
-		TaskIF tarea = futureTasks.getRoot();
-		futureTasks.remove(tarea);
-		pastTasks.add(tarea);
-	}
+            if (!futureTasks.isEmpty()) {
+                TaskIF task = futureTasks.getRoot();
+                futureTasks.remove(task);
+                pastTasks.add(task);
+            }
+        }
 
-	@Override
 	/* Devuelve un iterador de las tareas futuras */
+        @Override
 	public IteratorIF<TaskIF> iteratorFuture() {
-		return new IteratorIF<>(futureTasks);
-	}
+            return futureTasks.iterator(BSTreeIF.IteratorModes.DIRECTORDER);
+        }
 
-	@Override
 	/* Devuelve un iterador del histórico de tareas pasadas */
+        @Override
 	public IteratorIF<TaskIF> iteratorPast() {
-		return new IteratorIF<>(pastTasks);
-	}
+            return pastTasks.iterator(BSTreeIF.IteratorModes.DIRECTORDER);
+        }
 		
 }

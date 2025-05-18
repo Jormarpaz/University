@@ -1,4 +1,4 @@
-package es.uned.lsi.eped.pract2024_2025;
+package src.es.uned.lsi.eped.pract2024_2025;
 
 import es.uned.lsi.eped.DataStructures.IteratorIF;
 
@@ -21,13 +21,11 @@ public interface TaskPlannerIF {
 	 */
 
 	public void move(int origDate,int newDate);
-
 	/* Ejecuta la próxima tarea:
 	 * la mete en el histórico marcándola como completada
 	 */
 
 	public void execute();
-	
 	/* Descarta la próxima tarea:
 	 * la mete en el histórico marcándola como no completada
 	 */
