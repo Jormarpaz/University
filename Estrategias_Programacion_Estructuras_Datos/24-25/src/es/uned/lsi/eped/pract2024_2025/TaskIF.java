@@ -1,4 +1,4 @@
-package src.es.uned.lsi.eped.pract2024_2025;
+package es.uned.lsi.eped.pract2024_2025;
 
 public interface TaskIF extends Comparable<TaskIF>{
 	

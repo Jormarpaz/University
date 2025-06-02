@@ -1,8 +1,8 @@
-package src.es.uned.lsi.eped.pract2024_2025;
+package es.uned.lsi.eped.pract2024_2025;
 
 public class Task implements TaskIF {
-        
-        private String text;
+
+	private String text;
         private int date;
         private boolean completed;
 	/* Declaración de atributos para almacenar la información de una tarea */
@@ -40,7 +40,7 @@ public class Task implements TaskIF {
 	/* Compara la tarea actual con una tarea llamante */
         @Override
 	public int compareTo(TaskIF T) {
-            return this.date - T.getDate(); // Resto las fechas
+            return Integer.compare(this.date, T.getDate()); // Resto las fechas
         }
 
 }

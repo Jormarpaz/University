@@ -295,6 +295,41 @@ public class BSTree<E extends Comparable<E>> extends Tree<E> implements BSTreeIF
 		}
 	}
 	
+	public String toString() {
+		return toString_aux(0,0);   
+    }
+	
+	/**MIOS NO EN EL OFICIAL*/
+
+	private String toString_aux(int nivel, int numHijo){
+	    StringBuilder buff = new StringBuilder();
+	    if (nivel==0){
+	    	buff.append("BSTree:");
+		    buff.append("\n");
+		    buff.append("Ra�z -> " + getRoot());
+	    }
+	    else{
+		    buff.append("\n");
+		    for (int i=1;i<=nivel;i++) buff.append("\t");
+		    if(numHijo==1){
+			    buff.append("Hijo izq."+" -> " + getRoot());
+		    }
+		    else if(numHijo==2){
+			    buff.append("Hijo der."+" -> " + getRoot());
+		    }
+	    }
+	    if(!(leftChild==null)){
+	    	String saux = this.leftChild.toString_aux(nivel+1,1);
+	    	buff.append(saux);
+	    }
+	    
+	    if(!(rightChild==null)){
+	    	String saux = this.rightChild.toString_aux(nivel+1,2);
+	    	buff.append(saux);   
+	    }
+	    return buff.toString();
+    }
+
 	
 	/* Recorre el arbol en preorden */	
 	public IteratorIF<E> preOrden(BSTree<E> t, Queue<E> q) {
@@ -318,4 +353,31 @@ public class BSTree<E extends Comparable<E>> extends Tree<E> implements BSTreeIF
 		return null;
 	}
 	
+	public List<E> boundaries()
+	{
+		IteratorIF<E> it = boundaries(this, new Queue<>());
+		List<E> l = new List<E>();
+		int pos = 1;
+		while(it.hasNext())
+		{
+			l.insert(pos, it.getNext());
+			pos++;
+		}
+		return l;
+	}
+	
+	
+	/* Recorre el arbol en preorden y solo almacena si es hoja*/	
+	private IteratorIF<E> boundaries(BSTree<E> t, Queue<E> q) {
+		if ( !t.isEmpty() ) {
+			if(t.getLeftChild()==null && t.getRightChild()==null) {q.enqueue(t.getRoot());}
+			if ( t.getLeftChild() != null ) { boundaries(t.getLeftChild(),q); }			
+			if ( t.getRightChild() != null ) { boundaries(t.getRightChild(),q); }
+			return q.iterator();
+		}
+		return null;
+	}
+	
+
+
 }

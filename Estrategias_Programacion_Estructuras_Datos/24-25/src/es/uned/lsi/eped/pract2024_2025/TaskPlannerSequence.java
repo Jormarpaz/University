@@ -1,8 +1,13 @@
-package src.es.uned.lsi.eped.pract2024_2025;
+package es.uned.lsi.eped.pract2024_2025;
 
-import es.uned.lsi.eped.DataStructures.*;
+import es.uned.lsi.eped.DataStructures.IteratorIF;
+import es.uned.lsi.eped.DataStructures.List;
+import es.uned.lsi.eped.DataStructures.ListIF;
+import es.uned.lsi.eped.DataStructures.Queue;
+import es.uned.lsi.eped.DataStructures.SequenceIF;
 
 public class TaskPlannerSequence implements TaskPlannerIF{
+
 	/* Estructura que almacena las tareas pasadas */
 	protected SequenceIF<TaskIF> pastTasks;
 	/* La estructura que almacena las tareas futuras debe ser una secuencia */
@@ -10,8 +15,8 @@ public class TaskPlannerSequence implements TaskPlannerIF{
         
         /* Declaración de atributos para almacenar la información del planificador de tareas */
         public TaskPlannerSequence(){
-            this.pastTasks = new Queue<>();
-            this.futureTasks = new List<>();
+            this.pastTasks = new Queue<TaskIF>();
+            this.futureTasks = new List<TaskIF>();
         }
         
         // ((ListIF<TaskIF>)futureTasks).get(0); hay que hacerle cast a la lista
@@ -24,14 +29,14 @@ public class TaskPlannerSequence implements TaskPlannerIF{
         @Override
 	public void add(String text,int date) {
             TaskIF newTask = new Task(text, date);
-            int pos = 0;
+            int pos = 1;
             IteratorIF<TaskIF> it = futureTasks.iterator();
             while(it.hasNext()) {
                 TaskIF task = it.getNext();
                 if (task.getDate() >= date) break;
                 pos++;
             }
-            ((ListIF<TaskIF>)futureTasks).insert(pos, newTask);
+            ((ListIF<TaskIF>)futureTasks).insert(pos,newTask);
         }
 
 	/* Elimina una tarea
@@ -40,7 +45,7 @@ public class TaskPlannerSequence implements TaskPlannerIF{
         @Override
 	public void delete(int date) {
             IteratorIF<TaskIF> it = futureTasks.iterator();
-            int pos = 0;
+            int pos = 1;
             while(it.hasNext()) {
                 TaskIF task = it.getNext();
                 if(task.getDate() == date) {
@@ -58,12 +63,15 @@ public class TaskPlannerSequence implements TaskPlannerIF{
         @Override
 	public void move(int origDate,int newDate) {
             IteratorIF<TaskIF> it = futureTasks.iterator();
-            int pos = 0;
+            int pos = 1;
             TaskIF taskToMove = null;
             while (it.hasNext()) {
                 TaskIF task = it.getNext();
                 if (task.getDate() == origDate) {
                     taskToMove = task;
+                    if(task.getCompletion()){
+                        taskToMove.setCompleted();
+                    }
                     ((ListIF<TaskIF>)futureTasks).remove(pos);
                     break;
                 }
@@ -80,10 +88,10 @@ public class TaskPlannerSequence implements TaskPlannerIF{
         @Override
 	public void execute() {
             if (!futureTasks.isEmpty()) {
-                TaskIF task = ((ListIF<TaskIF>)futureTasks).get(0);
+                TaskIF task = ((ListIF<TaskIF>)futureTasks).get(1);
                 task.setCompleted();
-                ((ListIF<TaskIF>)pastTasks).insert(pastTasks.size(), task);
-                ((ListIF<TaskIF>)futureTasks).remove(0);
+                ((Queue<TaskIF>)pastTasks).enqueue(task);
+                ((ListIF<TaskIF>)futureTasks).remove(1);
             }
         }
 
@@ -93,9 +101,9 @@ public class TaskPlannerSequence implements TaskPlannerIF{
         @Override
 	public void discard() {
             if (!futureTasks.isEmpty()) {
-                TaskIF task = ((ListIF<TaskIF>)futureTasks).get(0);
-                ((ListIF<TaskIF>)pastTasks).insert(pastTasks.size(), task);
-                ((ListIF<TaskIF>)futureTasks).remove(0);
+                TaskIF task = ((ListIF<TaskIF>)futureTasks).get(1);
+                ((Queue<TaskIF>)pastTasks).enqueue(task);
+                ((ListIF<TaskIF>)futureTasks).remove(1);
             }
         }
 

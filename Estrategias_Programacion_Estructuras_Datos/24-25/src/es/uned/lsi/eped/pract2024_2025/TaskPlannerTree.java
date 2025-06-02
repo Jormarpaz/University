@@ -1,9 +1,12 @@
-package src.es.uned.lsi.eped.pract2024_2025;
+package es.uned.lsi.eped.pract2024_2025;
 
 
-import es.uned.lsi.eped.DataStructures.*;
+import es.uned.lsi.eped.DataStructures.BSTree;
+import es.uned.lsi.eped.DataStructures.BSTreeIF;
+import es.uned.lsi.eped.DataStructures.IteratorIF;
 
 public class TaskPlannerTree implements TaskPlannerIF{
+
 	/* Estructura que almacena las tareas pasadas */
 	protected BSTreeIF<TaskIF> pastTasks;
 	/* La estructura que almacena las tareas futuras debe ser un BSTree */
@@ -32,7 +35,9 @@ public class TaskPlannerTree implements TaskPlannerIF{
         @Override
 	public void delete(int date) {
             TaskIF tarea = new Task("", date);
-            futureTasks.remove(tarea);
+            if (futureTasks.contains(tarea)) {
+                futureTasks.remove(tarea);
+            }
         }
 
 	/* Reprograma una tarea
@@ -46,8 +51,8 @@ public class TaskPlannerTree implements TaskPlannerIF{
             while(iterador.hasNext()){
                 TaskIF fecha_a_mover = iterador.getNext();
                 if (fecha_a_mover.getDate() == origDate){
-                    futureTasks.remove(fecha_a_mover);
                     TaskIF nuevaFecha = new Task(fecha_a_mover.getText(),newDate);
+                    futureTasks.remove(fecha_a_mover);
                     futureTasks.add(nuevaFecha);
                     break;
                 }
@@ -60,7 +65,7 @@ public class TaskPlannerTree implements TaskPlannerIF{
         @Override
 	public void execute() {
             if (!futureTasks.isEmpty()) {
-                TaskIF task = futureTasks.getRoot();
+                TaskIF task = getMinTask();
                 task.setCompleted();
                 futureTasks.remove(task);
                 pastTasks.add(task);
@@ -73,7 +78,7 @@ public class TaskPlannerTree implements TaskPlannerIF{
         @Override
 	public void discard() {
             if (!futureTasks.isEmpty()) {
-                TaskIF task = futureTasks.getRoot();
+                TaskIF task = getMinTask();
                 futureTasks.remove(task);
                 pastTasks.add(task);
             }
@@ -90,5 +95,9 @@ public class TaskPlannerTree implements TaskPlannerIF{
 	public IteratorIF<TaskIF> iteratorPast() {
             return pastTasks.iterator(BSTreeIF.IteratorModes.DIRECTORDER);
         }
-		
+        
+        private TaskIF getMinTask() {
+            IteratorIF<TaskIF> it = futureTasks.iterator(BSTreeIF.IteratorModes.DIRECTORDER);
+        return it.hasNext() ? it.getNext() : null;
+}
 }
