@@ -1,23 +1,38 @@
-# University Projects
+# Proyectos Universitarios
 
-Welcome to the University Projects repository! This repository contains various projects and assignments completed during my time at university.
+## Descripción
+Repositorio que recopila todos los trabajos, ejercicios y proyectos desarrollados durante mi formación académica. Estos proyectos abarcan diversas áreas de la informática y la ingeniería, demostrando la evolución de mis habilidades técnicas.
 
-## Purpose
+## Tecnologías Principales
+- **Lenguajes de programación**:  
+  ![Java](https://img.shields.io/badge/-Java-007396?logo=java&logoColor=white)
+  ![C](https://img.shields.io/badge/-C-A8B9CC?logo=c&logoColor=black)
+  ![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white)
+  ![Haskell](https://img.shields.io/badge/-Haskell-5D4F85?logo=haskell&logoColor=white)
+  
+- **Bases de datos**:  
+  ![SQL](https://img.shields.io/badge/-SQL-4479A1?logo=postgresql&logoColor=white)
+  ![Hadoop](https://img.shields.io/badge/-Hadoop-66CCFF?logo=apachehadoop&logoColor=black)
 
-The primary purpose of this repository is to showcase the different projects and assignments I have worked on throughout my academic journey. These projects cover a wide range of topics and demonstrate my skills and knowledge in various areas of study.
+- **Electrónica/Arquitectura**:  
+  ![VHDL](https://img.shields.io/badge/-VHDL-005287?logo=vhdl&logoColor=white)
+  ![Ensamblador](https://img.shields.io/badge/-Assembly-6E4C13?logo=assemblyscript&logoColor=white)
 
-## Usage
+- **Otras tecnologías**:  
+  ![Django](https://img.shields.io/badge/-Django-092E20?logo=django&logoColor=white)
+  ![Flask](https://img.shields.io/badge/-Flask-000000?logo=flask&logoColor=white)
 
-Feel free to explore the projects and assignments. Each project folder contains a README file with detailed information about the project, including how to run the code and any dependencies required.
+## Áreas de Conocimiento
+- Algoritmos y estructuras de datos
+- Sistemas distribuidos
+- Diseño de sistemas operativos
+- Arquitectura de computadores
+- Programación funcional (Haskell)
+- Bases de datos relacionales y Big Data
 
-## Contributing
-
-If you have any suggestions or improvements, please feel free to open an issue or submit a pull request.
-
-## License
-
-This repository is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+## Estructura
+Los proyectos están organizados por asignaturas/cursos, con subdirectorios para cada proyecto individual que contienen su propio `README.md` con detalles específicos.
 
 ---
 
-Thank you for visiting my University Projects repository!
+*Nota: Este repositorio sigue en crecimiento conforme avanzo en mi formación académica.*
