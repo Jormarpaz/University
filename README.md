@@ -1,9 +1,11 @@
 # Proyectos Universitarios
 
 ## Descripción
+
 Repositorio que recopila todos los trabajos, ejercicios y proyectos desarrollados durante mi formación académica. Estos proyectos abarcan diversas áreas de la informática y la ingeniería, demostrando la evolución de mis habilidades técnicas.
 
 ## Tecnologías Principales
+
 - **Lenguajes de programación**:  
   ![Java](https://img.shields.io/badge/-Java-007396?logo=java&logoColor=white)
   ![C](https://img.shields.io/badge/-C-A8B9CC?logo=c&logoColor=black)
@@ -23,6 +25,7 @@ Repositorio que recopila todos los trabajos, ejercicios y proyectos desarrollado
   ![Flask](https://img.shields.io/badge/-Flask-000000?logo=flask&logoColor=white)
 
 ## Áreas de Conocimiento
+
 - Algoritmos y estructuras de datos
 - Sistemas distribuidos
 - Diseño de sistemas operativos
@@ -31,6 +34,7 @@ Repositorio que recopila todos los trabajos, ejercicios y proyectos desarrollado
 - Bases de datos relacionales y Big Data
 
 ## Estructura
+
 Los proyectos están organizados por asignaturas/cursos, con subdirectorios para cada proyecto individual que contienen su propio `README.md` con detalles específicos.
 
 ---

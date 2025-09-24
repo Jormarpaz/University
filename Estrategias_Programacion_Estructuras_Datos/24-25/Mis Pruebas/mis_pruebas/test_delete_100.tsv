@@ -1,0 +1,200 @@
+add	Preparar presentacion	22050527
+add	Analizar datos	24680211
+add	Revisar documentacion	21971005
+add	Hacer la compra	24880608
+add	Enviar documentos	24630804
+add	Revisar codigo	22240615
+add	Resolver bugs	21101013
+add	Hacer la compra	22191009
+add	Revisar codigo	22261106
+add	Hacer ejercicio	24710621
+add	Comprar leche	23451020
+add	Hacer ejercicio	22600402
+add	Revisar documentacion	21980530
+add	Entrenar modelo	21231124
+add	Hacer ejercicio	22090804
+add	Llamar al medico	22601029
+add	Leer libro	21420111
+add	Limpiar casa	21370305
+add	Entrenar modelo	20890918
+add	Revisar documentacion	22770806
+add	Revisar codigo	21890110
+add	Hacer ejercicio	21971203
+add	Analizar datos	21230115
+add	Hacer la compra	20771015
+add	Preparar presentacion	22861002
+add	Revisar documentacion	24071012
+add	Optimizar codigo	20361010
+add	Limpiar casa	24190626
+add	Llamar al medico	22570908
+add	Escribir informe	20850325
+add	Planificar semana	21910802
+add	Hacer la compra	24060923
+add	Estudiar para examen	23051014
+add	Enviar documentos	24531113
+add	Estudiar para examen	23130417
+add	Hacer ejercicio	23341225
+add	Estudiar para examen	22670108
+add	Enviar documentos	23780314
+add	Leer libro	22840202
+add	Resolver bugs	24270607
+add	Hacer la compra	21500531
+add	Optimizar codigo	23270629
+add	Hacer ejercicio	23590213
+add	Leer libro	23000221
+add	Revisar documentacion	24980522
+add	Preparar presentacion	20990220
+add	Optimizar codigo	24570416
+add	Optimizar codigo	21911029
+add	Hacer la compra	21840417
+add	Reunion con equipo	23980109
+add	Estudiar para examen	20330903
+add	Entrenar modelo	21450423
+add	Hacer la compra	24470523
+add	Escribir informe	20701119
+add	Reunion con equipo	23800130
+add	Hacer ejercicio	22480514
+add	Planificar semana	24740226
+add	Planificar semana	23260912
+add	Comprar leche	23610831
+add	Revisar codigo	20601103
+add	Revisar documentacion	24901002
+add	Entrenar modelo	23650901
+add	Preparar presentacion	21160504
+add	Estudiar para examen	22821108
+add	Leer libro	20560229
+add	Escribir informe	20441207
+add	Comprar leche	21050605
+add	Revisar documentacion	20731211
+add	Enviar documentos	22660214
+add	Estudiar para examen	23691011
+add	Leer libro	20820106
+add	Estudiar para examen	24060103
+add	Limpiar casa	23291118
+add	Entrenar modelo	21000619
+add	Hacer ejercicio	21271205
+add	Comprar leche	22630930
+add	Estudiar para examen	21420624
+add	Optimizar codigo	24080321
+add	Resolver bugs	24601206
+add	Limpiar casa	22400110
+add	Analizar datos	24010528
+add	Llamar al medico	22451012
+add	Resolver bugs	21720208
+add	Leer libro	20670813
+add	Optimizar codigo	23011113
+add	Hacer la compra	21100921
+add	Hacer ejercicio	20970521
+add	Hacer la compra	22590325
+add	Reunion con equipo	24720309
+add	Optimizar codigo	22410404
+add	Enviar documentos	24970821
+add	Leer libro	23640527
+add	Leer libro	20420405
+add	Hacer la compra	23650606
+add	Comprar leche	24101003
+add	Planificar semana	23061125
+add	Reunion con equipo	22170716
+add	Preparar presentacion	24750425
+add	Limpiar casa	22450123
+add	Revisar codigo	20320216
+delete	21971203
+delete	22480514
+delete	23260912
+delete	21971005
+delete	21911029
+delete	23691011
+delete	23800130
+delete	23291118
+delete	23270629
+delete	22840202
+delete	23051014
+delete	24750425
+delete	24060923
+delete	24071012
+delete	21231124
+delete	21420624
+delete	21230115
+delete	20361010
+delete	22570908
+delete	22821108
+delete	23130417
+delete	24531113
+delete	20560229
+delete	24710621
+delete	24980522
+delete	21910802
+delete	20890918
+delete	22770806
+delete	22410404
+delete	20330903
+delete	22660214
+delete	22670108
+delete	24901002
+delete	24680211
+delete	24190626
+delete	23650606
+delete	24740226
+delete	24570416
+delete	23780314
+delete	21890110
+delete	23590213
+delete	20420405
+delete	24470523
+delete	20990220
+delete	22630930
+delete	24630804
+delete	22240615
+delete	21420111
+delete	20701119
+delete	22170716
+delete	22261106
+delete	24970821
+delete	24720309
+delete	23640527
+delete	21050605
+delete	21101013
+delete	20771015
+delete	22590325
+delete	23610831
+delete	21370305
+delete	20441207
+delete	20820106
+delete	20670813
+delete	22450123
+delete	24601206
+delete	21720208
+delete	20731211
+delete	23011113
+delete	21840417
+delete	21160504
+delete	23451020
+delete	21100921
+delete	22400110
+delete	22861002
+delete	23980109
+delete	24080321
+delete	24060103
+delete	20320216
+delete	24880608
+delete	24010528
+delete	23061125
+delete	23650901
+delete	22451012
+delete	20970521
+delete	21000619
+delete	22191009
+delete	22601029
+delete	24270607
+delete	23000221
+delete	22090804
+delete	23341225
+delete	20850325
+delete	22050527
+delete	21980530
+delete	21450423
+delete	21500531
+delete	22600402
+delete	20601103
+delete	21271205
+delete	24101003

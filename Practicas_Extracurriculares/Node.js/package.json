@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "express": "^5.1.0",
+    "upper-case": "^2.0.2"
+  },
+  "name": "prueba",
+  "version": "1.0.0",
+  "description": "Mi primer proyecto con node",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

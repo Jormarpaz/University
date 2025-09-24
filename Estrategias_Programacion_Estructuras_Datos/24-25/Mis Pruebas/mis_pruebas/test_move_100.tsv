@@ -1,0 +1,200 @@
+add	Preparar presentacion	24590412
+add	Estudiar para examen	24290506
+add	Hacer ejercicio	21380206
+add	Leer libro	22221101
+add	Optimizar codigo	21521225
+add	Hacer ejercicio	24120605
+add	Llamar al medico	20440902
+add	Planificar semana	20620930
+add	Preparar presentacion	20411116
+add	Hacer ejercicio	23800914
+add	Preparar presentacion	24550517
+add	Enviar documentos	23640531
+add	Resolver bugs	20980619
+add	Resolver bugs	21140421
+add	Revisar codigo	23910107
+add	Comprar leche	20610202
+add	Entrenar modelo	22300207
+add	Analizar datos	21721018
+add	Optimizar codigo	22911112
+add	Optimizar codigo	20830417
+add	Escribir informe	23780816
+add	Limpiar casa	24090531
+add	Leer libro	24471224
+add	Leer libro	21231030
+add	Preparar presentacion	22701105
+add	Preparar presentacion	20750602
+add	Llamar al medico	22370715
+add	Enviar documentos	24750629
+add	Entrenar modelo	24840204
+add	Planificar semana	20620926
+add	Estudiar para examen	21501229
+add	Leer libro	21220315
+add	Preparar presentacion	22610404
+add	Comprar leche	23320923
+add	Limpiar casa	24780408
+add	Revisar codigo	20401013
+add	Comprar leche	24691018
+add	Preparar presentacion	24150803
+add	Leer libro	21620227
+add	Hacer ejercicio	22610818
+add	Reunion con equipo	24530628
+add	Entrenar modelo	24111103
+add	Reunion con equipo	24860525
+add	Planificar semana	20370529
+add	Estudiar para examen	22121117
+add	Revisar codigo	21150308
+add	Preparar presentacion	21811027
+add	Reunion con equipo	22390830
+add	Hacer ejercicio	24281025
+add	Limpiar casa	22720627
+add	Enviar documentos	24090712
+add	Planificar semana	20840308
+add	Enviar documentos	21320117
+add	Escribir informe	23670426
+add	Estudiar para examen	20670516
+add	Entrenar modelo	24670919
+add	Enviar documentos	23750707
+add	Llamar al medico	22350402
+add	Analizar datos	23790922
+add	Resolver bugs	22990612
+add	Limpiar casa	23050731
+add	Revisar documentacion	24171211
+add	Limpiar casa	20671119
+add	Analizar datos	23000803
+add	Llamar al medico	23400921
+add	Hacer la compra	24161211
+add	Revisar codigo	20361024
+add	Estudiar para examen	24220219
+add	Entrenar modelo	24510522
+add	Hacer ejercicio	21180507
+add	Optimizar codigo	23840508
+add	Enviar documentos	24601028
+add	Enviar documentos	21680602
+add	Entrenar modelo	20340614
+add	Preparar presentacion	24510301
+add	Planificar semana	21120725
+add	Revisar codigo	20570128
+add	Leer libro	20830729
+add	Reunion con equipo	22350922
+add	Revisar documentacion	23160906
+add	Comprar leche	20380310
+add	Planificar semana	21940317
+add	Optimizar codigo	22760819
+add	Resolver bugs	22101108
+add	Reunion con equipo	21890208
+add	Leer libro	23540502
+add	Escribir informe	23370630
+add	Entrenar modelo	23230511
+add	Preparar presentacion	24780704
+add	Enviar documentos	24070330
+add	Llamar al medico	20250501
+add	Escribir informe	23760303
+add	Planificar semana	23521108
+add	Revisar codigo	23740525
+add	Entrenar modelo	24860130
+add	Analizar datos	20540815
+add	Enviar documentos	20311231
+add	Revisar codigo	22241102
+add	Planificar semana	21281226
+add	Revisar codigo	24210805
+move	23790922	21530327
+move	21150308	24111221
+move	21501229	22810126
+move	22720627	22380507
+move	20980619	21070621
+move	20620926	21700419
+move	22350922	24120831
+move	23800914	22140101
+move	20370529	23730203
+move	24281025	20470329
+move	24510522	24461109
+move	23320923	20811230
+move	23780816	23230630
+move	23050731	21440506
+move	23640531	21100318
+move	24860525	24690206
+move	23521108	23620519
+move	22300207	24981105
+move	24070330	21501113
+move	22350402	24050812
+move	21180507	24060815
+move	21380206	24040129
+move	21890208	23240916
+move	24290506	23780612
+move	22390830	22020519
+move	23750707	21410825
+move	22990612	21271208
+move	23740525	24340226
+move	20830729	22240925
+move	24171211	20820503
+move	24780704	20261219
+move	20620930	23260802
+move	21721018	23030411
+move	20750602	21110524
+move	24601028	22741125
+move	24120605	23540505
+move	20610202	21991119
+move	24550517	20671015
+move	24691018	22010515
+move	23760303	20700325
+move	24530628	20281030
+move	23670426	20280928
+move	20671119	21590722
+move	22241102	24681209
+move	23230511	22240907
+move	20361024	22790616
+move	21220315	24851229
+move	20380310	22841024
+move	22911112	24431227
+move	21811027	23970408
+move	22221101	22630331
+move	22610818	20580517
+move	23000803	21900319
+move	24750629	24910203
+move	24860130	23580905
+move	22121117	23771023
+move	24510301	20721128
+move	20540815	22420707
+move	22610404	21000202
+move	21940317	21770118
+move	24090712	24770908
+move	21140421	20930519
+move	21320117	21121128
+move	22370715	20740325
+move	23370630	23811024
+move	23160906	20991116
+move	24090531	24710218
+move	20411116	23230530
+move	24111103	20570109
+move	21281226	22010611
+move	21620227	22070507
+move	20670516	20910411
+move	21120725	23330611
+move	20570128	21150510
+move	24471224	21081103
+move	24150803	21250326
+move	24161211	20841128
+move	23540502	21880309
+move	20401013	24891110
+move	23840508	20920617
+move	22101108	23100626
+move	20440902	24971003
+move	21521225	24180908
+move	20830417	22211211
+move	24590412	22780503
+move	24210805	22871215
+move	24780408	20371106
+move	21680602	21140621
+move	20340614	24230906
+move	20311231	22261117
+move	20840308	22220402
+move	24840204	23040106
+move	24670919	21530606
+move	22701105	24730707
+move	20250501	22690520
+move	21231030	20361011
+move	24220219	23600107
+move	22760819	23780911
+move	23910107	22061122
+move	23400921	23471002
